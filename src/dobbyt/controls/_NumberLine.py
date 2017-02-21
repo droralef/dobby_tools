@@ -12,7 +12,7 @@ import numpy as np
 
 from expyriment.misc import geometry
 from expyriment.misc._timer import get_time
-import expyriment.stimuli
+import expyriment as xpy
 
 import dobbyt
 
@@ -34,14 +34,14 @@ class NumberLine(dobbyt._Dobby_Object):
 
     """
 
-    Orientation = Enum('Orientation', 'horizontal vertical')
+    Orientation = Enum('Orientation', 'Horizontal Vertical')
 
     #===================================================================================
     #      Constructor + easy setters
     #===================================================================================
 
     def __init__(self, position, line_length, max_value, min_value=0,
-                 orientation=Orientation.horizontal,
+                 orientation=Orientation.Horizontal,
                  line_width=1, line_colour=None, end_tick_height=None,
                  visible=True):
         """
@@ -55,7 +55,7 @@ class NumberLine(dobbyt._Dobby_Object):
         :type end_tick_height: number
 
         :param position: the (x,y) coordinates of the middle of the line
-        :param orientation: NumberLine.Orientation.horizontal or NumberLine.Orientation.vertical
+        :param orientation: NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical
         :param line_length: the length of the line, in pixels
         :param line_width: the width (thickness) of the line, in pixels (default = 1)
         :param line_colour: the color of the line (default = None)
@@ -89,7 +89,7 @@ class NumberLine(dobbyt._Dobby_Object):
         self.min_value = min_value
         self.max_value = max_value
 
-        #-- Touch
+        #-- Touch parameters
         self._touch_directioned = True  # True: finger must be dragged to the NL from its initial direction
                                         # False: whenever the finger is close enough to the line, it's a touch
         self._touch_distance = 0        # Issue a "touch" decision when the finger is closer than this to the line
@@ -160,8 +160,9 @@ class NumberLine(dobbyt._Dobby_Object):
             self._prepare_labels()
 
         #-- Plot all visual elements on the canvas
-        for k in self._visual_objects:
-            self._visual_objects[k].plot(self._canvas)
+        if self._visible:
+            for k in self._visual_objects:
+                self._visual_objects[k].plot(self._canvas)
 
         return int((get_time() - start_time) * 1000)
 
@@ -178,7 +179,7 @@ class NumberLine(dobbyt._Dobby_Object):
         xmax, ymax = self._main_line_end()
 
         # Apply tick marks
-        if self._orientation == NumberLine.Orientation.horizontal:
+        if self._orientation == NumberLine.Orientation.Horizontal:
             ymax += self.end_tick_height
         else:
             xmax += self.end_tick_height
@@ -204,13 +205,13 @@ class NumberLine(dobbyt._Dobby_Object):
         height = 2 * max(ymax, -ymin)
 
         #-- Create the canvas
-        self._canvas = expyriment.stimuli.Canvas(size=(width, height), colour=None)
+        self._canvas = xpy.stimuli.Canvas(size=(width, height), colour=None)
 
 
     #-------------------------------------------------------
     def _prepare_main_line(self):
-        main_line = expyriment.stimuli.Line(self._main_line_start(), self._main_line_end(),
-                                            self._line_width, self._line_colour)
+        main_line = xpy.stimuli.Line(self._main_line_start(), self._main_line_end(),
+                                     self._line_width, self._line_colour)
         main_line.preload()
 
         # print "preparing line from {0} to {1} width={2} color={3}".format(self._main_line_start(), self._main_line_end(), self._line_width, self._line_colour)
@@ -219,15 +220,15 @@ class NumberLine(dobbyt._Dobby_Object):
 
     #-------------------------------------------------------
     def _prepare_end_of_line_ticks(self):
-        tick_dx = 0 if self._orientation == NumberLine.Orientation.horizontal else self._end_tick_height
-        tick_dy = self._end_tick_height if self._orientation == NumberLine.Orientation.horizontal else 0
+        tick_dx = 0 if self._orientation == NumberLine.Orientation.Horizontal else self._end_tick_height
+        tick_dy = self._end_tick_height if self._orientation == NumberLine.Orientation.Horizontal else 0
 
         pt1 = self._main_line_start()
         pt2 = self._main_line_end()
-        tick1 = expyriment.stimuli.Line(pt1, (pt1[0] + tick_dx, pt1[1] + tick_dy),
-                                        self._line_width, self._line_colour)
-        tick2 = expyriment.stimuli.Line(pt2, (pt2[0] + tick_dx, pt2[1] + tick_dy),
-                                        self._line_width, self._line_colour)
+        tick1 = xpy.stimuli.Line(pt1, (pt1[0] + tick_dx, pt1[1] + tick_dy),
+                                 self._line_width, self._line_colour)
+        tick2 = xpy.stimuli.Line(pt2, (pt2[0] + tick_dx, pt2[1] + tick_dy),
+                                 self._line_width, self._line_colour)
 
         tick1.preload()
         tick2.preload()
@@ -246,17 +247,17 @@ class NumberLine(dobbyt._Dobby_Object):
         min_text = str(self._min_value) if self._label_min_text is None else self._label_min_text
         min_pos = self._main_line_start()
         min_pos = (min_pos[0] + dx, min_pos[1] + dy)
-        min_box = expyriment.stimuli.TextBox(text=min_text, size=self._labels_box_size, position=min_pos,
-                                             text_font=self._labels_font_name, text_colour=self._labels_font_colour,
-                                             text_size=self._labels_font_size, text_justification=1)  # 1=center
+        min_box = xpy.stimuli.TextBox(text=min_text, size=self._labels_box_size, position=min_pos,
+                                      text_font=self._labels_font_name, text_colour=self._labels_font_colour,
+                                      text_size=self._labels_font_size, text_justification=1)  # 1=center
         min_box.preload()
 
         max_text = str(self._max_value) if self._label_max_text is None else self._label_max_text
         max_pos = self._main_line_end()
         max_pos = (max_pos[0] + dx, max_pos[1] + dy)
-        max_box = expyriment.stimuli.TextBox(text=max_text, size=self._labels_box_size, position=max_pos,
-                                             text_font=self._labels_font_name, text_colour=self._labels_font_colour,
-                                             text_size=self._labels_font_size, text_justification=1)  # 1=center
+        max_box = xpy.stimuli.TextBox(text=max_text, size=self._labels_box_size, position=max_pos,
+                                      text_font=self._labels_font_name, text_colour=self._labels_font_colour,
+                                      text_size=self._labels_font_size, text_justification=1)  # 1=center
         max_box.preload()
 
         self._visual_objects['label_min'] = min_box
@@ -268,14 +269,14 @@ class NumberLine(dobbyt._Dobby_Object):
     # Get start/end points of the main line relatively to the canvas
     #
     def _main_line_start(self):
-        if self._orientation == NumberLine.Orientation.horizontal:
+        if self._orientation == NumberLine.Orientation.Horizontal:
             return -self._line_length/2, 0
         else:
             return 0, -self._line_length/2
 
 
     def _main_line_end(self):
-        if self._orientation == NumberLine.Orientation.horizontal:
+        if self._orientation == NumberLine.Orientation.Horizontal:
             return self._line_length/2, 0
         else:
             return 0, self._line_length/2
@@ -318,27 +319,27 @@ class NumberLine(dobbyt._Dobby_Object):
 
 
     #---------------------------------------------------------
-    def mouse_at(self, xCoord, yCoord):
+    def mouse_at(self, x_coord, y_coord):
         """
         This function is called when mouse/touch has moved. It checks whether the movement implies touching the number line.
-        :param xCoord:
-        :param yCoord:
+        :param x_coord:
+        :param y_coord:
         :return: True if the number line was touched
         """
-        if not isinstance(xCoord, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_mouseat_non_numeric_coord.format("x", xCoord))
-        if not isinstance(yCoord, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_mouseat_non_numeric_coord.format("y", xCoord))
+        if not isinstance(x_coord, numbers.Number):
+            raise AttributeError(NumberLine._errmsg_mouseat_non_numeric_coord.format("x", x_coord))
+        if not isinstance(y_coord, numbers.Number):
+            raise AttributeError(NumberLine._errmsg_mouseat_non_numeric_coord.format("y", x_coord))
 
         if self._last_touched_coord is not None:
             return False
 
         #-- Get the relevant coordinates (x or y)
-        if self._orientation == NumberLine.Orientation.horizontal:
-            mouse_coord = yCoord
+        if self._orientation == NumberLine.Orientation.Horizontal:
+            mouse_coord = y_coord
             line_coord = self._main_line_start()[1]
         else:
-            mouse_coord = xCoord
+            mouse_coord = x_coord
             line_coord = self._main_line_start()[0]
 
         distance = line_coord - mouse_coord  # positive value: mouse coord < line coord
@@ -364,7 +365,7 @@ class NumberLine(dobbyt._Dobby_Object):
     #---------------------------------------------------------
     def last_touched_coord(self):
         """
-        The coordinate where the mouse/finger last touched the number line.
+        Get the coordinate where the mouse/finger last touched the number line.
         This is either the x or y coordinate, depending on the number line orientation
         If the finger didn't touch the line since the last call to reset_mouse_pos(), the function returns None.
         """
@@ -383,7 +384,7 @@ class NumberLine(dobbyt._Dobby_Object):
 
         #-- Convert the coordinate into a position using a 0-1 scale
         s = self._main_line_start()
-        s_coord = s[0] if self._orientation == NumberLine.Orientation.horizontal else s[1]
+        s_coord = s[0] if self._orientation == NumberLine.Orientation.Horizontal else s[1]
         pos01 = (self._last_touched_coord - s_coord) / self.line_length
 
         # noinspection PyUnresolvedReferences
@@ -438,20 +439,20 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def orientation(self):
-        """Get the number line's orientation (horizontal / vertical) """
+        """Get the number line's orientation (Horizontal / Vertical) """
         return self._orientation
 
     @orientation.setter
     def orientation(self, value):
         """
         Set the number line orientation
-        :param value: NLOrientation.horizontal or NLOrientation.vertical
+        :param value: NLOrientation.Horizontal or NLOrientation.Vertical
         """
 
         self._validate_unlocked()
 
         if not isinstance(value, dobbyt.controls.NumberLine.Orientation):
-            raise AttributeError("dobbyt error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.horizontal or NumberLine.Orientation.vertical".format(value))
+            raise AttributeError("dobbyt error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical".format(value))
 
         self._orientation = value
 
