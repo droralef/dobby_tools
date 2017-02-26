@@ -3,7 +3,7 @@ import unittest
 from dobbyt.controls import NumberLine
 
 
-class MyTestCase(unittest.TestCase):
+class NumberLineTestCase(unittest.TestCase):
 
     #-- Create a NumberLine object, test default values
     def test_default_propertie(self):
@@ -13,7 +13,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(nl.min_value, 0)
         self.assertEqual(nl.max_value, 100)
         self.assertEqual(nl.line_length, 1000)
-        self.assertEqual(nl.orientation, NumberLine.Orientation.horizontal)
+        self.assertEqual(nl.orientation, NumberLine.Orientation.Horizontal)
 
 
     #-- Validate() should fail when min>max
@@ -35,7 +35,7 @@ class MyTestCase(unittest.TestCase):
 
     #-- Touch mode = undirectioned, horizontal line
     def test_touch_line_undirectioned_horizontal(self):
-        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.horizontal)
+        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.Horizontal)
         nl.touch_directioned = False
         nl.touch_distance = 10
 
@@ -52,7 +52,7 @@ class MyTestCase(unittest.TestCase):
 
     #-- Touch mode = undirectioned, vertical line
     def test_touch_line_undirectioned_vertical(self):
-        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.vertical)
+        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.Vertical)
         nl.touch_directioned = False
         nl.touch_distance = 10
 
@@ -68,7 +68,7 @@ class MyTestCase(unittest.TestCase):
 
     #-- Touch mode = directioned, horizontal line
     def test_touch_line_directioned_horizontal(self):
-        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.horizontal)
+        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.Horizontal)
         nl.touch_directioned = True
         nl.touch_distance = 10
 
@@ -97,7 +97,7 @@ class MyTestCase(unittest.TestCase):
 
     #-- Touch mode = directioned, vertical line
     def test_touch_line_directioned_vertical(self):
-        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.vertical)
+        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.Vertical)
         nl.touch_directioned = True
         nl.touch_distance = 10
 
@@ -126,7 +126,7 @@ class MyTestCase(unittest.TestCase):
 
     #-- Touch mode = directioned, negative distance
     def test_touch_line_directioned_negative_distance(self):
-        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.horizontal)
+        nl = NumberLine((0,0), 100, 100, orientation=NumberLine.Orientation.Horizontal)
         nl.touch_directioned = True
         nl.touch_distance = -10
 

@@ -67,6 +67,8 @@ class NumberLine(dobbyt._Dobby_Object):
         :param visible: set the line as visible/invisible in the next plotting
         """
 
+        super(NumberLine, self).__init__()
+
         #-- The object starts as unlocked,but is locked when it is first drawn.
         #-- Locking means that its visual properties cannot be changed any longer
         self._locked = False

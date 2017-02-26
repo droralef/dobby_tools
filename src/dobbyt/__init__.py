@@ -10,6 +10,10 @@ dobbyt (Dobby Tools package) - a set of tools for psychological experiments unde
 
 class _Dobby_Object(object):
 
+    def __init__(self):
+        self.set_logging(False)
+
+
     def set_logging(self, onoff):
         """Set logging of this object on or off
 
@@ -25,10 +29,10 @@ class _Dobby_Object(object):
         self._logging = onoff
 
 
-    @property
     def logging(self):
         """Getter for logging on/off flag."""
         return self._logging
+
 
 
 class InvalidStateError(StandardError):

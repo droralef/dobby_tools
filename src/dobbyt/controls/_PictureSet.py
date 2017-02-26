@@ -39,6 +39,9 @@ class PictureSet(dobbyt._Dobby_Object):
         :param height: Height of the picture returned
         :param base_dir: Base directory for all picture files
         """
+
+        super(PictureSet, self).__init__()
+
         self._width = width
         self._height = height
         self._position = (0,0)
