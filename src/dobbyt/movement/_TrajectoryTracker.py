@@ -18,13 +18,13 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
 
 
     #----------------------------------------------------
-    def __init__(self, tracking_active=False):
+    def __init__(self):
         """
         Constructor
-        :param tracking_active: Whether tracking is immediately activated (default=False).
+        :param tracking_active: See :func:`~dobbyt.movement.TrajectoryTracker.tracking_active` (default=False).
         """
         super(TrajectoryTracker, self).__init__()
-        self.reset(tracking_active)
+        self.reset(False)
         self._filename = None
 
     #----------------------------------------------------
@@ -140,5 +140,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
         return len(rows)
 
     #----------------------------------------------------
+    # Default implementation for opening an output file
+    #
     def _open_file(self, filename, mode):
         return open(filename, mode)

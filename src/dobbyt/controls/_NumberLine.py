@@ -16,7 +16,6 @@ import expyriment as xpy
 
 import dobbyt
 
-
 # noinspection PyAttributeOutsideInit,PyProtectedMember
 class NumberLine(dobbyt._Dobby_Object):
     """
@@ -441,16 +440,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def orientation(self):
-        """Get the number line's orientation (Horizontal / Vertical) """
+        """The number line's orientation (NLOrientation.Horizontal or NLOrientation.Vertical)"""
         return self._orientation
 
     @orientation.setter
     def orientation(self, value):
-        """
-        Set the number line orientation
-        :param value: NLOrientation.Horizontal or NLOrientation.Vertical
-        """
-
         self._validate_unlocked()
 
         if not isinstance(value, dobbyt.controls.NumberLine.Orientation):
@@ -462,17 +456,12 @@ class NumberLine(dobbyt._Dobby_Object):
     @property
     def position(self):
         """
-        Get the number line's position: the (x,y) coordinates of the line mid point
+        The number line's position: the (x,y) coordinates of the line mid point (tuple/list are accepted)
         """
         return self._mid_x, self._mid_y
 
     @position.setter
     def position(self, value):
-        """
-        Set the number line position: coordinates of its mid point
-        :param value: an (x,y) tuple/list
-        """
-
         self._validate_unlocked()
 
         if isinstance(value, geometry.XYPoint):
@@ -495,16 +484,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def line_length(self):
-        """Get the number line length (in pixels)"""
+        """The number line length (in pixels). Only positive values are valid."""
         return self._line_length
 
     @line_length.setter
     def line_length(self, value):
-        """
-        Set the number line physical length
-        :param value: only positive value, specified in pixels.
-        """
-
         self._validate_unlocked()
 
         if not isinstance(value, numbers.Number):
@@ -517,16 +501,14 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def end_tick_height(self):
-        """Get the height of the ticks at the ends of the number line (in pixels)"""
+        """
+        The height of the ticks at the ends of the number line (in pixels)
+        Positive values = ticks above the line or to its right; negative values = below/left.
+        """
         return self._end_tick_height
 
     @end_tick_height.setter
     def end_tick_height(self, value):
-        """
-        Set the height of the ticks at the ends of the number line (in pixels).
-        :param value: positive values = ticks above the line or to its right; negative values = below/left
-        """
-
         self._validate_unlocked()
 
         if value is not None and not isinstance(value, numbers.Number):
@@ -537,16 +519,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def line_width(self):
-        """Get the number line width (in pixels)"""
+        """The number line width (in pixels). Only positive values are valid."""
         return self._line_width
 
     @line_width.setter
     def line_width(self, value):
-        """
-        Set the number line width
-        :param value: only positive value, specified in pixels.
-        """
-
         self._validate_unlocked()
 
         if not isinstance(value, numbers.Number):
@@ -559,13 +536,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def line_colour(self):
-        """Get the color of the number line. None = line not plotted."""
+        """The color of the number line. None = the line will not be plotted."""
         return self._line_colour
 
     @line_colour.setter
     def line_colour(self, value):
-        """Set the number line color. None = the line will not be plotted."""
-
         self._validate_unlocked()
         self._line_colour = value
 
@@ -577,12 +552,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def labels_visible(self):
-        """Return True/False to indicate whether the end-of-line labels are visible"""
+        """Whether the end-of-line labels are visible or not (boolean)"""
         return self._labels_visible
 
     @labels_visible.setter
     def labels_visible(self, value):
-        """Set the end-of-line labels as visible or invisible. Expecting a boolean/number argument."""
         if isinstance(value, numbers.Number):
             value = value != 0
         elif not isinstance(value, bool):
@@ -593,13 +567,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def labels_font_name(self):
-        """Get the font name of the end-of-line labels"""
+        """The font name of the end-of-line labels"""
         return self._labels_font_name
 
     @labels_font_name.setter
     def labels_font_name(self, value):
-        """Get the font name of the end-of-line labels."""
-
         self._validate_unlocked()
 
         if value is not None and type(value) != str:
@@ -610,13 +582,14 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def labels_font_colour(self):
-        """Get the font color of the end-of-line labels."""
+        """
+        The font color of the end-of-line labels.
+        The value is an expyriment color - tuple of 3 values, each 0-255
+        """
         return self._labels_font_colour
 
     @labels_font_colour.setter
     def labels_font_colour(self, value):
-        """Set the font color of the end-of-line labels."""
-
         self._validate_unlocked()
         self._labels_font_colour = value
 
@@ -624,16 +597,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def labels_font_size(self):
-        """Get the font size of the end-of-line labels"""
+        """The font size of the end-of-line labels"""
         return self._labels_font_size
 
     @labels_font_size.setter
     def labels_font_size(self, value):
-        """
-        Set the font size of the end-of-line labels
-        :param value: only positive value.
-        """
-
         self._validate_unlocked()
 
         if value is not None:
@@ -648,16 +616,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def labels_box_size(self):
-        """Get the textbox size of the end-of-line labels (height, width)"""
+        """The textbox size of the end-of-line labels (height, width)"""
         return self._labels_box_size
 
     @labels_box_size.setter
     def labels_box_size(self, value):
-        """
-        Set the textbox size of the end-of-line labels
-        :param value: height, width
-        """
-
         self._validate_unlocked()
 
         if value is not None:
@@ -680,17 +643,12 @@ class NumberLine(dobbyt._Dobby_Object):
     @property
     def labels_offset(self):
         """
-        Get the number line's position: the (x,y) coordinates of the line mid point
+        The number line's position: the (x,y) coordinates of the line mid point (tuple/list are accepted)
         """
         return self._labels_offset_x, self._labels_offset_y
 
     @labels_offset.setter
     def labels_offset(self, value):
-        """
-        Set the number line position: coordinates of its mid point
-        :param value: an (x,y) tuple/list
-        """
-
         self._validate_unlocked()
 
         if isinstance(value, geometry.XYPoint):
@@ -713,13 +671,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def label_min_text(self):
-        """Get the text for the label at the MIN end of the number line"""
+        """The text for the label at the MIN end of the number line"""
         return self._label_min_text
 
     @label_min_text.setter
     def label_min_text(self, value):
-        """Set the text for the label at the MIN end of the number line"""
-
         self._validate_unlocked()
 
         if isinstance(value, numbers.Number):
@@ -732,13 +688,11 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def label_max_text(self):
-        """Get the text for the label at the MAX end of the number line"""
+        """The text for the label at the MAX end of the number line"""
         return self._label_max_text
 
     @label_max_text.setter
     def label_max_text(self, value):
-        """Set the text for the label at the MAX end of the number line"""
-
         self._validate_unlocked()
 
         if isinstance(value, numbers.Number):
@@ -758,45 +712,38 @@ class NumberLine(dobbyt._Dobby_Object):
     #-----------------------------------------------------------
     @property
     def min_value(self):
-        """Get the minimal logical value on the number line"""
+        """The minimal logical value on the number line"""
         return self._min_value
 
     @min_value.setter
     def min_value(self, value):
-        """Set the minimal logical value on the number line"""
-
+        self._validate_unlocked()
         if not isinstance(value, numbers.Number):
             raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("min_value", value))
-
         self._min_value = value
 
     #-----------------------------------------------------------
     @property
     def max_value(self):
-        """Get the maximal logical value on the number line"""
+        """The maximal logical value on the number line"""
         return self._max_value
 
     @max_value.setter
     def max_value(self, value):
-        """Set the maximal logical value on the number line"""
-
         self._validate_unlocked()
-
         if not isinstance(value, numbers.Number):
             raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("max_value", value))
-
         self._max_value = value
 
 
     #-----------------------------------------------------------
     @property
     def visible(self):
-        """Return True/False to indicate whether the number line is visible"""
+        """Whether the number line is visible (boolean)"""
         return self._visible
 
     @visible.setter
     def visible(self, value):
-        """Set the number line as visible or invisible. Expecting a boolean/number argument."""
         if isinstance(value, numbers.Number):
             value = value != 0
         elif not isinstance(value, bool):
@@ -817,8 +764,6 @@ class NumberLine(dobbyt._Dobby_Object):
 
     @touch_distance.setter
     def touch_distance(self, value):
-        """Set the minimal distance from line that counts as touch """
-
         self._validate_unlocked()
 
         if not isinstance(value, numbers.Number):

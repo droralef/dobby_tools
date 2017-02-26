@@ -9,3 +9,5 @@ Dobby tools - movement package
 
 #  Import the package classes
 from _TrajectoryTracker import TrajectoryTracker
+from _InstantaneousSpeedValidator import InstantaneousSpeedValidator
+

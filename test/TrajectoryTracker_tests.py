@@ -20,7 +20,8 @@ class TrajectoryTrackerTestCase(unittest.TestCase):
     #------------------------------------------------------------------
     def test_track(self):
 
-        ttrk = TrajectoryTrackerForTesting(True)
+        ttrk = TrajectoryTrackerForTesting()
+        ttrk.tracking_active = True
         ttrk.init_output_file("stam", xy_precision=1, time_precision=1)
 
         ttrk.track(1, 1.5, 0.1)
@@ -41,6 +42,33 @@ class TrajectoryTrackerTestCase(unittest.TestCase):
 
 
     #------------------------------------------------------------------
+    def test_track_reset_false(self):
+
+        ttrk = TrajectoryTrackerForTesting()
+        ttrk.tracking_active = True
+        ttrk.reset(False)
+        ttrk.track(12, 2.5, 0.2)
+        self.assertEqual(0, len(ttrk.get_xyt()))
+
+    #------------------------------------------------------------------
+    def test_track_reset_true(self):
+
+        ttrk = TrajectoryTrackerForTesting()
+        ttrk.tracking_active = False
+        ttrk.reset(True)
+        ttrk.track(12, 2.5, 0.2)
+        self.assertEqual(1, len(ttrk.get_xyt()))
+
+    #------------------------------------------------------------------
+    def test_track_reset_none(self):
+
+        ttrk = TrajectoryTrackerForTesting()
+        ttrk.tracking_active = True
+        ttrk.reset()
+        ttrk.track(12, 2.5, 0.2)
+        self.assertEqual(1, len(ttrk.get_xyt()))
+
+    #------------------------------------------------------------------
     def test_track_active_inactive(self):
 
         ttrk = TrajectoryTrackerForTesting()
@@ -59,8 +87,9 @@ class TrajectoryTrackerTestCase(unittest.TestCase):
     #------------------------------------------------------------------
     def test_prec(self):
 
-        ttrk = TrajectoryTrackerForTesting(True)
+        ttrk = TrajectoryTrackerForTesting()
         ttrk.init_output_file("stam", xy_precision=2, time_precision=3)
+        ttrk.tracking_active = True
         ttrk.track(0.2, 0.3, 0.1)
         ttrk.save_to_file(0)
 
@@ -85,7 +114,6 @@ class TrajectoryTrackerTestCase(unittest.TestCase):
         except(Exception):
             pass
 
-
     #------------------------------------------------------------------
     def test_non_numeric_x(self):
         ttrk = TrajectoryTrackerForTesting()
@@ -94,7 +122,6 @@ class TrajectoryTrackerTestCase(unittest.TestCase):
             self.fail("Succeeded tracking a non-numeric x coord")
         except(Exception):
             pass
-
 
     #------------------------------------------------------------------
     def test_non_numeric_y(self):
