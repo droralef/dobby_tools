@@ -6,14 +6,26 @@
 Dobby Tools documentation!
 ==========================
 
-Contents:
+
+dobbyt.controls:
+----------------
 
 .. toctree::
    :maxdepth: 2
 
    NumberLine
-   TrajectoryTracker
+   PictureSet
+
+
+dobbyt.movement:
+----------------
+
+.. toctree::
+   :maxdepth: 2
+
+   GlobalSpeedValidator
    InstantaneousSpeedValidator
+   TrajectoryTracker
 
 
 Indices and tables

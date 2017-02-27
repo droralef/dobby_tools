@@ -10,18 +10,22 @@ from __future__ import division
 import numbers
 import numpy as np
 
+import expyriment
 import dobbyt
 
 
+# noinspection PyAttributeOutsideInit
 class DirectionValidator(dobbyt._Dobby_Object):
 
-    def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None, enabled=False):
+    def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None, grace_period=0, enabled=False):
         """
         Constructor
-        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.mouse_at`) per mm
+        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.mouse_at`) per mm.
+                             This is relevant for computation of :func:`~dobbyt.movement.DirectionValidator.calc_angle_interval`
         :param min_angle: See :func:`~dobbyt.movement.DirectionValidator.min_angle`
         :param max_angle: See :func:`~dobbyt.movement.DirectionValidator.max_angle`
         :param calc_angle_interval: See :func:`~dobbyt.movement.DirectionValidator.calc_angle_interval`
+        :param grace_period: See :func:`~dobbyt.movement.DirectionValidator.grace_period`
         :param enabled: See :func:`~dobbyt.movement.DirectionValidator.enabloed`
         """
         super(DirectionValidator, self).__init__()
@@ -35,6 +39,9 @@ class DirectionValidator(dobbyt._Dobby_Object):
         self.min_angle = min_angle
         self.max_angle = max_angle
         self.calc_angle_interval = calc_angle_interval
+        self.grace_period = grace_period
+
+        self.reset()
 
 
     #========================================================================
@@ -61,14 +68,20 @@ class DirectionValidator(dobbyt._Dobby_Object):
         :return: True if there was an error.
         """
 
-        if not self._enabled:
-            return DirectionValidator.ErrType.OK
+        if not self._enabled or self._min_angle == self._max_angle or self._min_angle is None or self._max_angle is None:
+            return False
 
         self._validate_xyt(x_coord, y_coord, time)
 
-        curr_xyt = (x_coord / self._units_per_mm, y_coord / self._units_per_mm, time)
+        x_coord /= self._units_per_mm
+        y_coord /= self._units_per_mm
 
-        latest_prev_time = time - self._calc_angle_interval
+        curr_xyt = (x_coord, y_coord, time)
+
+        if time <= self._grace_period:
+            self._prev_locations.append(curr_xyt)
+            return False
+
         can_compute_angle = self._remove_far_enough_prev_locations(x_coord, y_coord)
 
         #-- Remember current coords & time
@@ -76,13 +89,21 @@ class DirectionValidator(dobbyt._Dobby_Object):
 
         x0, y0, t0 = self._prev_locations[0]
 
-        #-- Calculate speed, if possible
         if can_compute_angle and (x0, y0) != (x_coord, y_coord):
-            angle = self._calc_angle((x0, y0), (x_coord, y_coord))
+            #-- Validate direction
+            angle = dobbyt.movement.get_angle((x0, y0), (x_coord, y_coord))
+            if self._angle_is_ok(angle):
+                # all is OK
+                return False
+            else:
+                if self._logging:
+                    # noinspection PyProtectedMember
+                    expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(type(self)), angle / (np.pi*2) * 360), 1)
+                return True
 
-            return self._test_angle(angle)
-
-        return DirectionValidator.ErrType.OK
+        else:
+            #-- Direction cannot be validated - the finger hasn't moved enough yet
+            return False
 
     #----------------
     def _validate_xyt(self, x_coord, y_coord, time):
@@ -106,34 +127,34 @@ class DirectionValidator(dobbyt._Dobby_Object):
     #
     def _remove_far_enough_prev_locations(self, x_coord, y_coord):
 
+        if len(self._prev_locations) == 0:
+            return False
+
         distance2 = self._calc_angle_interval ** 2
-        use_ind = None
+        too_close_ind = len(self._prev_locations)
+        found_far_enough_entry = False
         for i in range(len(self._prev_locations)):
             x, y, t = self._prev_locations[i]
             if (x-x_coord)**2 + (y-y_coord)**2 < distance2:
-                use_ind = i-1
+                # This entry is already too close
+                too_close_ind = i
                 break
+            else:
+                found_far_enough_entry = True
 
-        if use_ind is not None and use_ind>0:
-            self._prev_locations = self._prev_locations[use_ind:]
+        if too_close_ind > 1:
+            self._prev_locations = self._prev_locations[too_close_ind-1:]
 
-        return len(self._prev_locations) > 0 and use_ind > 0
+        return found_far_enough_entry
+
 
     #-------------------------------------
-    @staticmethod
-    def _calc_angle(point1, point2):
-
-        dx = point2[0] - point1[0]
-        dy = point2[1] - point1[1]
-
-        if dx==0:
-            return np.sign(dy) * np.pi
+    def _angle_is_ok(self, angle):
+        if self._min_angle < self._max_angle:
+            return self._min_angle_rad <= angle <= self._max_angle_rad
         else:
-            return np.arctan(dy/dx)
+            return not (self._max_angle_rad < angle < self._min_angle_rad)
 
-    #-------------------------------------
-    def _test_angle(self, angle):
-        pass
 
     #========================================================================
     #      Config
@@ -171,11 +192,20 @@ class DirectionValidator(dobbyt._Dobby_Object):
         """
         return self._min_angle
 
+
     @min_angle.setter
     def min_angle(self, value):
-        if value is not None and not isinstance(value, (int, float)):
+
+        if value is None:
+            self._min_angle = None
+            self._min_angle_rad = None
+            return
+
+        if not isinstance(value, (int, float)):
             raise AttributeError(DirectionValidator._errmsg_set_to_non_numeric.format("min_angle", value))
+
         self._min_angle = value % 360
+        self._min_angle_rad = self._min_angle / 360 * np.pi * 2
 
     #-----------------------------------------------------------------------------------
     @property
@@ -186,11 +216,20 @@ class DirectionValidator(dobbyt._Dobby_Object):
         """
         return self._max_angle
 
+
     @max_angle.setter
     def max_angle(self, value):
-        if value is not None and not isinstance(value, (int, float)):
+
+        if value is None:
+            self._max_angle = None
+            self._max_angle_rad = None
+            return
+
+        if not isinstance(value, (int, float)):
             raise AttributeError(DirectionValidator._errmsg_set_to_non_numeric.format("max_angle", value))
+
         self._max_angle = value % 360
+        self._max_angle_rad = self._max_angle / 360 * np.pi * 2
 
     #-----------------------------------------------------------------------------------
     @property
@@ -211,3 +250,22 @@ class DirectionValidator(dobbyt._Dobby_Object):
             raise AttributeError(DirectionValidator._errmsg_set_to_negative.format("calc_angle_interval", value))
 
         self._calc_angle_interval = value
+
+    #-----------------------------------------------------------------------------------
+    @property
+    def grace_period(self):
+        """The grace period in the beginning of each trial, during which speed is not validated (in seconds)."""
+        return self._grace_period
+
+    @grace_period.setter
+    def grace_period(self, value):
+        if value is None:
+            value = 0
+
+        if not isinstance(value, numbers.Number):
+            raise AttributeError(DirectionValidator._errmsg_set_to_non_numeric.format(type(self), "grace_period", value))
+        if value < 0:
+            raise AttributeError(DirectionValidator._errmsg_set_to_negative.format(type(self), "grace_period", value))
+
+        self._grace_period = value
+
