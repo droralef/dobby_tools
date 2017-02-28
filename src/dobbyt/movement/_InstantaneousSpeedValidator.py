@@ -13,10 +13,11 @@ import numbers
 
 import dobbyt
 from dobbyt.movement import ValidationAxis, SpeedError
+from dobbyt.movement._utils import BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
-class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
+class InstantaneousSpeedValidator(BaseValidator):
     """
     Validator for momentary (instantanesous) speed: make sure that at each given moment, the
     movement speed is within the valid boundaries
@@ -42,11 +43,11 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
         super(InstantaneousSpeedValidator, self).__init__()
 
         if not isinstance(units_per_mm, numbers.Number):
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_numeric.format("units_per_mm", units_per_mm))
+            raise ValueError(BaseValidator._errmsg_set_to_non_numeric.format("units_per_mm", units_per_mm))
 
         self._units_per_mm = units_per_mm
 
-        self.active = active
+        self.enabled = active
         self.axis = axis
         self.min_speed = min_speed
         self.max_speed = max_speed
@@ -60,7 +61,6 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
     #      Validation API
     #========================================================================
 
-    _errmsg_mouse_at_non_numeric = "dobbyt error: {0}.mouse_at was called with a non-numeric {1} ({2})"
 
     #-----------------------------------------------------------------------------------
     def reset(self, time=None):
@@ -69,7 +69,7 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
         :param time: The time when the trial starts. The grace period will be determined according to this time.
         """
         if time is not None and not isinstance(time, (int, float)):
-            raise AttributeError("dobbyt error: {0}.reset() was called with a non-numeric time".format(type(self), time))
+            raise ValueError(BaseValidator._errmsg_non_numeric_func_arg.format(type(self), "reset", "time", time))
 
         self._prev_locations = []
         self._time0 = time
@@ -85,10 +85,11 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
         :return: True if there was an error.
         """
 
-        if not self._active:
+        if not self._enabled:
             return SpeedError.OK
 
-        self._mouse_at_validate_xyt(x_coord, y_coord, time)
+        self.mouse_at_validate_xyt(x_coord, y_coord, time)
+        self._mouse_at_validate_time(time)
 
         if self._time0 is None:
             self._time0 = time
@@ -118,16 +119,7 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
 
 
     #--------------------------------------
-    def _mouse_at_validate_xyt(self, x_coord, y_coord, time):
-        #-- Validate types
-        if not isinstance(x_coord, numbers.Number):
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_mouse_at_non_numeric.format(type(self), "x_coord", x_coord))
-
-        if not isinstance(y_coord, numbers.Number):
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_mouse_at_non_numeric.format(type(self), "y_coord", y_coord))
-
-        if not isinstance(time, numbers.Number):
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_mouse_at_non_numeric.format(type(self), "time", time))
+    def _mouse_at_validate_time(self, time):
 
         #-- Validate that times are provided in increasing order
         prevTime = self._prev_locations[-1][2] if len(self._prev_locations) > 0 else self._time0
@@ -170,24 +162,16 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
     #      Config
     #========================================================================
 
-    _errmsg_set_to_non_numeric = "dobbyt error: invalid attempt to set {0}.{1} to a non-numeric value ({2})"
-    _errmsg_set_to_non_positive = "dobbyt error: invalid attempt to set {0}.{1} to a non-positive value ({2})"
-    _errmsg_set_to_negative = "dobbyt error: invalid attempt to set {0}.{1} to a negative value ({2})"
-    _errmsg_set_to_non_boolean = "dobbyt error: invalid attempt to set {0}.{1} to a non-boolean value ({2})"
-
     #-----------------------------------------------------------------------------------
     @property
-    def active(self):
-        """Whether the validator is currently active (boolean)"""
-        return self._active
+    def enabled(self):
+        """Whether the validator is currently enabled (boolean)"""
+        return self._enabled
 
-    @active.setter
-    def active(self, value):
-
-        if not isinstance(value, bool):
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_boolean.format(type(self), "active", value))
-
-        self._active = value
+    @enabled.setter
+    def enabled(self, value):
+        self.validate_type("enabled", value, bool)
+        self._enabled = value
 
     #-----------------------------------------------------------------------------------
     @property
@@ -225,12 +209,8 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
 
     @min_speed.setter
     def min_speed(self, value):
-        if value is not None:
-            if not isinstance(value, numbers.Number):
-                raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_numeric.format(type(self), "min_speed", value))
-            if value <= 0:
-                raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_positive.format(type(self), "min_speed", value))
-
+        self.validate_numeric("min_speed", value, none_value=BaseValidator.NoneValues.Valid)
+        self.validate_positive("min_speed", value)
         self._min_speed = value
 
     #-----------------------------------------------------------------------------------
@@ -244,12 +224,8 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
 
     @max_speed.setter
     def max_speed(self, value):
-        if value is not None:
-            if not isinstance(value, numbers.Number):
-                raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_numeric.format(type(self), "max_speed", value))
-            if value <= 0:
-                raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_positive.format(type(self), "max_speed", value))
-
+        self.validate_numeric("max_speed", value, none_value=BaseValidator.NoneValues.Valid)
+        self.validate_positive("max_speed", value)
         self._max_speed = value
 
     #-----------------------------------------------------------------------------------
@@ -260,14 +236,8 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
 
     @grace_period.setter
     def grace_period(self, value):
-        if value is None:
-            value = 0
-
-        if not isinstance(value, numbers.Number):
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_numeric.format(type(self), "grace_period", value))
-        if value < 0:
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_negative.format(type(self), "grace_period", value))
-
+        value = self.validate_numeric("grace_period", value, none_value=BaseValidator.NoneValues.ChangeTo0)
+        self.validate_not_negative("grace_period", value)
         self._grace_period = value
 
     #-----------------------------------------------------------------------------------
@@ -281,12 +251,6 @@ class InstantaneousSpeedValidator(dobbyt._Dobby_Object):
 
     @calc_speed_interval.setter
     def calc_speed_interval(self, value):
-        if value is None:
-            value = 0
-
-        if not isinstance(value, numbers.Number):
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_non_numeric.format(type(self), "calc_speed_interval", value))
-        if value < 0:
-            raise AttributeError(InstantaneousSpeedValidator._errmsg_set_to_negative.format(type(self), "calc_speed_interval", value))
-
+        value = self.validate_numeric("calc_speed_interval", value, none_value=BaseValidator.NoneValues.ChangeTo0)
+        self.validate_not_negative("calc_speed_interval", value)
         self._calc_speed_interval = value

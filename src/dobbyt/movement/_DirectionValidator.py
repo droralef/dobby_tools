@@ -12,12 +12,14 @@ import numpy as np
 
 import expyriment
 import dobbyt
+from dobbyt.movement._utils import BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
-class DirectionValidator(dobbyt._Dobby_Object):
+class DirectionValidator(BaseValidator):
 
-    def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None, grace_period=0, enabled=False):
+    def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None,
+                 grace_period=0, enabled=False):
         """
         Constructor
         :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.mouse_at`) per mm.
@@ -48,8 +50,6 @@ class DirectionValidator(dobbyt._Dobby_Object):
     #      Validation API
     #========================================================================
 
-    _errmsg_mouse_at_non_numeric = "dobbyt error: InstantaneousSpeedValidator.mouse_at was called with a non-numeric {0} ({1})"
-
     #-----------------------------------------------------------------------------------
     def reset(self):
         """
@@ -71,7 +71,8 @@ class DirectionValidator(dobbyt._Dobby_Object):
         if not self._enabled or self._min_angle == self._max_angle or self._min_angle is None or self._max_angle is None:
             return False
 
-        self._validate_xyt(x_coord, y_coord, time)
+        self.mouse_at_validate_xyt(x_coord, y_coord, time)
+        self._validate_time(time)
 
         x_coord /= self._units_per_mm
         y_coord /= self._units_per_mm
@@ -106,14 +107,7 @@ class DirectionValidator(dobbyt._Dobby_Object):
             return False
 
     #----------------
-    def _validate_xyt(self, x_coord, y_coord, time):
-        #-- Validate types
-        if not isinstance(x_coord, numbers.Number):
-            raise AttributeError(self._errmsg_mouse_at_non_numeric.format("x_coord", x_coord))
-        if not isinstance(y_coord, numbers.Number):
-            raise AttributeError(self._errmsg_mouse_at_non_numeric.format("y_coord", y_coord))
-        if not isinstance(time, numbers.Number):
-            raise AttributeError(self._errmsg_mouse_at_non_numeric.format("time", time))
+    def _validate_time(self, time):
 
         if len(self._prev_locations) > 0 and self._prev_locations[-1][2] > time:
             raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(type(self), time, self._prev_locations[-1][2]))
@@ -160,11 +154,6 @@ class DirectionValidator(dobbyt._Dobby_Object):
     #      Config
     #========================================================================
 
-    _errmsg_set_to_non_numeric = "dobbyt error: invalid attempt to set InstantaneousSpeedValidator.{0} to a non-numeric value ({1})"
-    _errmsg_set_to_non_positive = "dobbyt error: invalid attempt to set InstantaneousSpeedValidator.{0} to a non-positive value ({1})"
-    _errmsg_set_to_negative = "dobbyt error: invalid attempt to set InstantaneousSpeedValidator.{0} to a negative value ({1})"
-    _errmsg_set_to_non_boolean = "dobbyt error: invalid attempt to set InstantaneousSpeedValidator.{0} to a non-boolean value ({1})"
-
     #-----------------------------------------------------------------------------------
     @property
     def enabled(self):
@@ -173,14 +162,7 @@ class DirectionValidator(dobbyt._Dobby_Object):
 
     @enabled.setter
     def enabled(self, value):
-        """
-        Determine whether the validator is currently enabled
-        :param value: Boolean
-        """
-
-        if not isinstance(value, bool):
-            raise AttributeError(DirectionValidator._errmsg_set_to_non_boolean.format("enabled", value))
-
+        self.validate_type("enabled", value, bool)
         self._enabled = value
 
     #-----------------------------------------------------------------------------------
@@ -201,8 +183,7 @@ class DirectionValidator(dobbyt._Dobby_Object):
             self._min_angle_rad = None
             return
 
-        if not isinstance(value, (int, float)):
-            raise AttributeError(DirectionValidator._errmsg_set_to_non_numeric.format("min_angle", value))
+        self.validate_numeric("min_angle", value)
 
         self._min_angle = value % 360
         self._min_angle_rad = self._min_angle / 360 * np.pi * 2
@@ -225,8 +206,7 @@ class DirectionValidator(dobbyt._Dobby_Object):
             self._max_angle_rad = None
             return
 
-        if not isinstance(value, (int, float)):
-            raise AttributeError(DirectionValidator._errmsg_set_to_non_numeric.format("max_angle", value))
+        self.validate_numeric("max_angle", value)
 
         self._max_angle = value % 360
         self._max_angle_rad = self._max_angle / 360 * np.pi * 2
@@ -241,14 +221,8 @@ class DirectionValidator(dobbyt._Dobby_Object):
 
     @calc_angle_interval.setter
     def calc_angle_interval(self, value):
-        if value is None:
-            value = 0
-
-        if not isinstance(value, numbers.Number):
-            raise AttributeError(DirectionValidator._errmsg_set_to_non_numeric.format("calc_angle_interval", value))
-        if value < 0:
-            raise AttributeError(DirectionValidator._errmsg_set_to_negative.format("calc_angle_interval", value))
-
+        value = self.validate_numeric("calc_angle_interval", value, BaseValidator.NoneValues.ChangeTo0)
+        self.validate_not_negative("calc_angle_interval", value)
         self._calc_angle_interval = value
 
     #-----------------------------------------------------------------------------------
@@ -259,13 +233,7 @@ class DirectionValidator(dobbyt._Dobby_Object):
 
     @grace_period.setter
     def grace_period(self, value):
-        if value is None:
-            value = 0
-
-        if not isinstance(value, numbers.Number):
-            raise AttributeError(DirectionValidator._errmsg_set_to_non_numeric.format(type(self), "grace_period", value))
-        if value < 0:
-            raise AttributeError(DirectionValidator._errmsg_set_to_negative.format(type(self), "grace_period", value))
-
+        value = self.validate_numeric("grace_period", value, BaseValidator.NoneValues.ChangeTo0)
+        self.validate_not_negative("grace_period", value)
         self._grace_period = value
 

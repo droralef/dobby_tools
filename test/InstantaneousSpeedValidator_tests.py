@@ -43,7 +43,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
         validator.min_speed = 1
 
         self.assertEqual(SpeedError.OK, validator.mouse_at(0, 0, 0))
-        validator.active = True
+        validator.enabled = True
         self.assertEqual(SpeedError.OK, validator.mouse_at(0, 1, 2))
         self.assertEqual(SpeedError.TooSlow, validator.mouse_at(0, 2, 4))
 
