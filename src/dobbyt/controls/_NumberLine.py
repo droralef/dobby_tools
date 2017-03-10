@@ -11,10 +11,12 @@ import numbers
 import numpy as np
 
 from expyriment.misc import geometry
+# noinspection PyProtectedMember
 from expyriment.misc._timer import get_time
 import expyriment as xpy
 
 import dobbyt
+
 
 # noinspection PyAttributeOutsideInit,PyProtectedMember
 class NumberLine(dobbyt._Dobby_Object):
@@ -34,6 +36,8 @@ class NumberLine(dobbyt._Dobby_Object):
     """
 
     Orientation = Enum('Orientation', 'Horizontal Vertical')
+
+    #TODO: even after preloaded, allow chaning properties. We just need to know what should be changed.
 
     #===================================================================================
     #      Constructor + easy setters
@@ -68,9 +72,8 @@ class NumberLine(dobbyt._Dobby_Object):
 
         super(NumberLine, self).__init__()
 
-        #-- The object starts as unlocked,but is locked when it is first drawn.
-        #-- Locking means that its visual properties cannot be changed any longer
-        self._locked = False
+        #-- When preloaded, visual properties cannot be changed any longer
+        self._preloaded = False
 
         self.orientation = orientation
 
@@ -101,7 +104,6 @@ class NumberLine(dobbyt._Dobby_Object):
         self._visual_objects = {}
 
         self.reset_mouse_pos()
-
 
 
     #-----------------------------------------------------------------------------------
@@ -137,20 +139,17 @@ class NumberLine(dobbyt._Dobby_Object):
     def preload(self):
         """
         Pre-load the number line - prepare for plotting
-        :return: The time it took to run this function
+        :return: The time it took this function to run. (seconds)
         """
 
         start_time = get_time()
 
-        if self._locked:
+        if self._preloaded:
             # Already pre-loaded
-            return int((get_time() - start_time) * 1000)
+            return get_time() - start_time
 
         self.validate()
-        self._locked = True
-
-        #-- Create the canvas for this number line
-        self._prepare_canvas()
+        self._preloaded = True
 
         if self._line_colour is not None:
             self._prepare_main_line()
@@ -160,16 +159,39 @@ class NumberLine(dobbyt._Dobby_Object):
         if self._labels_visible:
             self._prepare_labels()
 
-        #-- Plot all visual elements on the canvas
-        if self._visible:
-            for k in self._visual_objects:
-                self._visual_objects[k].plot(self._canvas)
-
-        return int((get_time() - start_time) * 1000)
+        return get_time() - start_time
 
 
     #-------------------------------------------------------
-    def _prepare_canvas(self):
+    def present(self, clear=False, update=False):
+        """
+        Present the stimulus
+        :param clear: Whether to clear the screen buffer prior to presenting. Default=False
+        :param update: Whether to flip buffer after plotting. Default=False
+        :return: The time it took this function to run. (seconds)
+        """
+        start_time = get_time()
+
+        self.preload()
+
+        #-- Plot all visual elements on the canvas
+        if self._visible:
+            i = 0
+            for k in self._visual_objects:
+                do_clear = clear and i == 0
+                do_update = update and i == len(self._visual_objects) - 1
+                self._visual_objects[k].present(clear=do_clear, update=do_update)
+                i += 1
+
+        return get_time() - start_time
+
+    #-------------------------------------------------------
+    def get_size(self):
+        """
+        Get the size of the rectangle surrounding the number line, with all its elements.
+        The number line center will be at the center of the rectangle
+        :return: (width, height)
+        """
 
         self._canvas_to_nl_coord_shift = (0, 0)
 
@@ -206,7 +228,7 @@ class NumberLine(dobbyt._Dobby_Object):
         height = 2 * max(ymax, -ymin)
 
         #-- Create the canvas
-        self._canvas = xpy.stimuli.Canvas(size=(width, height), colour=None)
+        return width, height
 
 
     #-------------------------------------------------------
@@ -284,21 +306,23 @@ class NumberLine(dobbyt._Dobby_Object):
 
 
     #-------------------------------------------------------
-    def plot(self, stimulus):
+    def plot(self, stim):
         """
-        Plot all number line elements in a container canvas and return it
-        :param stimulus: The stimulus to plot on
-        :return: The time (in ms) it took this function to run
+        Plot the number line on another stimulus
+        :param stim: Any Expyriment visual object
+        :return: The time it took this function to run. (seconds)
         """
 
         start_time = get_time()
 
         self.preload()
 
-        self._canvas.position = (self._mid_x, self._mid_y)
-        self._canvas.plot(stimulus)
+        #-- Plot all visual elements on the canvas
+        if self._visible:
+            for k in self._visual_objects:
+                self._visual_objects[k].plot(stim)
 
-        return int((get_time() - start_time)*1000)
+        return get_time() - start_time
 
 
     #===================================================================================
@@ -429,7 +453,7 @@ class NumberLine(dobbyt._Dobby_Object):
 
     #-----------------------------------------------------------
     def _validate_unlocked(self):
-        if self._locked:
+        if self._preloaded:
             raise dobbyt.InvalidStateError('An attempt was made to change the visual properties of a NumberLine after it was already plotted')
 
     ###################################
