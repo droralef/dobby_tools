@@ -471,7 +471,7 @@ class NumberLine(dobbyt._Dobby_Object):
     def orientation(self, value):
         self._validate_unlocked()
 
-        if not isinstance(value, dobbyt.controls.NumberLine.Orientation):
+        if not isinstance(value, dobbyt.stimuli.NumberLine.Orientation):
             raise AttributeError("dobbyt error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical".format(value))
 
         self._orientation = value

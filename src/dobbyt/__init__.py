@@ -46,4 +46,4 @@ class InvalidStateError(StandardError):
         pass
 
 
-import dobbyt.controls as controls
+import dobbyt.stimuli as controls
