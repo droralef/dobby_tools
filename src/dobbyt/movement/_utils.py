@@ -50,6 +50,7 @@ class BaseValidator(dobbyt._Dobby_Object):
     _errmsg_set_to_invalid_value = "dobbyt error: {0}.{1} was set to an invalid value ({2})"
 
     _errmsg_non_numeric_func_arg = "dobbyt error: {0}.{1}() was called with a non-numeric {2} ({3})"
+    _errmsg_invalid_func_arg_type = "dobbyt error: {0}.{1}() was called with a non-{2} {3} ({4})"
 
     #--------------------------------------
     def mouse_at_validate_xyt(self, x_coord, y_coord, time):

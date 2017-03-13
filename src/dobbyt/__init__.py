@@ -47,3 +47,4 @@ class InvalidStateError(StandardError):
 
 
 import dobbyt.stimuli as controls
+import dobbyt.misc as misc

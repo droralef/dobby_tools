@@ -1,6 +1,6 @@
 import unittest
 
-from dobbyt.controls import NumberLine
+from dobbyt.stimuli import NumberLine
 
 
 class NumberLineTestCase(unittest.TestCase):
