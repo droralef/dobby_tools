@@ -59,7 +59,7 @@ class GlobalSpeedValidator(BaseValidator):
     def reset(self, time=0):
 
         if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(BaseValidator._errmsg_non_numeric_func_arg.format(type(self), "reset", "time", time))
+            raise ValueError(BaseValidator._errmsg_non_numeric_func_arg.format(self.__class__, "reset", "time", time))
 
         self._time0 = time
         self._prepare_expected_coords()
@@ -88,7 +88,7 @@ class GlobalSpeedValidator(BaseValidator):
             return False
 
         if time < self._time0:
-            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1}, but the trial started at time={2}".format(type(self), time, self._time0))
+            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1}, but the trial started at time={2}".format(self.__class__, time, self._time0))
 
         time -= self._time0
 
@@ -137,7 +137,7 @@ class GlobalSpeedValidator(BaseValidator):
     def enabled(self, value):
 
         if not isinstance(value, bool):
-            raise AttributeError(BaseValidator._errmsg_set_to_invalid_type.format(type(self), "enabled", bool, value))
+            raise AttributeError(BaseValidator._errmsg_set_to_invalid_type.format(self.__class__, "enabled", bool, value))
 
         self._enabled = value
 
@@ -155,7 +155,7 @@ class GlobalSpeedValidator(BaseValidator):
     def axis(self, value):
         self.validate_type("axis", value, ValidationAxis)
         if value == ValidationAxis.xy:
-            raise AttributeError(BaseValidator._errmsg_set_to_invalid_value.format(type(self), "axis", value))
+            raise AttributeError(BaseValidator._errmsg_set_to_invalid_value.format(self.__class__, "axis", value))
 
         self._axis = value
 
@@ -227,23 +227,23 @@ class GlobalSpeedValidator(BaseValidator):
             value = []
 
         if not isinstance(value, (tuple, list)):
-            raise AttributeError("dobbyt error: invalid value for {0}.sections ({1}) - expecting a list of 'TimeLimit' objects".format(type(self), value))
+            raise AttributeError("dobbyt error: invalid value for {0}.sections ({1}) - expecting a list of 'TimeLimit' objects".format(self.__class__, value))
 
         sections = []
         for i in range(len(value)):
             lim = value[i]
             if not isinstance(lim, GlobalSpeedValidator.Section):
-                raise AttributeError("dobbyt error: invalid value for {0}.sections - expecting a list of 'Section' objects".format(type(self)))
+                raise AttributeError("dobbyt error: invalid value for {0}.sections - expecting a list of 'Section' objects".format(self.__class__))
 
             if not isinstance(lim.distance_percentage, numbers.Number):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", type(self), i))
+                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", self.__class__, i))
             if not (0 < lim.distance_percentage < 1):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", type(self), i))
+                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", self.__class__, i))
 
             if not isinstance(lim.time_percentage, numbers.Number):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", type(self), i))
+                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", self.__class__, i))
             if not (0 < lim.time_percentage < 1):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", type(self), i))
+                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", self.__class__, i))
 
             sections.append(GlobalSpeedValidator.Section(lim.time_percentage, lim.distance_percentage))
 

@@ -69,7 +69,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         :param time: The time when the trial starts. The grace period will be determined according to this time.
         """
         if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(BaseValidator._errmsg_non_numeric_func_arg.format(type(self), "reset", "time", time))
+            raise ValueError(BaseValidator._errmsg_non_numeric_func_arg.format(self.__class__, "reset", "time", time))
 
         self._prev_locations = []
         self._time0 = time
@@ -124,7 +124,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         #-- Validate that times are provided in increasing order
         prevTime = self._prev_locations[-1][2] if len(self._prev_locations) > 0 else self._time0
         if len(self._prev_locations) > 0 and prevTime > time:
-            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(type(self), time, prevTime))
+            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, prevTime))
 
 
     #--------------------------------------

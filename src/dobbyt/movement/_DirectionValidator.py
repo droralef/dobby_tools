@@ -33,7 +33,7 @@ class DirectionValidator(BaseValidator):
         super(DirectionValidator, self).__init__()
 
         if not isinstance(units_per_mm, numbers.Number) or units_per_mm <= 0:
-            raise ValueError("dobbyt error: invalid units_per_mm argument ({0}) to constructor of {1}".format(units_per_mm, type(self)))
+            raise ValueError("dobbyt error: invalid units_per_mm argument ({0}) to constructor of {1}".format(units_per_mm, self.__class__))
 
         self._units_per_mm = units_per_mm
 
@@ -99,7 +99,7 @@ class DirectionValidator(BaseValidator):
             else:
                 if self._logging:
                     # noinspection PyProtectedMember
-                    expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(type(self)), angle / (np.pi*2) * 360), 1)
+                    expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(self.__class__), angle / (np.pi*2) * 360), 1)
                 return True
 
         else:
@@ -110,7 +110,7 @@ class DirectionValidator(BaseValidator):
     def _validate_time(self, time):
 
         if len(self._prev_locations) > 0 and self._prev_locations[-1][2] > time:
-            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(type(self), time, self._prev_locations[-1][2]))
+            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, self._prev_locations[-1][2]))
 
 
     #-------------------------------------
