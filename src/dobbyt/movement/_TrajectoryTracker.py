@@ -6,10 +6,13 @@ Trajectory Tracker: track mouse/finger movement
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
-import dobbyt
 import expyriment
 
+import dobbyt
+from dobbyt.misc._utils import ErrMsg
 
+
+# noinspection PyAttributeOutsideInit
 class TrajectoryTracker(dobbyt._Dobby_Object):
 
     _errmsg_set_to_non_boolean = "dobbyt error: invalid attempt to set TrajectoryTracker.{0} to a non-boolean value ({1})"
@@ -30,17 +33,13 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
     #----------------------------------------------------
     @property
     def tracking_active(self):
-        """ Check whether tracking is currently active """
+        """ Whether tracking is currently active (boolean). When inactive, calls to mouse_at() will be ignored. """
         return self._tracking_active
 
     @tracking_active.setter
     def tracking_active(self, value):
-        """
-        Set tracking as active/inactive. When inactive, calls to mouse_at() will be ignored.
-        :param value: boolean
-        """
         if not isinstance(value, bool):
-            raise ValueError(TrajectoryTracker._errmsg_set_to_non_boolean.format('tracking_active', value))
+            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, 'tracking_active', bool, value))
 
         self._tracking_active = value
 

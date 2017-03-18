@@ -8,12 +8,13 @@
 
 from __future__ import division
 
-import numpy as np
 import numbers
 
+import numpy as np
+
 import dobbyt
+from dobbyt.misc._utils import BaseValidator, ErrMsg
 from dobbyt.movement import ValidationAxis, SpeedError
-from dobbyt.movement._utils import BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
@@ -43,7 +44,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         super(InstantaneousSpeedValidator, self).__init__()
 
         if not isinstance(units_per_mm, numbers.Number):
-            raise ValueError(BaseValidator._errmsg_set_to_non_numeric.format("units_per_mm", units_per_mm))
+            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "units_per_mm", "numeric", units_per_mm))
 
         self._units_per_mm = units_per_mm
 
@@ -69,7 +70,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         :param time: The time when the trial starts. The grace period will be determined according to this time.
         """
         if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(BaseValidator._errmsg_non_numeric_func_arg.format(self.__class__, "reset", "time", time))
+            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
 
         self._prev_locations = []
         self._time0 = time
@@ -122,9 +123,9 @@ class InstantaneousSpeedValidator(BaseValidator):
     def _mouse_at_validate_time(self, time):
 
         #-- Validate that times are provided in increasing order
-        prevTime = self._prev_locations[-1][2] if len(self._prev_locations) > 0 else self._time0
-        if len(self._prev_locations) > 0 and prevTime > time:
-            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, prevTime))
+        prev_time = self._prev_locations[-1][2] if len(self._prev_locations) > 0 else self._time0
+        if len(self._prev_locations) > 0 and prev_time > time:
+            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, prev_time))
 
 
     #--------------------------------------

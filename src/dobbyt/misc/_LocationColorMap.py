@@ -10,16 +10,18 @@ from scipy import misc
 import numbers
 
 import dobbyt
-from dobbyt.movement._utils import BaseValidator
+from dobbyt.misc._utils import BaseValidator, ErrMsg
+from dobbyt.misc.utils import color_rgb_to_num
 
 
+# noinspection PyAttributeOutsideInit
 class LocationColorMap(dobbyt._Dobby_Object):
     """
     Translate the finger location into a code, according to a BMP image
     """
 
     #-------------------------------------------------
-    def __init__(self, image, top_left_coord=(0, 0), use_mapping=False, colormap=None):
+    def __init__(self, image, top_left_coord=None, use_mapping=False, colormap=None):
         """
         Constructor
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
@@ -71,10 +73,19 @@ class LocationColorMap(dobbyt._Dobby_Object):
     #-------------------------------------------------
     @property
     def top_left_coord(self):
+        """
+        The top-left coordinate of the image provided in the constructor
+        The coordinate should be an (x,y) tuple/list
+        If top_left_coord=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at`(a,b) will return the
+        color of the top-left point of the image.
+        """
         return self._top_left_coord
 
     @top_left_coord.setter
     def top_left_coord(self, value):
+
+        if value is None:
+            value = (0, 0)
 
         if not isinstance(value, (list, tuple)):
             raise ValueError("dobbyt error: invalid {0}.top_left_coord ({1})".format(self.__class__, value))
@@ -100,7 +111,7 @@ class LocationColorMap(dobbyt._Dobby_Object):
     @use_mapping.setter
     def use_mapping(self, value):
         if not isinstance(value, bool):
-            raise ValueError(BaseValidator._errmsg_set_to_invalid_type.format(self.__class__, "use_mapping", "bool", value))
+            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "use_mapping", "bool", value))
         self._use_mapping = value
 
 
@@ -145,7 +156,7 @@ class LocationColorMap(dobbyt._Dobby_Object):
             # Translate each triplet to an RGB code
             self._color_to_code = {}
             for color in self._available_colors:
-                self._color_to_code[color] = (color[0]<<16) + (color[1]<<8) + color[2]
+                self._color_to_code[color] = color_rgb_to_num(color)
 
         elif isinstance(value, dict):
             #-- Use this mapping; but make sure that all colors from the image were defined
@@ -175,20 +186,20 @@ class LocationColorMap(dobbyt._Dobby_Object):
         """
 
         if not isinstance(x_coord, int):
-            raise ValueError(BaseValidator._errmsg_invalid_func_arg_type.format(self.__class__, "get_color_at", "int", "x_coord", x_coord))
+            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "get_color_at", "int", "x_coord", x_coord))
         if not isinstance(y_coord, int):
-            raise ValueError(BaseValidator._errmsg_invalid_func_arg_type.format(self.__class__, "get_color_at", "int", "y_coord", y_coord))
+            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "get_color_at", "int", "y_coord", y_coord))
 
         if use_mapping is None:
             use_mapping = self._use_mapping
         elif not isinstance(use_mapping, bool):
-            raise ValueError(BaseValidator._errmsg_invalid_func_arg_type.format(self.__class__, "get_color_at", "bool", "use_mapping", use_mapping))
+            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "get_color_at", "bool", "use_mapping", use_mapping))
 
         if self._color_to_code is None and use_mapping:
             raise ValueError("dobbyt error: a call to %s.get_color_at(use_mapping=True) is invalid because color_codes were not specified" % self.__class__)
 
         if x_coord < self._top_left_coord[0] or x_coord >= self._top_left_coord[0]+self._width or \
-            y_coord < self._top_left_coord[1] or y_coord >= self._top_left_coord[1] + self._height:
+               y_coord < self._top_left_coord[1] or y_coord >= self._top_left_coord[1] + self._height:
             return None
 
         x_coord -= self._top_left_coord[0]

@@ -18,4 +18,3 @@ from _MovementAngleValidator import MovementAngleValidator
 from _GlobalSpeedValidator import GlobalSpeedValidator
 from _InstantaneousSpeedValidator import InstantaneousSpeedValidator
 from _TrajectoryTracker import TrajectoryTracker
-from _utils import get_angle

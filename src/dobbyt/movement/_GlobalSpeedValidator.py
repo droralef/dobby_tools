@@ -8,12 +8,13 @@ Validator for minimal/maximal global speed
 
 from __future__ import division
 
-import numpy as np
 import numbers
 
+import numpy as np
+
 import dobbyt
+from dobbyt.misc._utils import BaseValidator, ErrMsg
 from dobbyt.movement import ValidationAxis
-from dobbyt.movement._utils import BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
@@ -59,7 +60,7 @@ class GlobalSpeedValidator(BaseValidator):
     def reset(self, time=0):
 
         if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(BaseValidator._errmsg_non_numeric_func_arg.format(self.__class__, "reset", "time", time))
+            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
 
         self._time0 = time
         self._prepare_expected_coords()
@@ -137,7 +138,7 @@ class GlobalSpeedValidator(BaseValidator):
     def enabled(self, value):
 
         if not isinstance(value, bool):
-            raise AttributeError(BaseValidator._errmsg_set_to_invalid_type.format(self.__class__, "enabled", bool, value))
+            raise AttributeError(ErrMsg.attr_invalid_type(self.__class__, "enabled", bool, value))
 
         self._enabled = value
 
@@ -155,7 +156,7 @@ class GlobalSpeedValidator(BaseValidator):
     def axis(self, value):
         self.validate_type("axis", value, ValidationAxis)
         if value == ValidationAxis.xy:
-            raise AttributeError(BaseValidator._errmsg_set_to_invalid_value.format(self.__class__, "axis", value))
+            raise AttributeError(ErrMsg.attr_invalid_value(self.__class__, "axis", value))
 
         self._axis = value
 

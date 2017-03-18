@@ -7,12 +7,15 @@
 """
 
 from __future__ import division
+
 import numbers
-import numpy as np
 
 import expyriment
+import numpy as np
+
 import dobbyt
-from dobbyt.movement._utils import BaseValidator
+from dobbyt.misc._utils import BaseValidator
+import dobbyt.misc.utils as u
 
 
 # noinspection PyAttributeOutsideInit
@@ -92,7 +95,7 @@ class MovementAngleValidator(BaseValidator):
 
         if can_compute_angle and (x0, y0) != (x_coord, y_coord):
             #-- Validate direction
-            angle = dobbyt.movement.get_angle((x0, y0), (x_coord, y_coord))
+            angle = u.get_angle((x0, y0), (x_coord, y_coord))
             if self._angle_is_ok(angle):
                 # all is OK
                 return False
