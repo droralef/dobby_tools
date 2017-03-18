@@ -14,7 +14,7 @@ SpeedError = enum.Enum('SpeedError', 'OK TooSlow TooFast')
 
 
 #  Import the package classes
-from _DirectionValidator import DirectionValidator
+from _MovementAngleValidator import MovementAngleValidator
 from _GlobalSpeedValidator import GlobalSpeedValidator
 from _InstantaneousSpeedValidator import InstantaneousSpeedValidator
 from _TrajectoryTracker import TrajectoryTracker

@@ -1,6 +1,5 @@
 import unittest
 
-import dobbyt
 from dobbyt.misc import LocationColorMap
 
 testimage = [

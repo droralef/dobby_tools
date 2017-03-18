@@ -1,20 +1,20 @@
 import unittest
 
 
-from dobbyt.movement import DirectionValidator
+from dobbyt.movement import MovementAngleValidator
 
 
 class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_validation_disabled(self):
-        val = DirectionValidator(1)
+        val = MovementAngleValidator(1)
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertFalse(val.mouse_at(1, 1, 1))
 
     #------------------------------------------
     def test_validation_basic(self):
-        val = DirectionValidator(1, enabled=True, min_angle=0, max_angle=180)
+        val = MovementAngleValidator(1, enabled=True, min_angle=0, max_angle=180)
         val.reset()
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertFalse(val.mouse_at(1, 0, 1))
@@ -24,7 +24,7 @@ class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_config(self):
-        val = DirectionValidator(1)
+        val = MovementAngleValidator(1)
         self.assertFalse(val.enabled)
         val.enabled = True
         self.assertTrue(val.enabled)
@@ -45,7 +45,7 @@ class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_invalid_config(self):
-        val = DirectionValidator(1)
+        val = MovementAngleValidator(1)
 
         self.assertSetFails(val, "min_angle", "")
         self.assertSetSucceeds(val, "min_angle", None)
@@ -80,7 +80,7 @@ class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_range_crosses_zero(self):
-        val = DirectionValidator(1, enabled=True, min_angle=-45, max_angle=45)
+        val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
 
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertTrue(val.mouse_at(1.01, 1, 1))
@@ -99,7 +99,7 @@ class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_min_gt_max(self):
-        val = DirectionValidator(1, enabled=True, min_angle=45, max_angle=-45)
+        val = MovementAngleValidator(1, enabled=True, min_angle=45, max_angle=-45)
 
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertFalse(val.mouse_at(1.01, 1, 1))
@@ -119,17 +119,17 @@ class DirectionValidatorTestCase(unittest.TestCase):
     #------------------------------------------
     # Movement exactly towards min_angle or max_angle - is considered as valid
     def test_threshold_is_valid(self):
-        val = DirectionValidator(1, enabled=True, min_angle=-45, max_angle=45)
+        val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertFalse(val.mouse_at(1, 1, 1))
 
-        val = DirectionValidator(1, enabled=True, min_angle=45, max_angle=-45)
+        val = MovementAngleValidator(1, enabled=True, min_angle=45, max_angle=-45)
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertFalse(val.mouse_at(1, 1, 1))
 
     #------------------------------------------
     def test_movement_continues(self):
-        val = DirectionValidator(1, enabled=True, min_angle=-45, max_angle=45)
+        val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
 
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertFalse(val.mouse_at(0, 1, 1))
@@ -137,7 +137,7 @@ class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_grace(self):
-        val = DirectionValidator(1, enabled=True, min_angle=-45, max_angle=45, grace_period=1)
+        val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45, grace_period=1)
 
         self.assertFalse(val.mouse_at(0, 0, 0))
         self.assertFalse(val.mouse_at(0, -1, 1))  # in grace period
@@ -145,7 +145,7 @@ class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_min_distance(self):
-        val = DirectionValidator(1, enabled=True, min_angle=-45, max_angle=45)
+        val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
         val.calc_angle_interval = 1.5
 
         self.assertFalse(val.mouse_at(0, 0, 0))
@@ -155,7 +155,7 @@ class DirectionValidatorTestCase(unittest.TestCase):
 
     #------------------------------------------
     def test_units_per_mm(self):
-        val = DirectionValidator(2, enabled=True, min_angle=-45, max_angle=45)
+        val = MovementAngleValidator(2, enabled=True, min_angle=-45, max_angle=45)
         val.calc_angle_interval = 1
 
         self.assertFalse(val.mouse_at(0, 0, 0))

@@ -16,21 +16,21 @@ from dobbyt.movement._utils import BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
-class DirectionValidator(BaseValidator):
+class MovementAngleValidator(BaseValidator):
 
     def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None,
                  grace_period=0, enabled=False):
         """
         Constructor
         :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.mouse_at`) per mm.
-                             This is relevant for computation of :func:`~dobbyt.movement.DirectionValidator.calc_angle_interval`
-        :param min_angle: See :func:`~dobbyt.movement.DirectionValidator.min_angle`
-        :param max_angle: See :func:`~dobbyt.movement.DirectionValidator.max_angle`
-        :param calc_angle_interval: See :func:`~dobbyt.movement.DirectionValidator.calc_angle_interval`
-        :param grace_period: See :func:`~dobbyt.movement.DirectionValidator.grace_period`
-        :param enabled: See :func:`~dobbyt.movement.DirectionValidator.enabloed`
+                             This is relevant for computation of :func:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
+        :param min_angle: See :func:`~dobbyt.movement.MovementAngleValidator.min_angle`
+        :param max_angle: See :func:`~dobbyt.movement.MovementAngleValidator.max_angle`
+        :param calc_angle_interval: See :func:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
+        :param grace_period: See :func:`~dobbyt.movement.MovementAngleValidator.grace_period`
+        :param enabled: See :func:`~dobbyt.movement.MovementAngleValidator.enabloed`
         """
-        super(DirectionValidator, self).__init__()
+        super(MovementAngleValidator, self).__init__()
 
         if not isinstance(units_per_mm, numbers.Number) or units_per_mm <= 0:
             raise ValueError("dobbyt error: invalid units_per_mm argument ({0}) to constructor of {1}".format(units_per_mm, self.__class__))
@@ -170,7 +170,7 @@ class DirectionValidator(BaseValidator):
     def min_angle(self):
         """
         The minimal valid angle (in degrees)
-        This value can be either smaller or larger than :func:`~dobbyt.movement.DirectionValidator.max_angle`
+        This value can be either smaller or larger than :func:`~dobbyt.movement.MovementAngleValidator.max_angle`
         """
         return self._min_angle
 
@@ -193,7 +193,7 @@ class DirectionValidator(BaseValidator):
     def max_angle(self):
         """
         The maximal valid angle (in degrees)
-        This value can be either smaller or larger than :func:`~dobbyt.movement.DirectionValidator.min_angle`
+        This value can be either smaller or larger than :func:`~dobbyt.movement.MovementAngleValidator.min_angle`
         """
         return self._max_angle
 
