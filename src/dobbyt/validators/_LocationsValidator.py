@@ -10,23 +10,28 @@ import dobbyt
 
 from dobbyt.misc import LocationColorMap
 from dobbyt.misc._utils import BaseValidator, ErrMsg
+from dobbyt.validators import ValidationFailed
 
 import dobbyt.misc.utils as u
 
 
+
 class LocationsValidator(BaseValidator):
 
+    err_invalid_coordinates = "invalid_coords"
 
-    def __init__(self, image, top_left_coord=None):
+
+    def __init__(self, image, top_left_coord=None, default_valid=False):
         """
         Constructor
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
         :param top_left_coord: See :func:`~dobbyt.movement.LocationsValidator.top_left_coord`
+        :param default_valid: See :func:`~dobbyt.movement.LocationsValidator.default_valid`
         """
         super(LocationsValidator, self).__init__()
 
         self._lcm = LocationColorMap(image, top_left_coord=top_left_coord, use_mapping=True, colormap="RGB")
-        self.default_valid = False
+        self.default_valid = default_valid
         self.valid_colors = set()
         self.invalid_colors = set()
 
@@ -118,7 +123,11 @@ class LocationsValidator(BaseValidator):
 
         color = self._lcm.get_color_at(x_coord, y_coord)
         if self._default_valid:
-            return color not in self._invalid_colors
+            ok = color not in self._invalid_colors
         else:
-            return color in self._valid_colors
+            ok = color in self._valid_colors
+
+        if not ok:
+            raise ValidationFailed(self.err_invalid_coordinates, "You moved to an invalid location", self)
+
 

@@ -40,11 +40,13 @@ class InvalidStateError(StandardError):
     def __init__(self, *args, **kwargs): # real signature unknown
         pass
 
-    @staticmethod # known case of __new__
-    def __new__(S, *more): # real signature unknown; restored from __doc__
-        """ T.__new__(S, ...) -> a new object with type S, a subtype of T """
-        pass
+    # @staticmethod # known case of __new__
+    # def __new__(S, *more): # real signature unknown; restored from __doc__
+    #     """ T.__new__(S, ...) -> a new object with type S, a subtype of T """
+    #     pass
 
 
 import dobbyt.stimuli as controls
 import dobbyt.misc as misc
+import dobbyt.movement as movement
+import dobbyt.validators as validators

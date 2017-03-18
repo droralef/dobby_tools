@@ -14,7 +14,7 @@ import numpy as np
 
 import dobbyt
 from dobbyt.misc._utils import BaseValidator, ErrMsg
-from dobbyt.movement import ValidationAxis
+from dobbyt.validators import ValidationAxis, ValidationFailed
 
 
 # noinspection PyAttributeOutsideInit
@@ -24,6 +24,9 @@ class GlobalSpeedValidator(BaseValidator):
     The validation is of the *average* speed per trial. The validator can also interpolate the speed limit,
     i.e., impose the limit on the average speed from time=0 until any time point during the trial.
     """
+
+    err_too_slow = "too_slow"
+
 
     class Section(object):
         def __init__(self, time_percentage, distance_percentage):
@@ -80,7 +83,13 @@ class GlobalSpeedValidator(BaseValidator):
 
     #----------------------------------------------------------------------------------
     def mouse_at(self, x_coord, y_coord, time):
-
+        """
+        Validate movement. Thro
+        :param x_coord: Current x coordinates
+        :param y_coord: Current x coordinates
+        :param time: Time from start of trial
+        :raises dobbyt.ValidationFailed:
+        """
         self.mouse_at_validate_xyt(x_coord, y_coord, time)
 
         #-- If this is the first call in a trial: do nothing
@@ -103,8 +112,8 @@ class GlobalSpeedValidator(BaseValidator):
         d_coord = coord - expected_coord
 
         #-- Actual coordinate must be ahead of the expected minimum
-        return np.sign(d_coord) != np.sign(self._end_coord - self._origin_coord)
-
+        if np.sign(d_coord) != np.sign(self._end_coord - self._origin_coord):
+            raise ValidationFailed(self.err_too_slow, "You moved too slowly", self)
 
     #----------------------------------------------------------------------------------
     # Get the coordinate expected

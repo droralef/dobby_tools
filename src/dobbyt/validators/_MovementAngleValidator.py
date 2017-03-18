@@ -14,12 +14,17 @@ import expyriment
 import numpy as np
 
 import dobbyt
-from dobbyt.misc._utils import BaseValidator
 import dobbyt.misc.utils as u
+from dobbyt.misc._utils import BaseValidator
+from dobbyt.validators import ValidationFailed
 
 
 # noinspection PyAttributeOutsideInit
 class MovementAngleValidator(BaseValidator):
+
+
+    err_invalid_angle = "invalid_angle"
+
 
     def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None,
                  grace_period=0, enabled=False):
@@ -84,7 +89,7 @@ class MovementAngleValidator(BaseValidator):
 
         if time <= self._grace_period:
             self._prev_locations.append(curr_xyt)
-            return False
+            return
 
         can_compute_angle = self._remove_far_enough_prev_locations(x_coord, y_coord)
 
@@ -98,16 +103,17 @@ class MovementAngleValidator(BaseValidator):
             angle = u.get_angle((x0, y0), (x_coord, y_coord))
             if self._angle_is_ok(angle):
                 # all is OK
-                return False
+                return
             else:
                 if self._logging:
                     # noinspection PyProtectedMember
                     expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(self.__class__), angle / (np.pi*2) * 360), 1)
-                return True
+                raise ValidationFailed(self.err_invalid_angle, "You moved in an incorrect direction", self)
 
         else:
             #-- Direction cannot be validated - the finger hasn't moved enough yet
-            return False
+            pass
+
 
     #----------------
     def _validate_time(self, time):

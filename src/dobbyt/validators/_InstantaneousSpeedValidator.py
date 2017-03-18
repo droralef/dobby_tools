@@ -14,7 +14,7 @@ import numpy as np
 
 import dobbyt
 from dobbyt.misc._utils import BaseValidator, ErrMsg
-from dobbyt.movement import ValidationAxis, SpeedError
+from dobbyt.validators import ValidationAxis, SpeedError, ValidationFailed
 
 
 # noinspection PyAttributeOutsideInit
@@ -26,6 +26,9 @@ class InstantaneousSpeedValidator(BaseValidator):
     The min/max speed are configured as mm/sec, but the movement progress is provided in arbitrary units
     (e.g., pixels). You'll therefore need to define the units-per-mm ratio.
     """
+
+    err_too_slow = "too_slow"
+    err_too_fast = "too_fast"
 
     #-----------------------------------------------------------------------------------
     def __init__(self, units_per_mm, axis=ValidationAxis.y, active=False, min_speed=None, max_speed=None,
@@ -111,12 +114,10 @@ class InstantaneousSpeedValidator(BaseValidator):
             speed = self._calc_speed_func(self._prev_locations[0], curr_xyt)
 
             if self._min_speed is not None and speed < self._min_speed:
-                return SpeedError.TooSlow
+                raise ValidationFailed(self.err_too_slow, "You moved too slowly", self)
 
             if self._max_speed is not None and speed > self._max_speed:
-                return SpeedError.TooFast
-
-        return SpeedError.OK
+                raise ValidationFailed(self.err_too_fast, "You moved too fast", self)
 
 
     #--------------------------------------
