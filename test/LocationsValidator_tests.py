@@ -78,7 +78,7 @@ class LocationsValidatorTests(unittest.TestCase):
 
     #------------------------------------------------------------
     def test_validate_default_invalid(self):
-        val = LocationsValidator(testimage)
+        val = LocationsValidator(testimage, enabled=True)
         val.valid_colors = w
 
         self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, -2))
@@ -90,7 +90,7 @@ class LocationsValidatorTests(unittest.TestCase):
 
     #------------------------------------------------------------
     def test_validate_default_valid(self):
-        val = LocationsValidator(testimage, default_valid=True)
+        val = LocationsValidator(testimage, default_valid=True, enabled=True)
         val.invalid_colors = z
 
         self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, -2))
@@ -98,6 +98,12 @@ class LocationsValidatorTests(unittest.TestCase):
         self.assertRaises(ValidationFailed, lambda:val.mouse_at(-2, 0))
         val.mouse_at(2, 0)
         val.mouse_at(10, 10) # out of image
+
+    #------------------------------------------------------------
+    def test_disabled(self):
+        val = LocationsValidator(testimage)
+        val.valid_colors = w
+        val.mouse_at(0, -2)
 
 
 if __name__ == '__main__':

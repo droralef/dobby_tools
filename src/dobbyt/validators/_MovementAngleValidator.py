@@ -38,14 +38,13 @@ class MovementAngleValidator(BaseValidator):
         :param grace_period: See :func:`~dobbyt.movement.MovementAngleValidator.grace_period`
         :param enabled: See :func:`~dobbyt.movement.MovementAngleValidator.enabloed`
         """
-        super(MovementAngleValidator, self).__init__()
+        super(MovementAngleValidator, self).__init__(enabled=enabled)
 
         if not isinstance(units_per_mm, numbers.Number) or units_per_mm <= 0:
             raise ValueError("dobbyt error: invalid units_per_mm argument ({0}) to constructor of {1}".format(units_per_mm, self.__class__))
 
         self._units_per_mm = units_per_mm
 
-        self.enabled = enabled
         self.min_angle = min_angle
         self.max_angle = max_angle
         self.calc_angle_interval = calc_angle_interval
@@ -162,17 +161,6 @@ class MovementAngleValidator(BaseValidator):
     #========================================================================
     #      Config
     #========================================================================
-
-    #-----------------------------------------------------------------------------------
-    @property
-    def enabled(self):
-        """Whether the validator is currently enabled"""
-        return self._enabled
-
-    @enabled.setter
-    def enabled(self, value):
-        self.validate_type("enabled", value, bool)
-        self._enabled = value
 
     #-----------------------------------------------------------------------------------
     @property

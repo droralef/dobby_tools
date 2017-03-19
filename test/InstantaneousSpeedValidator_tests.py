@@ -9,7 +9,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
 
     #------------------------------------------
     def test_min_speed(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, active=True)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=True)
         validator.min_speed = 1
 
         validator.mouse_at(0, 0, 0)
@@ -23,7 +23,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
 
     #------------------------------------------
     def test_max_speed(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, active=True)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=True)
         validator.max_speed = 1
 
         validator.mouse_at(0, 0, 0)
@@ -37,7 +37,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
 
     #------------------------------------------
     def test_grace(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, active=True)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=True)
         validator.min_speed = 1
         validator.grace_period = 2
 
@@ -47,7 +47,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
 
     #------------------------------------------
     def test_disabled(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, active=False)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=False)
         validator.min_speed = 1
 
         validator.mouse_at(0, 0, 0)
@@ -58,7 +58,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
 
     #------------------------------------------
     def test_reset(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, active=True)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=True)
         validator.min_speed = 1
 
         validator.mouse_at(0, 0, 0)
@@ -68,7 +68,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
 
     #------------------------------------------
     def test_interval(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, active=True)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=True)
         validator.min_speed = 1
         validator.calc_speed_interval = 3
         validator.mouse_at(0, 0, 0)
@@ -77,21 +77,21 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
 
     #------------------------------------------
     def test_speed_y(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, active=True, min_speed=1)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=True, min_speed=1)
         validator.mouse_at(0, 0, 0)
         validator.mouse_at(0, 1, 1)
         self.assertRaises(ValidationFailed, lambda:validator.mouse_at(1, 1, 2))
 
     #------------------------------------------
     def test_speed_x(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.x, active=True, min_speed=1)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.x, enabled=True, min_speed=1)
         validator.mouse_at(0, 0, 0)
         validator.mouse_at(1, 0, 1)
         self.assertRaises(ValidationFailed, lambda:validator.mouse_at(1, 1, 2))
 
     #------------------------------------------
     def test_speed_xy(self):
-        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.xy, active=True, min_speed=5)
+        validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.xy, enabled=True, min_speed=5)
         validator.mouse_at(0, 0, 0)
         validator.mouse_at(3, 4, 1)
 

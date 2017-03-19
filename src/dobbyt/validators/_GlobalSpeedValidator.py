@@ -40,9 +40,8 @@ class GlobalSpeedValidator(BaseValidator):
     def __init__(self, enabled=False, origin_coord=None, end_coord=None, axis=ValidationAxis.y,
                  grace_period=None, sections=None):
 
-        super(GlobalSpeedValidator, self).__init__()
+        super(GlobalSpeedValidator, self).__init__(enabled=enabled)
 
-        self.enabled = enabled
         self.axis = axis
         self.grace_period = grace_period
         self.sections = sections
@@ -103,8 +102,8 @@ class GlobalSpeedValidator(BaseValidator):
         time -= self._time0
 
         #-- No validation during grace period
-        if time <= self._grace_period:
-            return False
+        if time <= self._grace_period or not self._enabled:
+            return
 
         #-- Get the expected and actual coordinates
         coord = x_coord if self._axis == ValidationAxis.x else y_coord
@@ -136,20 +135,6 @@ class GlobalSpeedValidator(BaseValidator):
     #========================================================================
     #      Config
     #========================================================================
-
-    #-----------------------------------------------------------------------------------
-    @property
-    def enabled(self):
-        """Whether the validator is currently enabled (boolean)"""
-        return self._enabled
-
-    @enabled.setter
-    def enabled(self, value):
-
-        if not isinstance(value, bool):
-            raise AttributeError(ErrMsg.attr_invalid_type(self.__class__, "enabled", bool, value))
-
-        self._enabled = value
 
     #-----------------------------------------------------------------------------------
     @property

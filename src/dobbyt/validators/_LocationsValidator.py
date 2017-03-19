@@ -6,8 +6,6 @@
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
-import dobbyt
-
 from dobbyt.misc import LocationColorMap
 from dobbyt.misc._utils import BaseValidator, ErrMsg
 from dobbyt.validators import ValidationFailed
@@ -25,15 +23,15 @@ class LocationsValidator(BaseValidator):
 
     err_invalid_coordinates = "invalid_coords"
 
-
-    def __init__(self, image, position=None, default_valid=False):
+    def __init__(self, image, enabled=False, position=None, default_valid=False):
         """
         Constructor
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
+        :param enabled: See :func:`~dobbyt.movement.LocationsValidator.enabled`
         :param position: See :func:`~dobbyt.movement.LocationsValidator.position`
         :param default_valid: See :func:`~dobbyt.movement.LocationsValidator.default_valid`
         """
-        super(LocationsValidator, self).__init__()
+        super(LocationsValidator, self).__init__(enabled=enabled)
 
         self._lcm = LocationColorMap(image, position=position, use_mapping=True, colormap="RGB")
         self.default_valid = default_valid
@@ -50,9 +48,8 @@ class LocationsValidator(BaseValidator):
     def position(self):
         """
         The position of the image: (x,y) tuple/list, indicating the image center
-        For even-sized images, use the Expyriment standard
-        If top_left_coord=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at`(a,b) will return the
-        color of the top-left point of the image
+        For even-sized images, use the Expyriment standard.
+        The position is used to align the image's coordinate space with that of mouse_at()
         """
         return self._lcm.position
 
@@ -125,6 +122,9 @@ class LocationsValidator(BaseValidator):
         :param y_coord: number
         """
         self.mouse_at_validate_xy(x_coord, y_coord)
+
+        if not self._enabled:
+            return
 
         color = self._lcm.get_color_at(x_coord, y_coord)
         if self._default_valid:

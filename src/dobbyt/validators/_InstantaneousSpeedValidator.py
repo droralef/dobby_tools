@@ -31,27 +31,26 @@ class InstantaneousSpeedValidator(BaseValidator):
     err_too_fast = "too_fast"
 
     #-----------------------------------------------------------------------------------
-    def __init__(self, units_per_mm, axis=ValidationAxis.y, active=False, min_speed=None, max_speed=None,
+    def __init__(self, units_per_mm, axis=ValidationAxis.y, enabled=False, min_speed=None, max_speed=None,
                  grace_period=0, calc_speed_interval=0):
         """
         Constructor
         :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.mouse_at`) per mm
         :param axis: See :func:`~dobbyt.movement.ValidationAxis`
-        :param active: See :func:`~dobbyt.movement.InstantaneousSpeedValidator.active`
-        :param min_speed: See :func:`~dobbyt.movement.InstantaneousSpeedValidator.min_speed`
-        :param max_speed: See :func:`~dobbyt.movement.InstantaneousSpeedValidator.max_speed`
-        :param grace_period: See :func:`~dobbyt.movement.InstantaneousSpeedValidator.grace_period`
-        :param calc_speed_interval: See :func:`~dobbyt.movement.InstantaneousSpeedValidator.calc_speed_interval`
+        :param enabled: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.enabled`
+        :param min_speed: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.min_speed`
+        :param max_speed: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.max_speed`
+        :param grace_period: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.grace_period`
+        :param calc_speed_interval: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.calc_speed_interval`
         """
 
-        super(InstantaneousSpeedValidator, self).__init__()
+        super(InstantaneousSpeedValidator, self).__init__(enabled=enabled)
 
         if not isinstance(units_per_mm, numbers.Number):
             raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "units_per_mm", "numeric", units_per_mm))
 
         self._units_per_mm = units_per_mm
 
-        self.enabled = active
         self.axis = axis
         self.min_speed = min_speed
         self.max_speed = max_speed
@@ -90,7 +89,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         """
 
         if not self._enabled:
-            return SpeedError.OK
+            return
 
         self.mouse_at_validate_xyt(x_coord, y_coord, time)
         self._mouse_at_validate_time(time)
@@ -163,17 +162,6 @@ class InstantaneousSpeedValidator(BaseValidator):
     #========================================================================
     #      Config
     #========================================================================
-
-    #-----------------------------------------------------------------------------------
-    @property
-    def enabled(self):
-        """Whether the validator is currently enabled (boolean)"""
-        return self._enabled
-
-    @enabled.setter
-    def enabled(self, value):
-        self.validate_type("enabled", value, bool)
-        self._enabled = value
 
     #-----------------------------------------------------------------------------------
     @property

@@ -57,21 +57,23 @@ class BaseValidator(dobbyt._Dobby_Object):
 
     NoneValues = Enum("NoneValues", "Invalid Valid ChangeTo0")
 
-    #--------------------------------------
-    def mouse_at_validate_xy(self, x_coord, y_coord):
-        #-- Validate types
-        if not isinstance(x_coord, numbers.Number):
-            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "x_coord", x_coord))
-        if not isinstance(y_coord, numbers.Number):
-            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "y_coord", y_coord))
+    def __init__(self, enabled=False):
+        super(BaseValidator, self).__init__()
+        self.enabled = enabled
 
+    #-----------------------------------------------------------------------------------
+    @property
+    def enabled(self):
+        """Whether the validator is currently enabled (boolean)"""
+        return self._enabled
 
-    #--------------------------------------
-    def mouse_at_validate_xyt(self, x_coord, y_coord, time):
-        #-- Validate types
-        self.mouse_at_validate_xy(x_coord, y_coord)
-        if not isinstance(time, numbers.Number):
-            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "time", time))
+    @enabled.setter
+    def enabled(self, value):
+
+        if not isinstance(value, bool):
+            raise AttributeError(ErrMsg.attr_invalid_type(self.__class__, "enabled", bool, value))
+
+        self._enabled = value
 
     #============================================================================
     #   Validate attributes
@@ -109,4 +111,25 @@ class BaseValidator(dobbyt._Dobby_Object):
     def validate_positive(self, attr_name, value):
         if value is not None and value <= 0:
             raise AttributeError(ErrMsg.attr_non_positive(type(self), attr_name, value))
+
+
+    #============================================================================
+    #   Other validations
+    #============================================================================
+
+    #--------------------------------------
+    def mouse_at_validate_xy(self, x_coord, y_coord):
+        #-- Validate types
+        if not isinstance(x_coord, numbers.Number):
+            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "x_coord", x_coord))
+        if not isinstance(y_coord, numbers.Number):
+            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "y_coord", y_coord))
+
+
+    #--------------------------------------
+    def mouse_at_validate_xyt(self, x_coord, y_coord, time):
+        #-- Validate types
+        self.mouse_at_validate_xy(x_coord, y_coord)
+        if not isinstance(time, numbers.Number):
+            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "time", time))
 
