@@ -23,16 +23,18 @@ class MoveByGradientValidator(BaseValidator):
     err_gradient = "gradient_violation"
 
 
-    def __init__(self, image, position=None, rgb_should_ascend=True, max_valid_back_movement=0, last_validated_rgb=None):
+    def __init__(self, image, position=None, rgb_should_ascend=True, max_valid_back_movement=0, last_validated_rgb=None,
+                 enabled=False):
         """
         Constructor
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
+        :param position: See :func:`~dobbyt.movement.MoveByGradientValidator.enabled`; default = False
         :param position: See :func:`~dobbyt.movement.MoveByGradientValidator.position`; default = (0,0)
         :param rgb_should_ascend: See :func:`~dobbyt.movement.MoveByGradientValidator.rgb_should_ascend`; default = True
         :param max_valid_back_movement: See :func:`~dobbyt.movement.MoveByGradientValidator.max_valid_back_movement`; default = 0
         :param last_validated_rgb: See :func:`~dobbyt.movement.MoveByGradientValidator.last_validated_rgb`; default = None
         """
-        super(MoveByGradientValidator, self).__init__()
+        super(MoveByGradientValidator, self).__init__(enabled=enabled)
 
         self._lcm = LocationColorMap(image, position=position, use_mapping=True, colormap="RGB")
         self.rgb_should_ascend = rgb_should_ascend
@@ -137,6 +139,9 @@ class MoveByGradientValidator(BaseValidator):
         :param y_coord: number
         """
         self.mouse_at_validate_xy(x_coord, y_coord)
+
+        if not self._enabled:
+            return
 
         color = self._lcm.get_color_at(x_coord, y_coord)
 
