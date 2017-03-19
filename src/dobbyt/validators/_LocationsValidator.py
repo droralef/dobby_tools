@@ -99,12 +99,12 @@ class LocationsValidator(BaseValidator):
             value = (value,)
 
         if not isinstance(value, (list, tuple, set)):
-            raise AttributeError(ErrMsg.attr_invalid_type(type(self), attr_name, "iterable", value))
+            raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "iterable", value))
 
         colors = set()
         for c in value:
             if not u.is_rgb(c):
-                raise AttributeError(ErrMsg.attr_invalid_type(type(self), attr_name, "color", value))
+                raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "color", value))
             colors.add(u.color_rgb_to_num(c))
 
         return colors

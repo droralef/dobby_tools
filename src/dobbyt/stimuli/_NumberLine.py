@@ -352,9 +352,9 @@ class NumberLine(dobbyt._Dobby_Object):
         :return: True if the number line was touched
         """
         if not isinstance(x_coord, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_mouseat_non_numeric_coord.format("x", x_coord))
+            raise ValueError(NumberLine._errmsg_mouseat_non_numeric_coord.format("x", x_coord))
         if not isinstance(y_coord, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_mouseat_non_numeric_coord.format("y", x_coord))
+            raise ValueError(NumberLine._errmsg_mouseat_non_numeric_coord.format("y", x_coord))
 
         if self._last_touched_coord is not None:
             return False
@@ -433,21 +433,21 @@ class NumberLine(dobbyt._Dobby_Object):
     def validate(self):
         """
         Validate that the number line configuration is ok.
-        Raises an AttributeError if not.
+        Raises an ValueError if not.
         """
 
         if self._min_value >= self._max_value:
-            raise AttributeError("dobbyt error: NumberLine.min_value({0}) >= NumberLine.max_value({1})".format(self._min_value, self._max_value))
+            raise ValueError("dobbyt error: NumberLine.min_value({0}) >= NumberLine.max_value({1})".format(self._min_value, self._max_value))
 
         if self._labels_visible:
             if self._labels_box_size is None:
-                raise AttributeError("dobbyt error: NumberLine - labels textbox size was not specified")
+                raise ValueError("dobbyt error: NumberLine - labels textbox size was not specified")
             if self._labels_font_name is None or self._labels_font_name == "":
-                raise AttributeError("dobbyt error: NumberLine - labels font name was not specified")
+                raise ValueError("dobbyt error: NumberLine - labels font name was not specified")
             if self._labels_font_size is None:
-                raise AttributeError("dobbyt error: NumberLine - labels font size was not specified")
+                raise ValueError("dobbyt error: NumberLine - labels font size was not specified")
             if self._labels_font_colour is None:
-                raise AttributeError("dobbyt error: NumberLine - labels font color was not specified")
+                raise ValueError("dobbyt error: NumberLine - labels font color was not specified")
 
 
 
@@ -472,7 +472,7 @@ class NumberLine(dobbyt._Dobby_Object):
         self._validate_unlocked()
 
         if not isinstance(value, dobbyt.stimuli.NumberLine.Orientation):
-            raise AttributeError("dobbyt error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical".format(value))
+            raise ValueError("dobbyt error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical".format(value))
 
         self._orientation = value
 
@@ -494,13 +494,13 @@ class NumberLine(dobbyt._Dobby_Object):
             return
 
         if not hasattr(value, '__iter__'):
-            raise AttributeError(NumberLine._errmsg_value_not_collection.format("position", value))
+            raise ValueError(NumberLine._errmsg_value_not_collection.format("position", value))
         if len(value) != 2:
-            raise AttributeError(NumberLine._errmsg_value_bad_length.format("position", value))
+            raise ValueError(NumberLine._errmsg_value_bad_length.format("position", value))
         if not isinstance(value[0], numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric_entry.format("position", value, "x coordinate"))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("position", value, "x coordinate"))
         if not isinstance(value[1], numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric_entry.format("position", value, "y coordinate"))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("position", value, "y coordinate"))
 
         self._mid_x = value[0]
         self._mid_y = value[1]
@@ -516,9 +516,9 @@ class NumberLine(dobbyt._Dobby_Object):
         self._validate_unlocked()
 
         if not isinstance(value, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("line_length", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("line_length", value))
         if value <= 0:
-            raise AttributeError(NumberLine._errmsg_set_to_non_positive.format("line_length", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_positive.format("line_length", value))
 
         self._line_length = value
 
@@ -536,7 +536,7 @@ class NumberLine(dobbyt._Dobby_Object):
         self._validate_unlocked()
 
         if value is not None and not isinstance(value, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("end_tick_height", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("end_tick_height", value))
 
         self._end_tick_height = value
 
@@ -551,9 +551,9 @@ class NumberLine(dobbyt._Dobby_Object):
         self._validate_unlocked()
 
         if not isinstance(value, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("line_width", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("line_width", value))
         if value <= 0:
-            raise AttributeError(NumberLine._errmsg_set_to_non_positive.format("line_width", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_positive.format("line_width", value))
 
         self._line_width = value
 
@@ -584,7 +584,7 @@ class NumberLine(dobbyt._Dobby_Object):
         if isinstance(value, numbers.Number):
             value = value != 0
         elif not isinstance(value, bool):
-                raise AttributeError(NumberLine._errmsg_set_to_non_boolean, "labels_visible", value)
+                raise ValueError(NumberLine._errmsg_set_to_non_boolean, "labels_visible", value)
 
         self._labels_visible = value
 
@@ -599,7 +599,7 @@ class NumberLine(dobbyt._Dobby_Object):
         self._validate_unlocked()
 
         if value is not None and type(value) != str:
-            raise AttributeError(NumberLine._errmsg_set_to_non_string.format("labels_font_name", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_string.format("labels_font_name", value))
 
         self._labels_font_name = value
 
@@ -630,9 +630,9 @@ class NumberLine(dobbyt._Dobby_Object):
 
         if value is not None:
             if not isinstance(value, numbers.Number):
-                raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("labels_font_size", value))
+                raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("labels_font_size", value))
             if value <= 0:
-                raise AttributeError(NumberLine._errmsg_set_to_non_positive.format("labels_font_size", value))
+                raise ValueError(NumberLine._errmsg_set_to_non_positive.format("labels_font_size", value))
 
         self._labels_font_size = value
 
@@ -649,17 +649,17 @@ class NumberLine(dobbyt._Dobby_Object):
 
         if value is not None:
             if not hasattr(value, '__iter__'):
-                raise AttributeError(NumberLine._errmsg_value_not_collection.format("labels_box_size", value))
+                raise ValueError(NumberLine._errmsg_value_not_collection.format("labels_box_size", value))
             if len(value) != 2:
-                raise AttributeError(NumberLine._errmsg_value_bad_length.format("labels_box_size", value))
+                raise ValueError(NumberLine._errmsg_value_bad_length.format("labels_box_size", value))
             if not isinstance(value[0], numbers.Number):
-                raise AttributeError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_box_size", value, "height"))
+                raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_box_size", value, "height"))
             if not isinstance(value[1], numbers.Number):
-                raise AttributeError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_box_size", value, "width"))
+                raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_box_size", value, "width"))
             if value[0] <= 0:
-                raise AttributeError(NumberLine._errmsg_set_to_non_positive_entry.format("labels_box_size", value, "height"))
+                raise ValueError(NumberLine._errmsg_set_to_non_positive_entry.format("labels_box_size", value, "height"))
             if value[1] <= 0:
-                raise AttributeError(NumberLine._errmsg_set_to_non_positive_entry.format("labels_box_size", value, "width"))
+                raise ValueError(NumberLine._errmsg_set_to_non_positive_entry.format("labels_box_size", value, "width"))
 
         self._labels_box_size = value
 
@@ -681,13 +681,13 @@ class NumberLine(dobbyt._Dobby_Object):
             return
 
         if not hasattr(value, '__iter__'):
-            raise AttributeError(NumberLine._errmsg_value_not_collection.format("labels_offset", value))
+            raise ValueError(NumberLine._errmsg_value_not_collection.format("labels_offset", value))
         if len(value) != 2:
-            raise AttributeError(NumberLine._errmsg_value_bad_length.format("labels_offset", value))
+            raise ValueError(NumberLine._errmsg_value_bad_length.format("labels_offset", value))
         if not isinstance(value[0], numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_offset", value, "x"))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_offset", value, "x"))
         if not isinstance(value[1], numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_offset", value, "y"))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_offset", value, "y"))
 
         self._labels_offset_x = value[0]
         self._labels_offset_y = value[1]
@@ -705,7 +705,7 @@ class NumberLine(dobbyt._Dobby_Object):
         if isinstance(value, numbers.Number):
             value = str(value)
         elif value is not None and type(value) != str:
-            raise AttributeError(NumberLine._errmsg_set_to_non_string.format("label_min_text", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_string.format("label_min_text", value))
 
         self._label_min_text = value
 
@@ -722,7 +722,7 @@ class NumberLine(dobbyt._Dobby_Object):
         if isinstance(value, numbers.Number):
             value = str(value)
         elif value is not None and type(value) != str:
-            raise AttributeError(NumberLine._errmsg_set_to_non_string.format("label_max_text", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_string.format("label_max_text", value))
 
         self._label_max_text = value
 
@@ -743,7 +743,7 @@ class NumberLine(dobbyt._Dobby_Object):
     def min_value(self, value):
         self._validate_unlocked()
         if not isinstance(value, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("min_value", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("min_value", value))
         self._min_value = value
 
     #-----------------------------------------------------------
@@ -756,7 +756,7 @@ class NumberLine(dobbyt._Dobby_Object):
     def max_value(self, value):
         self._validate_unlocked()
         if not isinstance(value, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("max_value", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("max_value", value))
         self._max_value = value
 
 
@@ -771,7 +771,7 @@ class NumberLine(dobbyt._Dobby_Object):
         if isinstance(value, numbers.Number):
             value = value != 0
         elif not isinstance(value, bool):
-                raise AttributeError(NumberLine._errmsg_set_to_non_boolean, "visible", value)
+                raise ValueError(NumberLine._errmsg_set_to_non_boolean, "visible", value)
 
         self._visible = value
 
@@ -791,7 +791,7 @@ class NumberLine(dobbyt._Dobby_Object):
         self._validate_unlocked()
 
         if not isinstance(value, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_numeric.format("touch_distance", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("touch_distance", value))
 
         self._touch_distance = value
 
@@ -808,7 +808,7 @@ class NumberLine(dobbyt._Dobby_Object):
         self._validate_unlocked()
 
         if not isinstance(value, numbers.Number):
-            raise AttributeError(NumberLine._errmsg_set_to_non_boolean.format("touch_directioned", value))
+            raise ValueError(NumberLine._errmsg_set_to_non_boolean.format("touch_directioned", value))
 
         self._touch_directioned = value
 

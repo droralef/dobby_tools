@@ -19,13 +19,13 @@ class NumberLineTestCase(unittest.TestCase):
     #-- Validate() should fail when min>max
     def test_invalid_min_max(self):
         nl = NumberLine((10,20), 1000, min_value=100, max_value=100)
-        self.assertRaises(AttributeError, lambda: nl.validate())
+        self.assertRaises(ValueError, lambda: nl.validate())
 
     #-- Validate() should fail when some data is missing
     def test_missing_labels(self):
         nl = NumberLine((10,20), 1000, 100)
         nl.labels_visible = True
-        self.assertRaises(AttributeError, lambda: nl.validate())
+        self.assertRaises(ValueError, lambda: nl.validate())
 
         nl.show_labels(box_size=(10,10), font_name='Arial', font_size=3, font_colour=1)
         nl.validate()

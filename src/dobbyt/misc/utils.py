@@ -39,7 +39,7 @@ def color_rgb_to_num(rgb):
     Convert an RGB color (3 integers, each 0-255) to a single int value (between 0 and 0xFFFFFF)
     """
     if not is_rgb(rgb):
-        raise AttributeError("dobbyt error: invalid argument to color_rgb_to_num(), expecting a 3*integer list/tuple")
+        raise ValueError("dobbyt error: invalid argument to color_rgb_to_num(), expecting a 3*integer list/tuple")
     return (rgb[0]<<16) + (rgb[1]<<8) + rgb[2]
 
 

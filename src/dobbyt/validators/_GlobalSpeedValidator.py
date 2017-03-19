@@ -150,7 +150,7 @@ class GlobalSpeedValidator(BaseValidator):
     def axis(self, value):
         self.validate_type("axis", value, ValidationAxis)
         if value == ValidationAxis.xy:
-            raise AttributeError(ErrMsg.attr_invalid_value(self.__class__, "axis", value))
+            raise ValueError(ErrMsg.attr_invalid_value(self.__class__, "axis", value))
 
         self._axis = value
 
@@ -222,23 +222,23 @@ class GlobalSpeedValidator(BaseValidator):
             value = []
 
         if not isinstance(value, (tuple, list)):
-            raise AttributeError("dobbyt error: invalid value for {0}.sections ({1}) - expecting a list of 'TimeLimit' objects".format(self.__class__, value))
+            raise ValueError("dobbyt error: invalid value for {0}.sections ({1}) - expecting a list of 'TimeLimit' objects".format(self.__class__, value))
 
         sections = []
         for i in range(len(value)):
             lim = value[i]
             if not isinstance(lim, GlobalSpeedValidator.Section):
-                raise AttributeError("dobbyt error: invalid value for {0}.sections - expecting a list of 'Section' objects".format(self.__class__))
+                raise ValueError("dobbyt error: invalid value for {0}.sections - expecting a list of 'Section' objects".format(self.__class__))
 
             if not isinstance(lim.distance_percentage, numbers.Number):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", self.__class__, i))
+                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", self.__class__, i))
             if not (0 < lim.distance_percentage < 1):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", self.__class__, i))
+                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", self.__class__, i))
 
             if not isinstance(lim.time_percentage, numbers.Number):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", self.__class__, i))
+                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", self.__class__, i))
             if not (0 < lim.time_percentage < 1):
-                raise AttributeError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", self.__class__, i))
+                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", self.__class__, i))
 
             sections.append(GlobalSpeedValidator.Section(lim.time_percentage, lim.distance_percentage))
 

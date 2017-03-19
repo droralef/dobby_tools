@@ -183,7 +183,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         elif value == ValidationAxis.xy:
             self._calc_speed_func = InstantaneousSpeedValidator._calc_speed_xy
         else:
-            raise AttributeError("dobbyt error: invalid value ({0}) for InstantaneousSpeedValidator.axis - expecting a value of type ValidationAxis".format(value))
+            raise ValueError("dobbyt error: invalid value ({0}) for InstantaneousSpeedValidator.axis - expecting a value of type ValidationAxis".format(value))
 
         self._axis = value
 

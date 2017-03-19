@@ -144,6 +144,8 @@ class MoveByGradientValidator(BaseValidator):
             return
 
         color = self._lcm.get_color_at(x_coord, y_coord)
+        if color is None:
+            return  # can't validate
 
         if self._last_color is None:
             #-- Nothing to validate
@@ -158,7 +160,7 @@ class MoveByGradientValidator(BaseValidator):
             self._last_color = color
             return
 
-        if rgb_delta > -self._max_valid_back_movement:
+        if rgb_delta >= -self._max_valid_back_movement:
             #-- The movement was in the opposite color diredction, but only slightly:
             #-- Don't issue an error, but also don't update "last_color" - remember the previous one
             return

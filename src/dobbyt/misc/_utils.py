@@ -71,7 +71,7 @@ class BaseValidator(dobbyt._Dobby_Object):
     def enabled(self, value):
 
         if not isinstance(value, bool):
-            raise AttributeError(ErrMsg.attr_invalid_type(self.__class__, "enabled", bool, value))
+            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "enabled", bool, value))
 
         self._enabled = value
 
@@ -83,34 +83,34 @@ class BaseValidator(dobbyt._Dobby_Object):
     def validate_type(self, attr_name, value, attr_type, none_allowed=False):
         if value is None:
             if not none_allowed:
-                raise AttributeError(ErrMsg.attr_invalid_type(type(self), attr_name, attr_type, "None"))
+                raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, attr_type, "None"))
         elif not isinstance(value, attr_type):
-            raise AttributeError(ErrMsg.attr_invalid_type(type(self), attr_name, attr_type, value))
+            raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, attr_type, value))
 
     #--------------------------------------
     def validate_numeric(self, attr_name, value, none_value=NoneValues.Invalid):
         if value is None:
             if none_value == BaseValidator.NoneValues.Invalid:
-                raise AttributeError(ErrMsg.attr_invalid_type(type(self), attr_name, "numeric", "None"))
+                raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "numeric", "None"))
             elif none_value == BaseValidator.NoneValues.Valid:
                 pass
             elif none_value == BaseValidator.NoneValues.ChangeTo0:
                 value = 0
 
         if value is not None and not isinstance(value, numbers.Number):
-            raise AttributeError(ErrMsg.attr_invalid_type(type(self), attr_name, "numeric", value))
+            raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "numeric", value))
 
         return value
 
     #--------------------------------------
     def validate_not_negative(self, attr_name, value):
         if value is not None and value < 0:
-            raise AttributeError(ErrMsg.attr_negative(type(self), attr_name, value))
+            raise ValueError(ErrMsg.attr_negative(type(self), attr_name, value))
 
     #--------------------------------------
     def validate_positive(self, attr_name, value):
         if value is not None and value <= 0:
-            raise AttributeError(ErrMsg.attr_non_positive(type(self), attr_name, value))
+            raise ValueError(ErrMsg.attr_non_positive(type(self), attr_name, value))
 
 
     #============================================================================
@@ -121,9 +121,9 @@ class BaseValidator(dobbyt._Dobby_Object):
     def mouse_at_validate_xy(self, x_coord, y_coord):
         #-- Validate types
         if not isinstance(x_coord, numbers.Number):
-            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "x_coord", x_coord))
+            raise ValueError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "x_coord", x_coord))
         if not isinstance(y_coord, numbers.Number):
-            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "y_coord", y_coord))
+            raise ValueError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "y_coord", y_coord))
 
 
     #--------------------------------------
@@ -131,5 +131,5 @@ class BaseValidator(dobbyt._Dobby_Object):
         #-- Validate types
         self.mouse_at_validate_xy(x_coord, y_coord)
         if not isinstance(time, numbers.Number):
-            raise AttributeError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "time", time))
+            raise ValueError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "time", time))
 
