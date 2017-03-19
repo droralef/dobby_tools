@@ -7,10 +7,11 @@ z = (0, 0, 0)
 w = (255, 255, 255)
 
 testimage = [
-    [z, z, z, z],
-    [z, w, w, w],
-    [z, w, w, w],
-    [z, z, z, z],
+    [z, z, z, z, z],
+    [z, w, w, w, w],
+    [z, w, w, w, w],
+    [z, w, w, w, w],
+    [z, z, z, z, z],
 ]
 
 class LocationsValidatorTests(unittest.TestCase):
@@ -80,9 +81,10 @@ class LocationsValidatorTests(unittest.TestCase):
         val = LocationsValidator(testimage)
         val.valid_colors = w
 
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, 0))
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(1, 3))
-        val.mouse_at(3, 1)
+        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, -2))
+        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0,  2))
+        self.assertRaises(ValidationFailed, lambda:val.mouse_at(-2, 0))
+        val.mouse_at(2, 0)
         self.assertRaises(ValidationFailed, lambda:val.mouse_at(10, 10))  # out of image
 
 
@@ -91,9 +93,10 @@ class LocationsValidatorTests(unittest.TestCase):
         val = LocationsValidator(testimage, default_valid=True)
         val.invalid_colors = z
 
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, 0))
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(1, 3))
-        val.mouse_at(3, 1)
+        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, -2))
+        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, 2))
+        self.assertRaises(ValidationFailed, lambda:val.mouse_at(-2, 0))
+        val.mouse_at(2, 0)
         val.mouse_at(10, 10) # out of image
 
 

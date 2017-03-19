@@ -6,8 +6,10 @@
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
+from __future__ import division
 from scipy import misc
 import numbers
+import numpy as np
 
 import dobbyt
 from dobbyt.misc._utils import BaseValidator, ErrMsg
@@ -21,11 +23,11 @@ class LocationColorMap(dobbyt._Dobby_Object):
     """
 
     #-------------------------------------------------
-    def __init__(self, image, top_left_coord=None, use_mapping=False, colormap=None):
+    def __init__(self, image, position=None, use_mapping=False, colormap=None):
         """
         Constructor
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param top_left_coord: See :func:`~dobbyt.misc.LocationColorMap.top_left_coord`
+        :param position: See :func:`~dobbyt.misc.LocationColorMap.position`
         :param use_mapping: See :func:`~dobbyt.misc.LocationColorMap.use_mapping`
         :param colormap: See :func:`~dobbyt.misc.LocationColorMap.colormap`
         """
@@ -45,7 +47,7 @@ class LocationColorMap(dobbyt._Dobby_Object):
         self._to_tuples()
         self._find_available_colors()
 
-        self.top_left_coord = top_left_coord
+        self.position = position
         self.colormap = colormap
         self._use_mapping = use_mapping
 
@@ -72,32 +74,36 @@ class LocationColorMap(dobbyt._Dobby_Object):
 
     #-------------------------------------------------
     @property
-    def top_left_coord(self):
+    def position(self):
         """
         The top-left coordinate of the image provided in the constructor
         The coordinate should be an (x,y) tuple/list
         If top_left_coord=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at`(a,b) will return the
         color of the top-left point of the image.
         """
-        return self._top_left_coord
+        return self._position
 
-    @top_left_coord.setter
-    def top_left_coord(self, value):
+    @position.setter
+    def position(self, value):
 
         if value is None:
             value = (0, 0)
 
         if not isinstance(value, (list, tuple)):
-            raise ValueError("dobbyt error: invalid {0}.top_left_coord ({1})".format(self.__class__, value))
+            raise ValueError("dobbyt error: invalid {0}.position ({1})".format(self.__class__, value))
 
         if not isinstance(value[0], numbers.Number):
-            raise ValueError("dobbyt error: invalid {0}.top_left_coord[0] ({1})".format(self.__class__, value[0]))
+            raise ValueError("dobbyt error: invalid {0}.position[0] ({1})".format(self.__class__, value[0]))
 
         if not isinstance(value[1], numbers.Number):
-            raise ValueError("dobbyt error: invalid {0}.top_left_coord[1] ({1})".format(self.__class__, value[1]))
+            raise ValueError("dobbyt error: invalid {0}.position[1] ({1})".format(self.__class__, value[1]))
 
 
-        self._top_left_coord = (value[0], value[1])
+        self._position = (value[0], value[1])
+
+        #-- Find top-left coordinates. The rounding is done in the same way as Expyriment does.
+        self._top_left_x = value[0] - int(np.floor((self._width-1)/2))
+        self._top_left_y = value[1] - int(np.floor((self._height-1)/2))
 
 
     #-------------------------------------------------
@@ -198,12 +204,12 @@ class LocationColorMap(dobbyt._Dobby_Object):
         if self._color_to_code is None and use_mapping:
             raise ValueError("dobbyt error: a call to %s.get_color_at(use_mapping=True) is invalid because color_codes were not specified" % self.__class__)
 
-        if x_coord < self._top_left_coord[0] or x_coord >= self._top_left_coord[0]+self._width or \
-               y_coord < self._top_left_coord[1] or y_coord >= self._top_left_coord[1] + self._height:
+        if x_coord < self._top_left_x or x_coord >= self._top_left_x+self._width or \
+               y_coord < self._top_left_y or y_coord >= self._top_left_y + self._height:
             return None
 
-        x_coord -= self._top_left_coord[0]
-        y_coord -= self._top_left_coord[1]
+        x_coord -= self._top_left_x
+        y_coord -= self._top_left_y
 
         v = self._image[y_coord][x_coord]
 

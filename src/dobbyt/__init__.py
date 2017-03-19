@@ -46,7 +46,7 @@ class InvalidStateError(StandardError):
     #     pass
 
 
-import dobbyt.stimuli as controls
+import dobbyt.stimuli as stimuli
 import dobbyt.misc as misc
 import dobbyt.movement as movement
 import dobbyt.validators as validators

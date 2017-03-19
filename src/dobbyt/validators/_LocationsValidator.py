@@ -17,20 +17,25 @@ import dobbyt.misc.utils as u
 
 
 class LocationsValidator(BaseValidator):
+    """
+    This validator gets an image, and validates that the mouse/finger would be placed
+    only on pixels of certain color(s).
+    You can define either the valid colors or the invalid colors.
+    """
 
     err_invalid_coordinates = "invalid_coords"
 
 
-    def __init__(self, image, top_left_coord=None, default_valid=False):
+    def __init__(self, image, position=None, default_valid=False):
         """
         Constructor
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param top_left_coord: See :func:`~dobbyt.movement.LocationsValidator.top_left_coord`
+        :param position: See :func:`~dobbyt.movement.LocationsValidator.position`
         :param default_valid: See :func:`~dobbyt.movement.LocationsValidator.default_valid`
         """
         super(LocationsValidator, self).__init__()
 
-        self._lcm = LocationColorMap(image, top_left_coord=top_left_coord, use_mapping=True, colormap="RGB")
+        self._lcm = LocationColorMap(image, position=position, use_mapping=True, colormap="RGB")
         self.default_valid = default_valid
         self.valid_colors = set()
         self.invalid_colors = set()
@@ -42,18 +47,18 @@ class LocationsValidator(BaseValidator):
 
     #-------------------------------------------------
     @property
-    def top_left_coord(self):
+    def position(self):
         """
-        The top-left coordinate of the image provided in the constructor
-        The coordinate should be an (x,y) tuple/list
+        The position of the image: (x,y) tuple/list, indicating the image center
+        For even-sized images, use the Expyriment standard
         If top_left_coord=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at`(a,b) will return the
         color of the top-left point of the image
         """
-        return self._lcm.top_left_coord
+        return self._lcm.position
 
-    @top_left_coord.setter
-    def top_left_coord(self, value):
-        self._lcm.top_left_coord = value
+    @position.setter
+    def position(self, value):
+        self._lcm.position = value
 
 
     #-------------------------------------------------
