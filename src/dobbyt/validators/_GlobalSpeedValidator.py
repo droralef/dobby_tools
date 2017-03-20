@@ -59,12 +59,12 @@ class GlobalSpeedValidator(_BaseValidator):
     #========================================================================
 
     #----------------------------------------------------------------------------------
-    def reset(self, time=0):
+    def reset(self, time0=0):
 
-        if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(_u.ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
+        if time0 is not None and not isinstance(time0, (int, float)):
+            raise ValueError(_u.ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time0))
 
-        self._time0 = time
+        self._time0 = time0
         self._prepare_expected_coords()
 
 
@@ -89,9 +89,8 @@ class GlobalSpeedValidator(_BaseValidator):
         :param time: Time from start of trial
         :returns: None if all OK, ValidationFailed object if error
         """
-        _u.validate_func_arg_type(self, "check_xyt", "x_coord", x_coord, numbers.Number, type_name="numeric")
-        _u.validate_func_arg_type(self, "check_xyt", "y_coord", y_coord, numbers.Number, type_name="numeric")
-        _u.validate_func_arg_type(self, "check_xyt", "time", time, numbers.Number, type_name="numeric")
+
+        self._check_xyt_validate_and_log(x_coord, y_coord, time)
 
         #-- If this is the first call in a trial: do nothing
         if self._time0 is None:
@@ -114,7 +113,7 @@ class GlobalSpeedValidator(_BaseValidator):
 
         #-- Actual coordinate must be ahead of the expected minimum
         if np.sign(d_coord) != np.sign(self._end_coord - self._origin_coord):
-            return ValidationFailed(self.err_too_slow, "You moved too slowly", self)
+            return self._create_validation_error(self.err_too_slow, "You moved too slowly")
 
         return None
 
@@ -158,6 +157,7 @@ class GlobalSpeedValidator(_BaseValidator):
             raise ValueError(_u.ErrMsg.attr_invalid_value(self.__class__, "axis", value))
 
         self._axis = value
+        self._log_setter("axis")
 
     #-----------------------------------------------------------------------------------
     @property
@@ -172,6 +172,7 @@ class GlobalSpeedValidator(_BaseValidator):
     def origin_coord(self, value):
         _u.validate_attr_numeric(self, "origin_coord", value, _u.NoneValues.Invalid)
         self._origin_coord = value
+        self._log_setter("origin_coord")
 
     #-----------------------------------------------------------------------------------
     @property
@@ -186,6 +187,7 @@ class GlobalSpeedValidator(_BaseValidator):
     def end_coord(self, value):
         _u.validate_attr_numeric(self, "end_coord", value, _u.NoneValues.Invalid)
         self._end_coord = value
+        self._log_setter("end_coord")
 
 
     #-----------------------------------------------------------------------------------
@@ -199,6 +201,7 @@ class GlobalSpeedValidator(_BaseValidator):
         value = _u.validate_attr_numeric(self, "grace_period", value, _u.NoneValues.ChangeTo0)
         _u.validate_attr_not_negative(self, "grace_period", value)
         self._grace_period = value
+        self._log_setter("grace_period")
 
     #-----------------------------------------------------------------------------------
     @property
@@ -211,6 +214,7 @@ class GlobalSpeedValidator(_BaseValidator):
         value = _u.validate_attr_numeric(self, "max_trial_duration", value, _u.NoneValues.ChangeTo0)
         _u.validate_attr_not_negative(self, "max_trial_duration", value)
         self._max_trial_duration = value
+        self._log_setter("max_trial_duration")
 
     #-----------------------------------------------------------------------------------
 

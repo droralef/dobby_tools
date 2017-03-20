@@ -15,7 +15,7 @@ import dobbyt._utils as _u
 
 
 # noinspection PyAttributeOutsideInit
-class TrajectoryTracker(dobbyt._Dobby_Object):
+class TrajectoryTracker(dobbyt._DobbyObject):
 
     _errmsg_set_to_non_boolean = "dobbyt error: invalid attempt to set TrajectoryTracker.{0} to a non-boolean value ({1})"
     _errmsg_non_numeric_coord = "dobbyt error in TrajectoryTracker.mouse_at(): the {0} is a non-numeric value ({1})"
@@ -42,6 +42,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
     def tracking_active(self, value):
         _u.validate_attr_type(self, "tracking_active", value, bool)
         self._tracking_active = value
+        self._log_setter("tracking_active")
 
 
     #----------------------------------------------------
@@ -55,7 +56,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
 
         self._trajectory = {'x' : [], 'y' : [], 'time' : []}
 
-        if self._logging:
+        if self._log_level:
             expyriment._active_exp._event_file_log("Trajectory,Reset", 1)
 
     #----------------------------------------------------
@@ -80,7 +81,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
         self._trajectory['y'].append(y_coord)
         self._trajectory['time'].append(time)
 
-        if self._logging:
+        if self._log_level:
             expyriment._active_exp._event_file_log("Trajectory,Track_xyt,{0},{1},{2}".format(x_coord, y_coord, time), 2)
 
     #----------------------------------------------------
@@ -107,7 +108,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
         fh.write('trial,time,x,y\n')
         fh.close()
 
-        if self._logging:
+        if self._log_level:
             expyriment._active_exp._event_file_log(
                 "Trajectory,InitOutputFile,%s" % self._filename, 2)
 
@@ -131,7 +132,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
 
         fh.close()
 
-        if self._logging:
+        if self._log_level:
             expyriment._active_exp._event_file_log(
                 "Trajectory,SavedTrial,%s,%d,%d" % (self._filename, trial_num, len(rows)), 2)
 

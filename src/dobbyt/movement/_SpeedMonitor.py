@@ -1,6 +1,6 @@
 """
 
-Movement monitor: continuously track speed, direction, etc.
+Movement monitor: continuously track the movement speed
 
 @author: Dror Dotan
 @copyright: Copyright (c) 2017, Dror Dotan
@@ -9,14 +9,13 @@ Movement monitor: continuously track speed, direction, etc.
 from __future__ import division
 
 import numbers
-
 import numpy as np
 
 import dobbyt
 import dobbyt._utils as _u
 
 
-class SpeedMonitor(dobbyt._Dobby_Object):
+class SpeedMonitor(dobbyt._DobbyObject):
     """
     Monitor the mouse/finger instantaneous speed
     """
@@ -58,6 +57,7 @@ class SpeedMonitor(dobbyt._Dobby_Object):
 
 
     #-------------------------------------------------------------------------
+    # noinspection PyIncorrectDocstring
     def update_xyt(self, x_coord, y_coord, time):
         """
         Call this method whenever the finger/mouse moves
@@ -168,21 +168,6 @@ class SpeedMonitor(dobbyt._Dobby_Object):
 
     #-------------------------------------------------------------------------
     @property
-    def angle(self):
-        """ The instantaneous movement angle (mm/sec) """
-
-        if self._pre_recent_point is None:
-            return None
-
-        xy1 = self._pre_recent_point[0:1]
-        xy2 = self._recent_points[-1][0:1]
-
-        #todo fix # Based on comparing two locations
-        pass
-
-
-    #-------------------------------------------------------------------------
-    @property
     def last_calculation_interval(self):
         """ The time interval (sec) used for the last calculation of speed & direction """
 
@@ -210,6 +195,7 @@ class SpeedMonitor(dobbyt._Dobby_Object):
         _u.validate_attr_type(self, "units_per_mm", value, numbers.Number)
         _u.validate_attr_positive(self, "units_per_mm", value)
         self._units_per_mm = value
+        self._log_setter("units_per_mm")
 
 
     #-------------------------------------------------------------------------
@@ -227,3 +213,4 @@ class SpeedMonitor(dobbyt._Dobby_Object):
         _u.validate_attr_type(self, "calculation_interval", value, numbers.Number)
         _u.validate_attr_not_negative(self, "calculation_interval", value)
         self._calculation_interval = value
+        self._log_setter("calculation_interval")

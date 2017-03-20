@@ -70,12 +70,12 @@ class InstantaneousSpeedValidator(_BaseValidator):
 
 
     #-----------------------------------------------------------------------------------
-    def reset(self, time=None):
+    def reset(self, time0=None):
         """
         Called when a trial starts - reset any previous movement
-        :param time: The time when the trial starts. The grace period will be determined according to this time.
+        :param time0: The time when the trial starts. The grace period will be determined according to this time.
         """
-        self._speed_monitor.reset(time)
+        self._speed_monitor.reset(time0)
 
 
     #-----------------------------------------------------------------------------------
@@ -90,6 +90,8 @@ class InstantaneousSpeedValidator(_BaseValidator):
 
         if not self._enabled:
             return None
+
+        self._check_xyt_validate_and_log(x_coord, y_coord, time)
 
         self._speed_monitor.update_xyt(x_coord, y_coord, time)
 
@@ -112,10 +114,10 @@ class InstantaneousSpeedValidator(_BaseValidator):
                 return None
 
             if self._min_speed is not None and speed < self._min_speed:
-                return ValidationFailed(self.err_too_slow, "You moved too slowly", self, {self.arg_speed: speed})
+                return self._create_validation_error(self.err_too_slow, "You moved too slowly", {self.arg_speed: speed})
 
             if self._max_speed is not None and speed > self._max_speed:
-                return ValidationFailed(self.err_too_fast, "You moved too fast", self, {self.arg_speed: speed})
+                return self._create_validation_error(self.err_too_fast, "You moved too fast", {self.arg_speed: speed})
 
         return None
 
@@ -138,6 +140,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
     def axis(self, value):
         _u.validate_attr_type(self, "axis", value, ValidationAxis)
         self._axis = value
+        self._log_setter("axis")
 
 
     #-----------------------------------------------------------------------------------
@@ -154,6 +157,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
         _u.validate_attr_numeric(self, "min_speed", value, none_value=_u.NoneValues.Valid)
         _u.validate_attr_positive(self, "min_speed", value)
         self._min_speed = value
+        self._log_setter("min_speed")
 
     #-----------------------------------------------------------------------------------
     @property
@@ -169,6 +173,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
         _u.validate_attr_numeric(self, "max_speed", value, none_value=_u.NoneValues.Valid)
         _u.validate_attr_positive(self, "max_speed", value)
         self._max_speed = value
+        self._log_setter("max_speed")
 
     #-----------------------------------------------------------------------------------
     @property
@@ -181,6 +186,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
         value = _u.validate_attr_numeric(self, "grace_period", value, none_value=_u.NoneValues.ChangeTo0)
         _u.validate_attr_not_negative(self, "grace_period", value)
         self._grace_period = value
+        self._log_setter("grace_period")
 
     #-----------------------------------------------------------------------------------
     @property
@@ -194,3 +200,4 @@ class InstantaneousSpeedValidator(_BaseValidator):
     @calculation_interval.setter
     def calculation_interval(self, value):
         self._speed_monitor.calculation_interval = value
+        self._log_setter("calculation_interval")

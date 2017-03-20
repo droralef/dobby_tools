@@ -19,7 +19,7 @@ from dobbyt.misc.utils import color_rgb_to_num
 
 
 # noinspection PyAttributeOutsideInit
-class LocationColorMap(dobbyt._Dobby_Object):
+class LocationColorMap(dobbyt._DobbyObject):
     """
     Translate the finger location into a code, according to a BMP image
     """
@@ -102,6 +102,7 @@ class LocationColorMap(dobbyt._Dobby_Object):
 
 
         self._position = (value[0], value[1])
+        self._log_setter("position")
 
         #-- Find top-left coordinates. The rounding is done in the same way as Expyriment does.
         self._top_left_x = value[0] - int(np.floor((self._width-1)/2))
@@ -120,6 +121,7 @@ class LocationColorMap(dobbyt._Dobby_Object):
     def use_mapping(self, value):
         _u.validate_attr_type(self, "use_mapping", value, bool)
         self._use_mapping = value
+        self._log_setter("use_mapping")
 
 
     #-------------------------------------------------
@@ -180,6 +182,8 @@ class LocationColorMap(dobbyt._Dobby_Object):
             raise ValueError(
                 "dobbyt error: {0}.color_codes can only be set to None, 'default', or a dict. Invalid value: {1}".format(
                     self.__class__, value))
+
+        self._log_setter("colormap", value)
 
 
     #-------------------------------------------------

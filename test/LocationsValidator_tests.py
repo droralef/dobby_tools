@@ -81,11 +81,11 @@ class LocationsValidatorTests(unittest.TestCase):
         val = LocationsValidator(testimage, enabled=True)
         val.valid_colors = w
 
-        self.assertIsNotNone(val.check_xy(0, -2))
-        self.assertIsNotNone(val.check_xy(0, 2))
-        self.assertIsNotNone(val.check_xy(-2, 0))
-        self.assertIsNone(val.check_xy(2, 0))
-        self.assertIsNotNone(val.check_xy(10, 10))  # out of image
+        self.assertIsNotNone(val.check_xyt(0, -2))
+        self.assertIsNotNone(val.check_xyt(0, 2))
+        self.assertIsNotNone(val.check_xyt(-2, 0))
+        self.assertIsNone(val.check_xyt(2, 0))
+        self.assertIsNotNone(val.check_xyt(10, 10))  # out of image
 
 
     #------------------------------------------------------------
@@ -93,24 +93,24 @@ class LocationsValidatorTests(unittest.TestCase):
         val = LocationsValidator(testimage, default_valid=True, enabled=True)
         val.invalid_colors = z
 
-        self.assertIsNotNone(val.check_xy(0, -2))
-        self.assertIsNotNone(val.check_xy(0, 2))
-        self.assertIsNotNone(val.check_xy(-2, 0))
-        self.assertIsNone(val.check_xy(2, 0))
-        self.assertIsNone(val.check_xy(10, 10)) # out of image
+        self.assertIsNotNone(val.check_xyt(0, -2))
+        self.assertIsNotNone(val.check_xyt(0, 2))
+        self.assertIsNotNone(val.check_xyt(-2, 0))
+        self.assertIsNone(val.check_xyt(2, 0))
+        self.assertIsNone(val.check_xyt(10, 10)) # out of image
 
     #------------------------------------------------------------
     def test_disabled(self):
         val = LocationsValidator(testimage)
         val.valid_colors = w
-        self.assertIsNone(val.check_xy(0, -2))
+        self.assertIsNone(val.check_xyt(0, -2))
 
     #------------------------------------------------------------
     def test_validate_color(self):
         val = LocationsValidator(testimage, enabled=True)
         val.valid_colors = w
 
-        e = val.check_xy(0, -2)
+        e = val.check_xyt(0, -2)
         self.assertIsNotNone(e)
         self.assertEqual(e.arg(LocationsValidator.arg_color), color_rgb_to_num(z))
 

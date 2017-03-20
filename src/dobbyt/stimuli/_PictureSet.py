@@ -13,7 +13,7 @@ from expyriment.stimuli import Picture
 
 import dobbyt
 
-class PictureSet(dobbyt._Dobby_Object):
+class PictureSet(dobbyt._DobbyObject):
     """
      A class that holds a set of expyriment.stimuli.Picture objects, each with a logical name.
      It can retrieve each picture, and rescale all pictures to the same size
@@ -160,6 +160,7 @@ class PictureSet(dobbyt._Dobby_Object):
     @position.setter
     def position(self, position):
         self._position = position
+        self._log_setter("position")
 
         if self._preloaded:
             for name in self._pics:

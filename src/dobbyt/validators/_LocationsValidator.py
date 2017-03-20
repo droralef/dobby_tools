@@ -60,6 +60,7 @@ class LocationsValidator(_BaseValidator):
     @position.setter
     def position(self, value):
         self._lcm.position = value
+        self._log_setter("position")
 
 
     #-------------------------------------------------
@@ -77,6 +78,7 @@ class LocationsValidator(_BaseValidator):
     def default_valid(self, value):
         _u.validate_attr_type(self, "default_valid", value, bool)
         self._default_valid = value
+        self._log_setter("default_valid")
 
 
     #-------------------------------------------------
@@ -87,8 +89,10 @@ class LocationsValidator(_BaseValidator):
     @valid_colors.setter
     def valid_colors(self, value):
         self._valid_colors = self._get_colors_as_ints(value, "valid_colors")
+        self._log_setter("valid_colors")
 
 
+    #-------------------------------------------------
     @property
     def invalid_colors(self):
         return self._invalid_colors
@@ -96,6 +100,7 @@ class LocationsValidator(_BaseValidator):
     @invalid_colors.setter
     def invalid_colors(self, value):
         self._invalid_colors = self._get_colors_as_ints(value, "valid_colors")
+        self._log_setter("invalid_colors")
 
 
     def _get_colors_as_ints(self, value, attr_name):
@@ -103,8 +108,6 @@ class LocationsValidator(_BaseValidator):
             value = (value,)
 
         _u.validate_attr_type(self, attr_name, value, (list, tuple, set))
-#TODO        if not isinstance(value, (list, tuple, set)):
-#            raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "iterable", value))
 
         colors = set()
         for c in value:
@@ -119,14 +122,17 @@ class LocationsValidator(_BaseValidator):
     #   Validate
     #======================================================================
 
+    def reset(self, time0=None):
+        pass
 
-    def check_xy(self, x_coord, y_coord):
+
+    def check_xyt(self, x_coord, y_coord, time=None):
         """
         Check whether the given coordinate is a valid one
+        :param time: ignored
         :return: None if all OK, ValidationFailed if error
         """
-        _u.validate_func_arg_type(self, "check_xy", "x_coord", x_coord, numbers.Number)
-        _u.validate_func_arg_type(self, "check_xy", "y_coord", y_coord, numbers.Number)
+        self._check_xyt_validate_and_log(x_coord, y_coord, time, False)
 
         if not self._enabled:
             return None
@@ -141,7 +147,7 @@ class LocationsValidator(_BaseValidator):
             return None
 
         else:
-            return ValidationFailed(self.err_invalid_coordinates, "You moved to an invalid location",
-                                    self, {LocationsValidator.arg_color: color})
+            return self._create_validation_error(self.err_invalid_coordinates, "You moved to an invalid location",
+                                                 {LocationsValidator.arg_color: color})
 
 

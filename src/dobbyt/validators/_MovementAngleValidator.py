@@ -59,7 +59,7 @@ class MovementAngleValidator(_BaseValidator):
     #========================================================================
 
     #-----------------------------------------------------------------------------------
-    def reset(self):
+    def reset(self, time0=None):
         """
         Called when a trial starts - reset any previous movement
         """
@@ -79,9 +79,7 @@ class MovementAngleValidator(_BaseValidator):
         if not self._enabled or self._min_angle == self._max_angle or self._min_angle is None or self._max_angle is None:
             return None
 
-        _u.validate_func_arg_type(self, "check_xyt", "x_coord", x_coord, numbers.Number, type_name="numeric")
-        _u.validate_func_arg_type(self, "check_xyt", "y_coord", y_coord, numbers.Number, type_name="numeric")
-        _u.validate_func_arg_type(self, "check_xyt", "time", time, numbers.Number, type_name="numeric")
+        self._check_xyt_validate_and_log(x_coord, y_coord, time)
         self._validate_time(time)
 
         x_coord /= self._units_per_mm
@@ -111,12 +109,12 @@ class MovementAngleValidator(_BaseValidator):
                 #-- Error
                 angle_deg = angle / (np.pi * 2) * 360
 
-                if self._logging:
+                if self._log_level:
                     # noinspection PyProtectedMember
                     expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(self.__class__), angle_deg), 1)
 
-                return ValidationFailed(self.err_invalid_angle, "You moved in an incorrect direction", self,
-                                        {self.arg_angle: angle_deg})
+                return self._create_validation_error(self.err_invalid_angle, "You moved in an incorrect direction",
+                                                     {self.arg_angle: angle_deg})
 
         else:
             #-- Direction cannot be validated - the finger hasn't moved enough yet
@@ -196,6 +194,8 @@ class MovementAngleValidator(_BaseValidator):
         self._min_angle = value % 360
         self._min_angle_rad = self._min_angle / 360 * np.pi * 2
 
+        self._log_setter("min_angle")
+
     #-----------------------------------------------------------------------------------
     @property
     def max_angle(self):
@@ -219,6 +219,8 @@ class MovementAngleValidator(_BaseValidator):
         self._max_angle = value % 360
         self._max_angle_rad = self._max_angle / 360 * np.pi * 2
 
+        self._log_setter("max_angle")
+
     #-----------------------------------------------------------------------------------
     @property
     def calc_angle_interval(self):
@@ -232,6 +234,7 @@ class MovementAngleValidator(_BaseValidator):
         value = _u.validate_attr_numeric(self, "calc_angle_interval", value, _u.NoneValues.ChangeTo0)
         _u.validate_attr_not_negative(self, "calc_angle_interval", value)
         self._calc_angle_interval = value
+        self._log_setter("calc_angle_interval")
 
     #-----------------------------------------------------------------------------------
     @property
@@ -244,4 +247,5 @@ class MovementAngleValidator(_BaseValidator):
         value = _u.validate_attr_numeric(self, "grace_period", value, _u.NoneValues.ChangeTo0)
         _u.validate_attr_not_negative(self, "grace_period", value)
         self._grace_period = value
+        self._log_setter("grace_period")
 

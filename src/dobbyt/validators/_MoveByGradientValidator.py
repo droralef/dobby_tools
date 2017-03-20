@@ -76,6 +76,7 @@ class MoveByGradientValidator(_BaseValidator):
     def rgb_should_ascend(self, value):
         _u.validate_attr_type(self, "rgb_should_ascend", value, bool)
         self._rgb_should_ascend = value
+        self._log_setter("rgb_should_ascend")
 
 
     #-------------------------------------------------
@@ -102,6 +103,8 @@ class MoveByGradientValidator(_BaseValidator):
                 _u.validate_attr_not_negative(self, "last_validated_rgb", value)
             self._last_validated_rgb = value
 
+        self._log_setter("last_validated_rgb")
+
 
     #-------------------------------------------------
     @property
@@ -117,6 +120,7 @@ class MoveByGradientValidator(_BaseValidator):
         _u.validate_attr_numeric(self, "max_valid_back_movement", value)
         _u.validate_attr_not_negative(self, "max_valid_back_movement", value)
         self._max_valid_back_movement = value
+        self._log_setter("max_valid_back_movement")
 
 
 
@@ -125,7 +129,7 @@ class MoveByGradientValidator(_BaseValidator):
     #======================================================================
 
     #-----------------------------------------------------------------
-    def reset(self):
+    def reset(self, time0=None):
         """
         Reset the movement validation
         """
@@ -133,13 +137,13 @@ class MoveByGradientValidator(_BaseValidator):
 
 
     #-----------------------------------------------------------------
-    def check_xy(self, x_coord, y_coord):
+    def check_xyt(self, x_coord, y_coord, time=None):
         """
         Validate the movement
         :return: None if all OK, ValidationFailed if error
         """
-        _u.validate_func_arg_type(self, "check_xy", "x_coord", x_coord, numbers.Number)
-        _u.validate_func_arg_type(self, "check_xy", "y_coord", y_coord, numbers.Number)
+
+        self._check_xyt_validate_and_log(x_coord, y_coord, time, False)
 
         if not self._enabled:
             return None
@@ -174,6 +178,6 @@ class MoveByGradientValidator(_BaseValidator):
             #-- Previous color is very close to 0 - avoid validating, in order to allow "crossing the 0 color"
             return None
 
-        return ValidationFailed(self.err_gradient, "You moved in an invalid direction", self)
+        return self._create_validation_error(self.err_gradient, "You moved in an invalid direction")
 
 

@@ -19,7 +19,7 @@ import dobbyt
 
 
 # noinspection PyAttributeOutsideInit,PyProtectedMember
-class NumberLine(dobbyt._Dobby_Object):
+class NumberLine(dobbyt._DobbyObject):
     """
      A class that plots a number line and monitors its behavior.
 
@@ -475,6 +475,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError("dobbyt error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical".format(value))
 
         self._orientation = value
+        self._log_setter("orientation")
 
     #-----------------------------------------------------------
     @property
@@ -504,6 +505,8 @@ class NumberLine(dobbyt._Dobby_Object):
 
         self._mid_x = value[0]
         self._mid_y = value[1]
+        self._log_setter("position")
+
 
     #-----------------------------------------------------------
     @property
@@ -521,6 +524,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_positive.format("line_length", value))
 
         self._line_length = value
+        self._log_setter("line_length")
 
     #-----------------------------------------------------------
     @property
@@ -539,6 +543,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("end_tick_height", value))
 
         self._end_tick_height = value
+        self._log_setter("end_tick_height")
 
     #-----------------------------------------------------------
     @property
@@ -556,6 +561,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_positive.format("line_width", value))
 
         self._line_width = value
+        self._log_setter("line_width")
 
     #-----------------------------------------------------------
     @property
@@ -567,6 +573,7 @@ class NumberLine(dobbyt._Dobby_Object):
     def line_colour(self, value):
         self._validate_unlocked()
         self._line_colour = value
+        self._log_setter("line_colour")
 
 
     ###################################
@@ -587,6 +594,7 @@ class NumberLine(dobbyt._Dobby_Object):
                 raise ValueError(NumberLine._errmsg_set_to_non_boolean, "labels_visible", value)
 
         self._labels_visible = value
+        self._log_setter("labels_visible")
 
     #-----------------------------------------------------------
     @property
@@ -602,6 +610,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_string.format("labels_font_name", value))
 
         self._labels_font_name = value
+        self._log_setter("labels_font_name")
 
     #-----------------------------------------------------------
     @property
@@ -616,6 +625,7 @@ class NumberLine(dobbyt._Dobby_Object):
     def labels_font_colour(self, value):
         self._validate_unlocked()
         self._labels_font_colour = value
+        self._log_setter("labels_font_colour")
 
 
     #-----------------------------------------------------------
@@ -635,6 +645,7 @@ class NumberLine(dobbyt._Dobby_Object):
                 raise ValueError(NumberLine._errmsg_set_to_non_positive.format("labels_font_size", value))
 
         self._labels_font_size = value
+        self._log_setter("labels_font_size")
 
 
     #-----------------------------------------------------------
@@ -662,6 +673,7 @@ class NumberLine(dobbyt._Dobby_Object):
                 raise ValueError(NumberLine._errmsg_set_to_non_positive_entry.format("labels_box_size", value, "width"))
 
         self._labels_box_size = value
+        self._log_setter("labels_box_size")
 
     #-----------------------------------------------------------
     @property
@@ -691,6 +703,7 @@ class NumberLine(dobbyt._Dobby_Object):
 
         self._labels_offset_x = value[0]
         self._labels_offset_y = value[1]
+        self._log_setter("labels_offset")
 
     #-----------------------------------------------------------
     @property
@@ -708,6 +721,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_string.format("label_min_text", value))
 
         self._label_min_text = value
+        self._log_setter("label_min_text")
 
     #-----------------------------------------------------------
     @property
@@ -725,6 +739,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_string.format("label_max_text", value))
 
         self._label_max_text = value
+        self._log_setter("label_max_text")
 
 
 
@@ -745,6 +760,7 @@ class NumberLine(dobbyt._Dobby_Object):
         if not isinstance(value, numbers.Number):
             raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("min_value", value))
         self._min_value = value
+        self._log_setter("min_value")
 
     #-----------------------------------------------------------
     @property
@@ -758,6 +774,7 @@ class NumberLine(dobbyt._Dobby_Object):
         if not isinstance(value, numbers.Number):
             raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("max_value", value))
         self._max_value = value
+        self._log_setter("max_value")
 
 
     #-----------------------------------------------------------
@@ -774,6 +791,7 @@ class NumberLine(dobbyt._Dobby_Object):
                 raise ValueError(NumberLine._errmsg_set_to_non_boolean, "visible", value)
 
         self._visible = value
+        self._log_setter("visible")
 
 
     ###################################
@@ -794,6 +812,7 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_numeric.format("touch_distance", value))
 
         self._touch_distance = value
+        self._log_setter("touch_distance")
 
 
     #-----------------------------------------------------------
@@ -811,5 +830,6 @@ class NumberLine(dobbyt._Dobby_Object):
             raise ValueError(NumberLine._errmsg_set_to_non_boolean.format("touch_directioned", value))
 
         self._touch_directioned = value
+        self._log_setter("touch_directioned")
 
 
