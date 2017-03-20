@@ -45,6 +45,8 @@ class InstMovementMonitorTests(unittest.TestCase):
     def test_set_calc_interval(self):
         m = InstMovementMonitor(2, 10)
 
+        m.calculation_interval = 0
+
         try:
             m.calculation_interval = ""
             self.fail()
@@ -53,12 +55,6 @@ class InstMovementMonitorTests(unittest.TestCase):
 
         try:
             m.calculation_interval = None
-            self.fail()
-        except ValueError:
-            pass
-
-        try:
-            m.calculation_interval = 0
             self.fail()
         except ValueError:
             pass
@@ -149,7 +145,7 @@ class InstMovementMonitorTests(unittest.TestCase):
     #---------------------------------------------------------
     def test_angle(self):
         m = InstMovementMonitor(2, 10)
-        self.fail('write this test; also, use InstMovementMonitor for speed/angle validation')
+        self.fail('write this test; also, use InstMovementMonitor for angle validation')
 
 
 

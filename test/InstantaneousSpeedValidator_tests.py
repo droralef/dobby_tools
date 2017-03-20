@@ -70,7 +70,7 @@ class InstantaneousSpeedValidatorTests(unittest.TestCase):
     def test_interval(self):
         validator = InstantaneousSpeedValidator(1, axis=ValidationAxis.y, enabled=True)
         validator.min_speed = 1
-        validator.calc_speed_interval = 3
+        validator.calculation_interval = 3
         validator.mouse_at(0, 0, 0)
         validator.mouse_at(0, 1, 2)
         self.assertRaises(ValidationFailed, lambda:validator.mouse_at(0, 2, 4))

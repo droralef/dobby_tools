@@ -15,6 +15,7 @@ import numpy as np
 import dobbyt
 from dobbyt.misc._utils import BaseValidator, ErrMsg
 from dobbyt.validators import ValidationAxis, ValidationFailed
+from dobbyt.movement import InstMovementMonitor
 
 
 # noinspection PyAttributeOutsideInit
@@ -33,7 +34,7 @@ class InstantaneousSpeedValidator(BaseValidator):
 
     #-----------------------------------------------------------------------------------
     def __init__(self, units_per_mm, axis=ValidationAxis.y, enabled=False, min_speed=None, max_speed=None,
-                 grace_period=0, calc_speed_interval=0):
+                 grace_period=0, calculation_interval=0, movement_monitor=None):
         """
         Constructor
         :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.mouse_at`) per mm
@@ -42,7 +43,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         :param min_speed: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.min_speed`
         :param max_speed: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.max_speed`
         :param grace_period: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.grace_period`
-        :param calc_speed_interval: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.calc_speed_interval`
+        :param calculation_interval: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.calc_speed_interval`
         """
 
         super(InstantaneousSpeedValidator, self).__init__(enabled=enabled)
@@ -50,13 +51,18 @@ class InstantaneousSpeedValidator(BaseValidator):
         if not isinstance(units_per_mm, numbers.Number):
             raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "units_per_mm", "numeric", units_per_mm))
 
-        self._units_per_mm = units_per_mm
+        if movement_monitor is None:
+            self._movement_monitor = InstMovementMonitor(units_per_mm, calculation_interval)
+        elif isinstance(movement_monitor, InstMovementMonitor):
+            self._movement_monitor = movement_monitor
+        else:
+            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "__init__", "movement_monitor", "InstMovementMonitor", movement_monitor))
 
         self.axis = axis
         self.min_speed = min_speed
         self.max_speed = max_speed
         self.grace_period = grace_period
-        self.calc_speed_interval = calc_speed_interval
+        self.calculation_interval = calculation_interval
 
         self.reset()
 
@@ -72,11 +78,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         Called when a trial starts - reset any previous movement
         :param time: The time when the trial starts. The grace period will be determined according to this time.
         """
-        if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
-
-        self._prev_locations = []
-        self._time0 = time
+        self._movement_monitor.reset(time)
 
 
     #-----------------------------------------------------------------------------------
@@ -92,26 +94,22 @@ class InstantaneousSpeedValidator(BaseValidator):
         if not self._enabled:
             return
 
-        BaseValidator._mouse_at_validate_xyt(self, x_coord, y_coord, time)
-        self._mouse_at_validate_time(time)
+        self._movement_monitor.mouse_at(x_coord, y_coord, time)
 
-        if self._time0 is None:
-            self._time0 = time
-
-        curr_xyt = (x_coord / self._units_per_mm, y_coord / self._units_per_mm, time)
-
-        latest_prev_time = time - self._calc_speed_interval
-        self._remove_too_old_prev_locations(latest_prev_time)
-
-        #-- Remember current coords & time
-        self._prev_locations.append(curr_xyt)
 
         #-- Calculate speed, if possible
-        if len(self._prev_locations) > 1 \
-                and self._prev_locations[0][2] <= latest_prev_time \
-                and (self._grace_period is None or time-self._time0 > self._grace_period):
+        if self._movement_monitor.time_in_trial is not None and \
+            self._movement_monitor.time_in_trial > self._grace_period and \
+            self._movement_monitor.last_calculation_interval is not None:
 
-            speed = self._calc_speed_func(self._prev_locations[0], curr_xyt)
+            if self._axis == ValidationAxis.x:
+                speed = self._movement_monitor.xspeed
+            elif self._axis == ValidationAxis.y:
+                speed = self._movement_monitor.yspeed
+            elif self._axis == ValidationAxis.xy:
+                speed = self._movement_monitor.xyspeed
+            else:
+                return
 
             if self._min_speed is not None and speed < self._min_speed:
                 raise ValidationFailed(self.err_too_slow, "You moved too slowly", self, { self.arg_speed : speed })
@@ -176,16 +174,7 @@ class InstantaneousSpeedValidator(BaseValidator):
 
     @axis.setter
     def axis(self, value):
-
-        if value == ValidationAxis.x:
-            self._calc_speed_func = InstantaneousSpeedValidator._calc_speed_x
-        elif value == ValidationAxis.y:
-            self._calc_speed_func = InstantaneousSpeedValidator._calc_speed_y
-        elif value == ValidationAxis.xy:
-            self._calc_speed_func = InstantaneousSpeedValidator._calc_speed_xy
-        else:
-            raise ValueError("dobbyt error: invalid value ({0}) for InstantaneousSpeedValidator.axis - expecting a value of type ValidationAxis".format(value))
-
+        self.validate_type("axis", value, ValidationAxis)
         self._axis = value
 
 
@@ -233,15 +222,13 @@ class InstantaneousSpeedValidator(BaseValidator):
 
     #-----------------------------------------------------------------------------------
     @property
-    def calc_speed_interval(self):
+    def calculation_interval(self):
         """
         Time interval (in seconds) for testing speed: the speed is calculated according to the difference in
         (x,y) coordinates over a time interval at least this long.
         """
-        return self._calc_speed_interval
+        return self._movement_monitor.calculation_interval
 
-    @calc_speed_interval.setter
-    def calc_speed_interval(self, value):
-        value = self.validate_numeric("calc_speed_interval", value, none_value=BaseValidator.NoneValues.ChangeTo0)
-        self.validate_not_negative("calc_speed_interval", value)
-        self._calc_speed_interval = value
+    @calculation_interval.setter
+    def calculation_interval(self, value):
+        self._movement_monitor.calculation_interval = value

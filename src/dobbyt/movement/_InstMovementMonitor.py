@@ -11,6 +11,7 @@ import numbers
 import numpy as np
 
 import dobbyt
+# noinspection PyProtectedMember
 from dobbyt.misc._utils import ErrMsg, BaseValidator
 
 
@@ -225,8 +226,8 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
     def calculation_interval(self, value):
         if not isinstance(value, numbers.Number):
             raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "calculation_interval", "numeric", value))
-        if value <= 0:
-            raise ValueError(ErrMsg.attr_non_positive(self.__class__, "calculation_interval", value))
+        if value < 0:
+            raise ValueError(ErrMsg.attr_negative(self.__class__, "calculation_interval", value))
 
         self._calculation_interval = value
 
