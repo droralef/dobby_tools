@@ -10,13 +10,13 @@ from __future__ import division
 
 import numbers
 
-import dobbyt.misc._utils as _u
-from dobbyt.validators import ValidationAxis, ValidationFailed
+import dobbyt._utils as _u
 from dobbyt.movement import SpeedMonitor
+from dobbyt.validators import ValidationAxis, ValidationFailed, _BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
-class InstantaneousSpeedValidator(_u.BaseValidator):
+class InstantaneousSpeedValidator(_BaseValidator):
     """
     Validator for momentary (instantanesous) speed: make sure that at each given moment, the
     movement speed is within the valid boundaries

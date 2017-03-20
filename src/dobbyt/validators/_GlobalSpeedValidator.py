@@ -13,12 +13,12 @@ import numbers
 import numpy as np
 
 import dobbyt
-import dobbyt.misc._utils as _u
-from dobbyt.validators import ValidationAxis, ValidationFailed
+import dobbyt._utils as _u
+from dobbyt.validators import ValidationAxis, ValidationFailed, _BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
-class GlobalSpeedValidator(_u.BaseValidator):
+class GlobalSpeedValidator(_BaseValidator):
     """
     Validate minimal movement speed.
     The validation is of the *average* speed per trial. The validator can also interpolate the speed limit,

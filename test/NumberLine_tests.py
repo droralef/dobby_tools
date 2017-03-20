@@ -31,7 +31,7 @@ class NumberLineTestCase(unittest.TestCase):
         nl.validate()
 
 
-    #----------- Validate mouse_at()
+    #----------- Validate update_xy()
 
     #-- Touch mode = undirectioned, horizontal line
     def test_touch_line_undirectioned_horizontal(self):

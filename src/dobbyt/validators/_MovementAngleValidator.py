@@ -14,14 +14,13 @@ import expyriment
 import numpy as np
 
 import dobbyt
+import dobbyt._utils as _u
 import dobbyt.misc.utils as u
-import dobbyt.misc._utils as _u
-from dobbyt.misc._utils import BaseValidator
-from dobbyt.validators import ValidationFailed
+from dobbyt.validators import ValidationFailed, _BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
-class MovementAngleValidator(_u.BaseValidator):
+class MovementAngleValidator(_BaseValidator):
 
 
     err_invalid_angle = "invalid_angle"

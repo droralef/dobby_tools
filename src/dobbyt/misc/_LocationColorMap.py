@@ -7,12 +7,14 @@
 """
 
 from __future__ import division
-from scipy import misc
+
 import numbers
+
 import numpy as np
+from scipy import misc
 
 import dobbyt
-from dobbyt.misc._utils import BaseValidator, ErrMsg
+import dobbyt._utils as _u
 from dobbyt.misc.utils import color_rgb_to_num
 
 
@@ -116,8 +118,7 @@ class LocationColorMap(dobbyt._Dobby_Object):
 
     @use_mapping.setter
     def use_mapping(self, value):
-        if not isinstance(value, bool):
-            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "use_mapping", "bool", value))
+        _u.validate_attr_type(self, "use_mapping", value, bool)
         self._use_mapping = value
 
 
@@ -191,15 +192,12 @@ class LocationColorMap(dobbyt._Dobby_Object):
         :return: The color in the given place, or None if the coordinate is out of the image range
         """
 
-        if not isinstance(x_coord, int):
-            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "get_color_at", "int", "x_coord", x_coord))
-        if not isinstance(y_coord, int):
-            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "get_color_at", "int", "y_coord", y_coord))
+        _u.validate_func_arg_type(self, "get_color_at", "x_coord", x_coord, int)
+        _u.validate_func_arg_type(self, "get_color_at", "y_coord", y_coord, int)
+        _u.validate_func_arg_type(self, "get_color_at", "use_mapping", use_mapping, numbers.Number, none_allowed=True)
 
         if use_mapping is None:
             use_mapping = self._use_mapping
-        elif not isinstance(use_mapping, bool):
-            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "get_color_at", "bool", "use_mapping", use_mapping))
 
         if self._color_to_code is None and use_mapping:
             raise ValueError("dobbyt error: a call to %s.get_color_at(use_mapping=True) is invalid because color_codes were not specified" % self.__class__)

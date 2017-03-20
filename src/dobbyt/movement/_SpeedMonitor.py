@@ -7,11 +7,13 @@ Movement monitor: continuously track speed, direction, etc.
 """
 
 from __future__ import division
+
 import numbers
+
 import numpy as np
 
 import dobbyt
-import dobbyt.misc._utils as _u
+import dobbyt._utils as _u
 
 
 class SpeedMonitor(dobbyt._Dobby_Object):
@@ -24,8 +26,8 @@ class SpeedMonitor(dobbyt._Dobby_Object):
     def __init__(self, units_per_mm, calculation_interval):
         """
         Constructor
-        :param units_per_mm: See :func:`~dobbyt.movement.InstMovementMonitor.units_per_mm`
-        :param calculation_interval: See :func:`~dobbyt.movement.InstMovementMonitor.calculation_interval`
+        :param units_per_mm: See :func:`~dobbyt.movement.SpeedMonitor.units_per_mm`
+        :param calculation_interval: See :func:`~dobbyt.movement.SpeedMonitor.calculation_interval`
         """
         super(SpeedMonitor, self).__init__()
 
@@ -62,9 +64,9 @@ class SpeedMonitor(dobbyt._Dobby_Object):
         :param time: use the same time scale provided to reset()
         """
 
-        _u.validate_func_arg_type(self, "update_xyt", "x_coord", x_coord, numbers.Number, type_name="numeric")
-        _u.validate_func_arg_type(self, "update_xyt", "y_coord", y_coord, numbers.Number, type_name="numeric")
-        _u.validate_func_arg_type(self, "update_xyt", "time", time, numbers.Number, type_name="numeric")
+        _u.validate_func_arg_type(self, "update_xyt", "x_coord", x_coord, numbers.Number)
+        _u.validate_func_arg_type(self, "update_xyt", "y_coord", y_coord, numbers.Number)
+        _u.validate_func_arg_type(self, "update_xyt", "time", time, numbers.Number)
         self._validate_time(time)
 
         if self._time0 is None:
@@ -93,7 +95,7 @@ class SpeedMonitor(dobbyt._Dobby_Object):
         #-- Validate that times are provided in increasing order
         prev_time = self._recent_points[-1][2] if len(self._recent_points) > 0 else self._time0
         if prev_time is not None and prev_time > time:
-            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, prev_time))
+            raise dobbyt.InvalidStateError("{0}.update_xyt() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, prev_time))
 
 
     #--------------------------------------
@@ -198,7 +200,7 @@ class SpeedMonitor(dobbyt._Dobby_Object):
     @property
     def units_per_mm(self):
         """
-        The ratio of units (provided in the call to :func:`~dobbyt.movement.MovementMonitor.mouse_at`) per mm
+        The ratio of units (provided in the call to :func:`~dobbyt.movement.SpeedMonitor.update_xyt`) per mm
         """
         return self._units_per_mm
 

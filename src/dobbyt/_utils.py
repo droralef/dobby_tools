@@ -9,8 +9,6 @@ Dobby tools - movement package - private utilities
 from enum import Enum
 import numbers
 
-import dobbyt
-
 
 #--------------------------------------------------------------------------
 class ErrMsg(object):
@@ -25,18 +23,9 @@ class ErrMsg(object):
         return "dobbyt error: {0}.{1} was set to a non-{2} value ({3})".format(class_name, attr_name, expected_type, arg_value)
 
     @staticmethod
-    def attr_non_positive(class_name, attr_name, arg_value):
-        "dobbyt error: {0}.{1} was set to a non-positive value ({2})".format(class_name, attr_name, arg_value)
-
-    @staticmethod
-    def attr_negative(class_name, attr_name, arg_value):
-        "dobbyt error: {0}.{1} was set to a negative value ({2})".format(class_name, attr_name, arg_value)
-
-    @staticmethod
     def attr_invalid_value(class_name, attr_name, arg_value):
         "dobbyt error: {0}.{1} was set to an invalid value ({2})".format(class_name, attr_name, arg_value)
 
-    #-----------------
 
     @staticmethod
     def invalid_func_arg_type(method_name, expected_type, arg_name, arg_value):
@@ -45,34 +34,6 @@ class ErrMsg(object):
     @staticmethod
     def invalid_method_arg_type(class_name, method_name, expected_type, arg_name, arg_value):
         return "dobbyt error: {0}.{1}() was called with a non-{2} {3} ({4})".format(class_name, method_name, expected_type, arg_name, arg_value)
-
-
-
-
-#--------------------------------------------------------------------------
-#
-# Base class for validators - contains various implementation issues
-#
-class BaseValidator(dobbyt._Dobby_Object):
-
-    def __init__(self, enabled=False):
-        super(BaseValidator, self).__init__()
-        self.enabled = enabled
-
-    #-----------------------------------------------------------------------------------
-    @property
-    def enabled(self):
-        """Whether the validator is currently enabled (boolean)"""
-        return self._enabled
-
-    @enabled.setter
-    def enabled(self, value):
-
-        if not isinstance(value, bool):
-            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "enabled", bool, value))
-
-        self._enabled = value
-
 
 
 #============================================================================
@@ -120,12 +81,14 @@ def validate_attr_numeric(obj, attr_name, value, none_value=NoneValues.Invalid):
 #--------------------------------------
 def validate_attr_not_negative(obj, attr_name, value):
     if value is not None and value < 0:
-        raise ValueError(ErrMsg.attr_negative(type(obj), attr_name, value))
+        msg = "dobbyt error: {0}.{1} was set to a negative value ({2})".format(type(obj), attr_name, value)
+        raise ValueError(msg)
 
 #--------------------------------------
 def validate_attr_positive(obj, attr_name, value):
     if value is not None and value <= 0:
-        raise ValueError(ErrMsg.attr_non_positive(type(obj), attr_name, value))
+        msg = "dobbyt error: {0}.{1} was set to a negative/0 value ({2})".format(type(obj), attr_name, value)
+        raise ValueError(msg)
 
 
 #============================================================================
@@ -143,6 +106,28 @@ def validate_func_arg_type(obj, func_name, arg_name, value, arg_type, none_allow
             raise ValueError(ErrMsg.invalid_func_arg_type(func_name, type_name, arg_name, value))
         else:
             raise ValueError(ErrMsg.invalid_method_arg_type(type(obj), func_name, type_name, arg_name, value))
+
+#--------------------------------------
+def validate_func_arg_not_negative(obj, func_name, arg_name, value):
+
+    if value is not None and value < 0:
+        if obj is None:
+            msg = "dobbyt error: Argument '{1}' of {0}() has a negative value ({2})".format(func_name, arg_name, value)
+        else:
+            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative value ({3})".format(type(obj), func_name, arg_name, value)
+
+        raise ValueError(msg)
+
+#--------------------------------------
+def validate_func_arg_positive(obj, func_name, arg_name, value):
+
+    if value is not None and value <= 0:
+        if obj is None:
+            msg = "dobbyt error: Argument '{1}' of {0}() has a negative/0 value ({2})".format(func_name, arg_name, value)
+        else:
+            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative/0 value ({3})".format(type(obj), func_name, arg_name, value)
+
+        raise ValueError(msg)
 
 
 

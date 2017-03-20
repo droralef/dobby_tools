@@ -6,10 +6,12 @@ Trajectory Tracker: track mouse/finger movement
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
+import numbers
+
 import expyriment
 
 import dobbyt
-from dobbyt.misc._utils import ErrMsg
+import dobbyt._utils as _u
 
 
 # noinspection PyAttributeOutsideInit
@@ -38,9 +40,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
 
     @tracking_active.setter
     def tracking_active(self, value):
-        if not isinstance(value, bool):
-            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, 'tracking_active', bool, value))
-
+        _u.validate_attr_type(self, "tracking_active", value, bool)
         self._tracking_active = value
 
 
@@ -68,12 +68,11 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
         if not self._tracking_active:
             return
 
-        if not isinstance(x_coord, (float, int)):
-            raise ValueError(TrajectoryTracker._errmsg_non_numeric_coord.format('x coordinate', x_coord))
-        if not isinstance(y_coord, (float, int)):
-            raise ValueError(TrajectoryTracker._errmsg_non_numeric_coord.format('y coordinate', y_coord))
-        if not isinstance(time, (float, int)):
-            raise ValueError(TrajectoryTracker._errmsg_non_numeric_coord.format('time', time))
+        _u.validate_func_arg_type(self, "update_xyt", "x_coord", x_coord, numbers.Number)
+        _u.validate_func_arg_type(self, "update_xyt", "y_coord", y_coord, numbers.Number)
+        _u.validate_func_arg_type(self, "update_xyt", "time", time, numbers.Number)
+        _u.validate_func_arg_type(self, "update_xyt", "time", time, numbers.Number)
+
         if time < 0:
             raise ValueError(TrajectoryTracker._errmsg_negative_time.format(time))
 

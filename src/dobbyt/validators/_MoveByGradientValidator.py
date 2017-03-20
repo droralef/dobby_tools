@@ -8,15 +8,14 @@
 
 import numbers
 
-import dobbyt.misc._utils as _u
-from dobbyt.misc import LocationColorMap
-from dobbyt.validators import ValidationFailed
-
+import dobbyt._utils as _u
 import dobbyt.misc.utils as u
+from dobbyt.misc import LocationColorMap
+from dobbyt.validators import ValidationFailed, _BaseValidator
 
 
 
-class MoveByGradientValidator(_u.BaseValidator):
+class MoveByGradientValidator(_BaseValidator):
     """
     This validator gets an image, and allows mouse to move only according to it -
     from a light color to a darker color (or vice versa).

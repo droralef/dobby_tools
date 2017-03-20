@@ -8,15 +8,14 @@
 
 import numbers
 
-import dobbyt.misc._utils as _u
-from dobbyt.misc import LocationColorMap
-from dobbyt.validators import ValidationFailed
-
+import dobbyt._utils as _u
 import dobbyt.misc.utils as u
+from dobbyt.misc import LocationColorMap
+from dobbyt.validators import ValidationFailed, _BaseValidator
 
 
 
-class LocationsValidator(_u.BaseValidator):
+class LocationsValidator(_BaseValidator):
     """
     This validator gets an image, and validates that the mouse/finger would be placed
     only on pixels of certain color(s).
