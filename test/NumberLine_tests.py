@@ -40,14 +40,14 @@ class NumberLineTestCase(unittest.TestCase):
         nl.touch_distance = 10
 
         #-- touch twice from the same direction
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(0, 11))
-        self.assertTrue(nl.mouse_at(0, 9))
+        nl.reset()
+        self.assertFalse(nl.update_xy(0, 11))
+        self.assertTrue(nl.update_xy(0, 9))
 
         #-- touch twice from two different directions
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(0, 11))
-        self.assertTrue(nl.mouse_at(0, -9))
+        nl.reset()
+        self.assertFalse(nl.update_xy(0, 11))
+        self.assertTrue(nl.update_xy(0, -9))
 
 
     #-- Touch mode = undirectioned, vertical line
@@ -57,14 +57,14 @@ class NumberLineTestCase(unittest.TestCase):
         nl.touch_distance = 10
 
         #-- touch twice from the same direction
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(11, 0))
-        self.assertTrue(nl.mouse_at(9, 0))
+        nl.reset()
+        self.assertFalse(nl.update_xy(11, 0))
+        self.assertTrue(nl.update_xy(9, 0))
 
         #-- touch twice from two different directions
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(11, 0))
-        self.assertTrue(nl.mouse_at(-9, 0))
+        nl.reset()
+        self.assertFalse(nl.update_xy(11, 0))
+        self.assertTrue(nl.update_xy(-9, 0))
 
     #-- Touch mode = directioned, horizontal line
     def test_touch_line_directioned_horizontal(self):
@@ -73,26 +73,26 @@ class NumberLineTestCase(unittest.TestCase):
         nl.touch_distance = 10
 
         #-- Get closer to the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(0, 11))
-        self.assertTrue(nl.mouse_at(0, 9))
+        nl.reset()
+        self.assertFalse(nl.update_xy(0, 11))
+        self.assertTrue(nl.update_xy(0, 9))
 
         #-- Cross the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(0, 11))
-        self.assertTrue(nl.mouse_at(0, -100))
+        nl.reset()
+        self.assertFalse(nl.update_xy(0, 11))
+        self.assertTrue(nl.update_xy(0, -100))
 
         #--- Now, from the other direction
 
         #-- Get closer to the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(0, -11))
-        self.assertTrue(nl.mouse_at(0, -9))
+        nl.reset()
+        self.assertFalse(nl.update_xy(0, -11))
+        self.assertTrue(nl.update_xy(0, -9))
 
         #-- Cross the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(0, -11))
-        self.assertTrue(nl.mouse_at(0, 100))
+        nl.reset()
+        self.assertFalse(nl.update_xy(0, -11))
+        self.assertTrue(nl.update_xy(0, 100))
 
 
     #-- Touch mode = directioned, vertical line
@@ -102,26 +102,26 @@ class NumberLineTestCase(unittest.TestCase):
         nl.touch_distance = 10
 
         #-- Get closer to the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(11, 0))
-        self.assertTrue(nl.mouse_at(9, 0))
+        nl.reset()
+        self.assertFalse(nl.update_xy(11, 0))
+        self.assertTrue(nl.update_xy(9, 0))
 
         #-- Cross the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(11, 0))
-        self.assertTrue(nl.mouse_at(-100, 0))
+        nl.reset()
+        self.assertFalse(nl.update_xy(11, 0))
+        self.assertTrue(nl.update_xy(-100, 0))
 
         #--- Now, from the other direction
 
         #-- Get closer to the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(-11, 0))
-        self.assertTrue(nl.mouse_at(-9, 0))
+        nl.reset()
+        self.assertFalse(nl.update_xy(-11, 0))
+        self.assertTrue(nl.update_xy(-9, 0))
 
         #-- Cross the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(-11, 0))
-        self.assertTrue(nl.mouse_at(100, 0))
+        nl.reset()
+        self.assertFalse(nl.update_xy(-11, 0))
+        self.assertTrue(nl.update_xy(100, 0))
 
 
     #-- Touch mode = directioned, negative distance
@@ -131,12 +131,12 @@ class NumberLineTestCase(unittest.TestCase):
         nl.touch_distance = -10
 
         #-- Get closer to the line
-        nl.reset_mouse_pos()
-        self.assertFalse(nl.mouse_at(0, 10))
-        self.assertFalse(nl.mouse_at(0, 1))
-        self.assertFalse(nl.mouse_at(0, 0))
-        self.assertFalse(nl.mouse_at(0, -5))
-        self.assertTrue(nl.mouse_at(0, -11))
+        nl.reset()
+        self.assertFalse(nl.update_xy(0, 10))
+        self.assertFalse(nl.update_xy(0, 1))
+        self.assertFalse(nl.update_xy(0, 0))
+        self.assertFalse(nl.update_xy(0, -5))
+        self.assertTrue(nl.update_xy(0, -11))
 
 
 

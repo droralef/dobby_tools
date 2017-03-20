@@ -6,15 +6,17 @@
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
+import numbers
+
+import dobbyt.misc._utils as _u
 from dobbyt.misc import LocationColorMap
-from dobbyt.misc._utils import BaseValidator, ErrMsg
 from dobbyt.validators import ValidationFailed
 
 import dobbyt.misc.utils as u
 
 
 
-class LocationsValidator(BaseValidator):
+class LocationsValidator(_u.BaseValidator):
     """
     This validator gets an image, and validates that the mouse/finger would be placed
     only on pixels of certain color(s).
@@ -24,6 +26,8 @@ class LocationsValidator(BaseValidator):
     err_invalid_coordinates = "invalid_coords"
     arg_color = 'color'  # ValidationFailed exception argument: the color in the invalid location
 
+
+    #------------------------------------------------------------
     def __init__(self, image, enabled=False, position=None, default_valid=False):
         """
         Constructor
@@ -50,7 +54,7 @@ class LocationsValidator(BaseValidator):
         """
         The position of the image: (x,y) tuple/list, indicating the image center
         For even-sized images, use the Expyriment standard.
-        The position is used to align the image's coordinate space with that of mouse_at()
+        The position is used to align the image's coordinate space with that of check_xy()
         """
         return self._lcm.position
 
@@ -72,7 +76,7 @@ class LocationsValidator(BaseValidator):
 
     @default_valid.setter
     def default_valid(self, value):
-        self.validate_type(self, value, bool)
+        _u.validate_attr_type(self, "default_valid", value, bool)
         self._default_valid = value
 
 
@@ -99,13 +103,14 @@ class LocationsValidator(BaseValidator):
         if u.is_rgb(value):
             value = (value,)
 
-        if not isinstance(value, (list, tuple, set)):
-            raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "iterable", value))
+        _u.validate_attr_type(self, attr_name, value, (list, tuple, set))
+#TODO        if not isinstance(value, (list, tuple, set)):
+#            raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "iterable", value))
 
         colors = set()
         for c in value:
             if not u.is_rgb(c):
-                raise ValueError(ErrMsg.attr_invalid_type(type(self), attr_name, "color", value))
+                raise ValueError(_u.ErrMsg.attr_invalid_type(type(self), attr_name, "color", value))
             colors.add(u.color_rgb_to_num(c))
 
         return colors
@@ -116,16 +121,16 @@ class LocationsValidator(BaseValidator):
     #======================================================================
 
 
-    def mouse_at(self, x_coord, y_coord):
+    def check_xy(self, x_coord, y_coord):
         """
         Check whether the given coordinate is a valid one
-        :param x_coord: number
-        :param y_coord: number
+        :return: None if all OK, ValidationFailed if error
         """
-        BaseValidator._mouse_at_validate_xy(self, x_coord, y_coord)
+        _u.validate_func_arg_type(self, "check_xy", "x_coord", x_coord, numbers.Number)
+        _u.validate_func_arg_type(self, "check_xy", "y_coord", y_coord, numbers.Number)
 
         if not self._enabled:
-            return
+            return None
 
         color = self._lcm.get_color_at(x_coord, y_coord)
         if self._default_valid:
@@ -133,8 +138,11 @@ class LocationsValidator(BaseValidator):
         else:
             ok = color in self._valid_colors
 
-        if not ok:
-            raise ValidationFailed(self.err_invalid_coordinates, "You moved to an invalid location",
-                                   self, { LocationsValidator.arg_color : color })
+        if ok:
+            return None
+
+        else:
+            return ValidationFailed(self.err_invalid_coordinates, "You moved to an invalid location",
+                                    self, {LocationsValidator.arg_color: color})
 
 

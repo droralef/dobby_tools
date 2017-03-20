@@ -103,7 +103,7 @@ class NumberLine(dobbyt._Dobby_Object):
 
         self._visual_objects = {}
 
-        self.reset_mouse_pos()
+        self.reset()
 
 
     #-----------------------------------------------------------------------------------
@@ -332,9 +332,9 @@ class NumberLine(dobbyt._Dobby_Object):
     _errmsg_mouseat_non_numeric_coord = "dobbyt error in NumberLine.mouseAt(): a non-numeric {0} coordinate was provided ({1})"
 
     #---------------------------------------------------------
-    def reset_mouse_pos(self):
+    def reset(self):
         """
-        Reset the last-known mouse position, so that mouse_at() will forget any previous movement
+        Reset the last-known mouse position, so that update_xy() will forget any previous movement
         This function is typically called in the beginning of a trial.
         """
 
@@ -344,7 +344,7 @@ class NumberLine(dobbyt._Dobby_Object):
 
 
     #---------------------------------------------------------
-    def mouse_at(self, x_coord, y_coord):
+    def update_xy(self, x_coord, y_coord):
         """
         This function is called when mouse/touch has moved. It checks whether the movement implies touching the number line.
         :param x_coord:

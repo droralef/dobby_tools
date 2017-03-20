@@ -9,18 +9,18 @@ class DirectionValidatorTestCase(unittest.TestCase):
     #------------------------------------------
     def test_validation_disabled(self):
         val = MovementAngleValidator(1)
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(1, 1, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(1, 1, 1))
 
     #------------------------------------------
     def test_validation_basic(self):
         val = MovementAngleValidator(1, enabled=True, min_angle=0, max_angle=180)
         val.reset()
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(1, 0, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(1, 0, 1))
         val.reset()
-        val.mouse_at(0, 0, 0)
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(-1, 0, 1))
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNotNone(val.check_xyt(-1, 0, 1))
 
     #------------------------------------------
     def test_config(self):
@@ -82,87 +82,87 @@ class DirectionValidatorTestCase(unittest.TestCase):
     def test_range_crosses_zero(self):
         val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
 
-        val.mouse_at(0, 0, 0)
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(1.01, 1, 1))
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNotNone(val.check_xyt(1.01, 1, 1))
 
         val.reset()
-        val.mouse_at(0, 0, 0)
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(-1.01, 1, 1))
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNotNone(val.check_xyt(-1.01, 1, 1))
 
         val.reset()
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(0.99, 1, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(0.99, 1, 1))
 
         val.reset()
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(-0.99, 1, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(-0.99, 1, 1))
 
     #------------------------------------------
     def test_min_gt_max(self):
         val = MovementAngleValidator(1, enabled=True, min_angle=45, max_angle=-45)
 
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(1.01, 1, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(1.01, 1, 1))
 
         val.reset()
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(-1.01, 1, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(-1.01, 1, 1))
 
         val.reset()
-        val.mouse_at(0, 0, 0)
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0.99, 1, 1))
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNotNone(val.check_xyt(0.99, 1, 1))
 
         val.reset()
-        val.mouse_at(0, 0, 0)
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(-0.99, 1, 1))
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNotNone(val.check_xyt(-0.99, 1, 1))
 
     #------------------------------------------
     # Movement exactly towards min_angle or max_angle - is considered as valid
     def test_threshold_is_valid(self):
         val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(1, 1, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(1, 1, 1))
 
         val = MovementAngleValidator(1, enabled=True, min_angle=45, max_angle=-45)
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(1, 1, 1)
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(1, 1, 1))
 
     #------------------------------------------
     def test_movement_continues(self):
         val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
 
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(0, 1, 1)
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(1.01, 2, 1))
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(0, 1, 1))
+        self.assertIsNotNone(val.check_xyt(1.01, 2, 1))
 
     #------------------------------------------
     def test_grace(self):
         val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45, grace_period=1)
 
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(0, -1, 1)  # in grace period
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(0, -2, 1.01))   # Now we get the error
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(0, -1, 1))  # in grace period
+        self.assertIsNotNone(val.check_xyt(0, -2, 1.01))   # Now we get the error
 
     #------------------------------------------
     def test_min_distance(self):
         val = MovementAngleValidator(1, enabled=True, min_angle=-45, max_angle=45)
         val.calc_angle_interval = 1.5
 
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(0, -1, 0.1)  # Too close to calculate direction
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(0, -1, 0.1))  # Too close to calculate direction
 
-        self.assertRaises(ValidationFailed, lambda: val.mouse_at(0, -2, 0.2))   # Now we get the error
+        self.assertIsNotNone(val.check_xyt(0, -2, 0.2))   # Now we get the error
 
-        val.mouse_at(0, 1, 0.3)   # Moving back in a valid direction
+        self.assertIsNone(val.check_xyt(0, 1, 0.3))   # Moving back in a valid direction
 
     #------------------------------------------
     def test_units_per_mm(self):
         val = MovementAngleValidator(2, enabled=True, min_angle=-45, max_angle=45)
         val.calc_angle_interval = 1
 
-        val.mouse_at(0, 0, 0)
-        val.mouse_at(1.98, 0, 0.1)  # Too close to calculate direction: 1.98 units = 0.99 mm
-        self.assertRaises(ValidationFailed, lambda:val.mouse_at(2.02, 0, 0.2))  # Far enough
+        self.assertIsNone(val.check_xyt(0, 0, 0))
+        self.assertIsNone(val.check_xyt(1.98, 0, 0.1))  # Too close to calculate direction: 1.98 units = 0.99 mm
+        self.assertIsNotNone(val.check_xyt(2.02, 0, 0.2))  # Far enough
 
 
 

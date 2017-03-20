@@ -9,5 +9,5 @@ Dobby tools - movement package
 
 
 #  Import the package classes
-from _InstMovementMonitor import InstMovementMonitor
+from _SpeedMonitor import SpeedMonitor
 from _TrajectoryTracker import TrajectoryTracker

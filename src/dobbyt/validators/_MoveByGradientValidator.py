@@ -6,15 +6,17 @@
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
+import numbers
+
+import dobbyt.misc._utils as _u
 from dobbyt.misc import LocationColorMap
-from dobbyt.misc._utils import BaseValidator, ErrMsg
 from dobbyt.validators import ValidationFailed
 
 import dobbyt.misc.utils as u
 
 
 
-class MoveByGradientValidator(BaseValidator):
+class MoveByGradientValidator(_u.BaseValidator):
     """
     This validator gets an image, and allows mouse to move only according to it -
     from a light color to a darker color (or vice versa).
@@ -53,7 +55,7 @@ class MoveByGradientValidator(BaseValidator):
         """
         The position of the image: (x,y) tuple/list, indicating the image center
         For even-sized images, use the Expyriment standard.
-        The position is used to align the image's coordinate space with that of mouse_at()
+        The position is used to align the image's coordinate space with that of check_xy()
         """
         return self._lcm.position
 
@@ -73,7 +75,7 @@ class MoveByGradientValidator(BaseValidator):
 
     @rgb_should_ascend.setter
     def rgb_should_ascend(self, value):
-        self.validate_type(self, value, bool)
+        _u.validate_attr_type(self, "rgb_should_ascend", value, bool)
         self._rgb_should_ascend = value
 
 
@@ -97,8 +99,8 @@ class MoveByGradientValidator(BaseValidator):
             self._last_validated_rgb = u.color_rgb_to_num(value)
         else:
             if value is not None:
-                self.validate_numeric("last_validated_rgb", value)
-                self.validate_not_negative("last_validated_rgb", value)
+                _u.validate_attr_numeric(self, "last_validated_rgb", value)
+                _u.validate_attr_not_negative(self, "last_validated_rgb", value)
             self._last_validated_rgb = value
 
 
@@ -113,8 +115,8 @@ class MoveByGradientValidator(BaseValidator):
 
     @max_valid_back_movement.setter
     def max_valid_back_movement(self, value):
-        self.validate_numeric(self, value)
-        self.validate_not_negative(self, value)
+        _u.validate_attr_numeric(self, "max_valid_back_movement", value)
+        _u.validate_attr_not_negative(self, "max_valid_back_movement", value)
         self._max_valid_back_movement = value
 
 
@@ -132,25 +134,25 @@ class MoveByGradientValidator(BaseValidator):
 
 
     #-----------------------------------------------------------------
-    def mouse_at(self, x_coord, y_coord):
+    def check_xy(self, x_coord, y_coord):
         """
         Validate the movement
-        :param x_coord: number
-        :param y_coord: number
+        :return: None if all OK, ValidationFailed if error
         """
-        BaseValidator._mouse_at_validate_xy(self, x_coord, y_coord)
+        _u.validate_func_arg_type(self, "check_xy", "x_coord", x_coord, numbers.Number)
+        _u.validate_func_arg_type(self, "check_xy", "y_coord", y_coord, numbers.Number)
 
         if not self._enabled:
-            return
+            return None
 
         color = self._lcm.get_color_at(x_coord, y_coord)
         if color is None:
-            return  # can't validate
+            return None  # can't validate
 
         if self._last_color is None:
             #-- Nothing to validate
             self._last_color = color
-            return
+            return None
 
 
         expected_direction = 1 if self._rgb_should_ascend else -1
@@ -158,12 +160,12 @@ class MoveByGradientValidator(BaseValidator):
         if rgb_delta >= 0:
             #-- All is OK
             self._last_color = color
-            return
+            return None
 
         if rgb_delta >= -self._max_valid_back_movement:
             #-- The movement was in the opposite color diredction, but only slightly:
             #-- Don't issue an error, but also don't update "last_color" - remember the previous one
-            return
+            return None
 
         #-- Invalid situation!
 
@@ -171,8 +173,8 @@ class MoveByGradientValidator(BaseValidator):
                 ((self._rgb_should_ascend and self._last_color > self._last_validated_rgb) or
                  (not self._rgb_should_ascend and self._last_color < self._last_validated_rgb)):
             #-- Previous color is very close to 0 - avoid validating, in order to allow "crossing the 0 color"
-            return
+            return None
 
-        raise ValidationFailed(self.err_gradient, "You moved in an invalid direction", self)
+        return ValidationFailed(self.err_gradient, "You moved in an invalid direction", self)
 
 

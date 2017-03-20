@@ -147,54 +147,54 @@ class MoveByGradientValidatorTests(unittest.TestCase):
     #-------------------------------------------------------
     def test_validate_basic(self):
         val = MoveByGradientValidator(grad, enabled=True)
-        val.mouse_at(0, 0)
-        val.mouse_at(10, 0)
-        self.assertRaises(ValidationFailed, lambda: val.mouse_at(9, 0))
+        self.assertIsNone(val.check_xy(0, 0))
+        self.assertIsNone(val.check_xy(10, 0))
+        self.assertIsNotNone(val.check_xy(9, 0))
 
 
     #-------------------------------------------------------
     def test_validator_disabled(self):
         val = MoveByGradientValidator(grad)
-        val.mouse_at(0, 0)
-        val.mouse_at(-1, 0)
+        self.assertIsNone(val.check_xy(0, 0))
+        self.assertIsNone(val.check_xy(-1, 0))
 
 
     #-------------------------------------------------------
     def test_validate_out_of_range(self):
         val = MoveByGradientValidator(grad, enabled=True)
-        val.mouse_at(0, 0)
-        val.mouse_at(-100, 0)
+        self.assertIsNone(val.check_xy(0, 0))
+        self.assertIsNone(val.check_xy(-100, 0))
 
 
     #-------------------------------------------------------
     def test_validate_small_back_movement(self):
         val = MoveByGradientValidator(grad, enabled=True)
         val.max_valid_back_movement = 3
-        val.mouse_at(0, 0)
-        val.mouse_at(-3, 0)
-        self.assertRaises(ValidationFailed, lambda: val.mouse_at(-4, 0))
+        self.assertIsNone(val.check_xy(0, 0))
+        self.assertIsNone(val.check_xy(-3, 0))
+        self.assertIsNotNone(val.check_xy(-4, 0))
 
 
     # -------------------------------------------------------
     def test_validate_descending(self):
         val = MoveByGradientValidator(grad, enabled=True, rgb_should_ascend=False)
-        val.mouse_at(0, 0)
-        val.mouse_at(-10, 0)
-        self.assertRaises(ValidationFailed, lambda: val.mouse_at(-9, 0))
+        self.assertIsNone(val.check_xy(0, 0))
+        self.assertIsNone(val.check_xy(-10, 0))
+        self.assertIsNotNone(val.check_xy(-9, 0))
 
 
     #-------------------------------------------------------
     def test_validate_cross_zero(self):
         val = MoveByGradientValidator(grad, enabled=True, last_validated_rgb=(0, 0, 90))
-        val.mouse_at(0, 0)   # the color here is 50
-        val.mouse_at(40, 0)  # the color here is 90
-        val.mouse_at(45, 0)  # the color here is 95
-        val.mouse_at(-45, 0)  # the color here is 5
+        self.assertIsNone(val.check_xy(0, 0))   # the color here is 50
+        self.assertIsNone(val.check_xy(40, 0))  # the color here is 90
+        self.assertIsNone(val.check_xy(45, 0))  # the color here is 95
+        self.assertIsNone(val.check_xy(-45, 0))  # the color here is 5
 
         val = MoveByGradientValidator(grad, enabled=True, last_validated_rgb=(0, 0, 90))
-        val.mouse_at(0, 0)   # the color here is 50
-        val.mouse_at(39, 0)  # the color here is 89
-        self.assertRaises(ValidationFailed, lambda: val.mouse_at(-45, 0))
+        self.assertIsNone(val.check_xy(0, 0))   # the color here is 50
+        self.assertIsNone(val.check_xy(39, 0))  # the color here is 89
+        self.assertIsNotNone(val.check_xy(-45, 0))
 
 
 

@@ -13,12 +13,12 @@ import numbers
 import numpy as np
 
 import dobbyt
-from dobbyt.misc._utils import BaseValidator, ErrMsg
+import dobbyt.misc._utils as _u
 from dobbyt.validators import ValidationAxis, ValidationFailed
 
 
 # noinspection PyAttributeOutsideInit
-class GlobalSpeedValidator(BaseValidator):
+class GlobalSpeedValidator(_u.BaseValidator):
     """
     Validate minimal movement speed.
     The validation is of the *average* speed per trial. The validator can also interpolate the speed limit,
@@ -62,7 +62,7 @@ class GlobalSpeedValidator(BaseValidator):
     def reset(self, time=0):
 
         if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
+            raise ValueError(_u.ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
 
         self._time0 = time
         self._prepare_expected_coords()
@@ -81,20 +81,22 @@ class GlobalSpeedValidator(BaseValidator):
 
 
     #----------------------------------------------------------------------------------
-    def mouse_at(self, x_coord, y_coord, time):
+    def check_xyt(self, x_coord, y_coord, time):
         """
-        Validate movement. Thro
+        Validate movement.
         :param x_coord: Current x coordinates
         :param y_coord: Current x coordinates
         :param time: Time from start of trial
-        :raises dobbyt.ValidationFailed:
+        :returns: None if all OK, ValidationFailed object if error
         """
-        BaseValidator._mouse_at_validate_xyt(self, x_coord, y_coord, time)
+        _u.validate_func_arg_type(self, "check_xyt", "x_coord", x_coord, numbers.Number, type_name="numeric")
+        _u.validate_func_arg_type(self, "check_xyt", "y_coord", y_coord, numbers.Number, type_name="numeric")
+        _u.validate_func_arg_type(self, "check_xyt", "time", time, numbers.Number, type_name="numeric")
 
         #-- If this is the first call in a trial: do nothing
         if self._time0 is None:
             self.reset(time)
-            return False
+            return None
 
         if time < self._time0:
             raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1}, but the trial started at time={2}".format(self.__class__, time, self._time0))
@@ -103,7 +105,7 @@ class GlobalSpeedValidator(BaseValidator):
 
         #-- No validation during grace period
         if time <= self._grace_period or not self._enabled:
-            return
+            return None
 
         #-- Get the expected and actual coordinates
         coord = x_coord if self._axis == ValidationAxis.x else y_coord
@@ -112,7 +114,10 @@ class GlobalSpeedValidator(BaseValidator):
 
         #-- Actual coordinate must be ahead of the expected minimum
         if np.sign(d_coord) != np.sign(self._end_coord - self._origin_coord):
-            raise ValidationFailed(self.err_too_slow, "You moved too slowly", self)
+            return ValidationFailed(self.err_too_slow, "You moved too slowly", self)
+
+        return None
+
 
     #----------------------------------------------------------------------------------
     # Get the coordinate expected
@@ -148,9 +153,9 @@ class GlobalSpeedValidator(BaseValidator):
 
     @axis.setter
     def axis(self, value):
-        self.validate_type("axis", value, ValidationAxis)
+        _u.validate_attr_type(self, "axis", value, ValidationAxis)
         if value == ValidationAxis.xy:
-            raise ValueError(ErrMsg.attr_invalid_value(self.__class__, "axis", value))
+            raise ValueError(_u.ErrMsg.attr_invalid_value(self.__class__, "axis", value))
 
         self._axis = value
 
@@ -165,7 +170,7 @@ class GlobalSpeedValidator(BaseValidator):
 
     @origin_coord.setter
     def origin_coord(self, value):
-        self.validate_numeric("origin_coord", value, BaseValidator.NoneValues.Invalid)
+        _u.validate_attr_numeric(self, "origin_coord", value, _u.NoneValues.Invalid)
         self._origin_coord = value
 
     #-----------------------------------------------------------------------------------
@@ -179,7 +184,7 @@ class GlobalSpeedValidator(BaseValidator):
 
     @end_coord.setter
     def end_coord(self, value):
-        self.validate_numeric("end_coord", value, BaseValidator.NoneValues.Invalid)
+        _u.validate_attr_numeric(self, "end_coord", value, _u.NoneValues.Invalid)
         self._end_coord = value
 
 
@@ -191,8 +196,8 @@ class GlobalSpeedValidator(BaseValidator):
 
     @grace_period.setter
     def grace_period(self, value):
-        value = self.validate_numeric("grace_period", value, BaseValidator.NoneValues.ChangeTo0)
-        self.validate_not_negative("grace_period", value)
+        value = _u.validate_attr_numeric(self, "grace_period", value, _u.NoneValues.ChangeTo0)
+        _u.validate_attr_not_negative(self, "grace_period", value)
         self._grace_period = value
 
     #-----------------------------------------------------------------------------------
@@ -203,8 +208,8 @@ class GlobalSpeedValidator(BaseValidator):
 
     @max_trial_duration.setter
     def max_trial_duration(self, value):
-        value = self.validate_numeric("max_trial_duration", value, BaseValidator.NoneValues.ChangeTo0)
-        self.validate_not_negative("max_trial_duration", value)
+        value = _u.validate_attr_numeric(self, "max_trial_duration", value, _u.NoneValues.ChangeTo0)
+        _u.validate_attr_not_negative(self, "max_trial_duration", value)
         self._max_trial_duration = value
 
     #-----------------------------------------------------------------------------------

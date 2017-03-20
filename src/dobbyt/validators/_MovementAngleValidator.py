@@ -15,12 +15,13 @@ import numpy as np
 
 import dobbyt
 import dobbyt.misc.utils as u
+import dobbyt.misc._utils as _u
 from dobbyt.misc._utils import BaseValidator
 from dobbyt.validators import ValidationFailed
 
 
 # noinspection PyAttributeOutsideInit
-class MovementAngleValidator(BaseValidator):
+class MovementAngleValidator(_u.BaseValidator):
 
 
     err_invalid_angle = "invalid_angle"
@@ -31,7 +32,7 @@ class MovementAngleValidator(BaseValidator):
                  grace_period=0, enabled=False):
         """
         Constructor
-        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.mouse_at`) per mm.
+        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.MovementAngleValidator.check_xyt`) per mm.
                              This is relevant for computation of :func:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
         :param min_angle: See :func:`~dobbyt.movement.MovementAngleValidator.min_angle`
         :param max_angle: See :func:`~dobbyt.movement.MovementAngleValidator.max_angle`
@@ -67,19 +68,21 @@ class MovementAngleValidator(BaseValidator):
 
 
     #-----------------------------------------------------------------------------------
-    def mouse_at(self, x_coord, y_coord, time):
+    def check_xyt(self, x_coord, y_coord, time):
         """
         Given a current position, check whether the movement complies with the speed limits.
         :param x_coord: Current x coordinate (in the predefined coordinate system)
         :param y_coord: Current y coordinate (in the predefined coordinate system)
         :param time: Time, in seconds. The zero point doesn't matter, as long as you're consistent until reset() is called.
-        :return: True if there was an error.
+        :return: None if all OK, ValidationFailed if error
         """
 
         if not self._enabled or self._min_angle == self._max_angle or self._min_angle is None or self._max_angle is None:
-            return False
+            return None
 
-        BaseValidator._mouse_at_validate_xyt(self, x_coord, y_coord, time)
+        _u.validate_func_arg_type(self, "check_xyt", "x_coord", x_coord, numbers.Number, type_name="numeric")
+        _u.validate_func_arg_type(self, "check_xyt", "y_coord", y_coord, numbers.Number, type_name="numeric")
+        _u.validate_func_arg_type(self, "check_xyt", "time", time, numbers.Number, type_name="numeric")
         self._validate_time(time)
 
         x_coord /= self._units_per_mm
@@ -89,7 +92,7 @@ class MovementAngleValidator(BaseValidator):
 
         if time <= self._grace_period:
             self._prev_locations.append(curr_xyt)
-            return
+            return None
 
         can_compute_angle = self._remove_far_enough_prev_locations(x_coord, y_coord)
 
@@ -103,7 +106,7 @@ class MovementAngleValidator(BaseValidator):
             angle = u.get_angle((x0, y0), (x_coord, y_coord))
             if self._angle_is_ok(angle):
                 #-- all is OK
-                return
+                return None
 
             else:
                 #-- Error
@@ -113,12 +116,14 @@ class MovementAngleValidator(BaseValidator):
                     # noinspection PyProtectedMember
                     expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(self.__class__), angle_deg), 1)
 
-                raise ValidationFailed(self.err_invalid_angle, "You moved in an incorrect direction", self,
-                                       { self.arg_angle : angle_deg })
+                return ValidationFailed(self.err_invalid_angle, "You moved in an incorrect direction", self,
+                                        {self.arg_angle: angle_deg})
 
         else:
             #-- Direction cannot be validated - the finger hasn't moved enough yet
             pass
+
+        return None
 
 
     #----------------
@@ -187,7 +192,7 @@ class MovementAngleValidator(BaseValidator):
             self._min_angle_rad = None
             return
 
-        self.validate_numeric("min_angle", value)
+        _u.validate_attr_numeric(self, "min_angle", value)
 
         self._min_angle = value % 360
         self._min_angle_rad = self._min_angle / 360 * np.pi * 2
@@ -210,7 +215,7 @@ class MovementAngleValidator(BaseValidator):
             self._max_angle_rad = None
             return
 
-        self.validate_numeric("max_angle", value)
+        _u.validate_attr_numeric(self, "max_angle", value)
 
         self._max_angle = value % 360
         self._max_angle_rad = self._max_angle / 360 * np.pi * 2
@@ -225,8 +230,8 @@ class MovementAngleValidator(BaseValidator):
 
     @calc_angle_interval.setter
     def calc_angle_interval(self, value):
-        value = self.validate_numeric("calc_angle_interval", value, BaseValidator.NoneValues.ChangeTo0)
-        self.validate_not_negative("calc_angle_interval", value)
+        value = _u.validate_attr_numeric(self, "calc_angle_interval", value, _u.NoneValues.ChangeTo0)
+        _u.validate_attr_not_negative(self, "calc_angle_interval", value)
         self._calc_angle_interval = value
 
     #-----------------------------------------------------------------------------------
@@ -237,7 +242,7 @@ class MovementAngleValidator(BaseValidator):
 
     @grace_period.setter
     def grace_period(self, value):
-        value = self.validate_numeric("grace_period", value, BaseValidator.NoneValues.ChangeTo0)
-        self.validate_not_negative("grace_period", value)
+        value = _u.validate_attr_numeric(self, "grace_period", value, _u.NoneValues.ChangeTo0)
+        _u.validate_attr_not_negative(self, "grace_period", value)
         self._grace_period = value
 

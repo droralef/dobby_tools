@@ -11,14 +11,12 @@ import numbers
 import numpy as np
 
 import dobbyt
-# noinspection PyProtectedMember
-from dobbyt.misc._utils import ErrMsg, BaseValidator
+import dobbyt.misc._utils as _u
 
 
-class InstMovementMonitor(dobbyt._Dobby_Object):
+class SpeedMonitor(dobbyt._Dobby_Object):
     """
-    This object monitors the mouse/finger movement and can get info about the instantaneous movement
-    direction and speed.
+    Monitor the mouse/finger instantaneous speed
     """
 
 
@@ -29,7 +27,7 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
         :param units_per_mm: See :func:`~dobbyt.movement.InstMovementMonitor.units_per_mm`
         :param calculation_interval: See :func:`~dobbyt.movement.InstMovementMonitor.calculation_interval`
         """
-        super(InstMovementMonitor, self).__init__()
+        super(SpeedMonitor, self).__init__()
 
         self.units_per_mm = units_per_mm
         self.calculation_interval = calculation_interval
@@ -50,7 +48,7 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
         :param time: The time when the trial starts.
         """
         if time is not None and not isinstance(time, (int, float)):
-            raise ValueError(ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
+            raise ValueError(_u.ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time))
 
         self._recent_points = []
         self._pre_recent_point = None
@@ -58,15 +56,16 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
 
 
     #-------------------------------------------------------------------------
-    def mouse_at(self, x_coord, y_coord, time):
+    def update_xyt(self, x_coord, y_coord, time):
         """
         Call this method whenever the finger/mouse moves
         :param time: use the same time scale provided to reset()
         """
 
-        # noinspection PyProtectedMember
-        BaseValidator._mouse_at_validate_xyt(self, x_coord, y_coord, time)
-        self._mouse_at_validate_time(time)
+        _u.validate_func_arg_type(self, "update_xyt", "x_coord", x_coord, numbers.Number, type_name="numeric")
+        _u.validate_func_arg_type(self, "update_xyt", "y_coord", y_coord, numbers.Number, type_name="numeric")
+        _u.validate_func_arg_type(self, "update_xyt", "time", time, numbers.Number, type_name="numeric")
+        self._validate_time(time)
 
         if self._time0 is None:
             self._time0 = time
@@ -89,7 +88,7 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
 
 
     #--------------------------------------
-    def _mouse_at_validate_time(self, time):
+    def _validate_time(self, time):
 
         #-- Validate that times are provided in increasing order
         prev_time = self._recent_points[-1][2] if len(self._recent_points) > 0 else self._time0
@@ -128,7 +127,7 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
     #-------------------------------------------------------------------------
     @property
     def xspeed(self):
-        """ The instantaneous speed (mm/sec) """
+        """ The instantaneous X speed (mm/sec) """
 
         if self._pre_recent_point is None:
             return None
@@ -141,7 +140,7 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
     #-------------------------------------------------------------------------
     @property
     def yspeed(self):
-        """ The instantaneous speed (mm/sec) """
+        """ The instantaneous Y speed (mm/sec) """
 
         if self._pre_recent_point is None:
             return None
@@ -154,7 +153,9 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
     #-------------------------------------------------------------------------
     @property
     def xyspeed(self):
-        """ The instantaneous speed (mm/sec) """
+        """
+        The instantaneous speed (mm/sec) - for this calculation we consider the full distance traveled by the mouse/finger
+        """
 
         if self._pre_recent_point is None:
             return None
@@ -204,11 +205,8 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
 
     @units_per_mm.setter
     def units_per_mm(self, value):
-        if not isinstance(value, numbers.Number):
-            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "units_per_mm", "numeric", value))
-        if value <= 0:
-            raise ValueError(ErrMsg.attr_non_positive(self.__class__, "units_per_mm", value))
-
+        _u.validate_attr_type(self, "units_per_mm", value, numbers.Number)
+        _u.validate_attr_positive(self, "units_per_mm", value)
         self._units_per_mm = value
 
 
@@ -224,11 +222,6 @@ class InstMovementMonitor(dobbyt._Dobby_Object):
 
     @calculation_interval.setter
     def calculation_interval(self, value):
-        if not isinstance(value, numbers.Number):
-            raise ValueError(ErrMsg.attr_invalid_type(self.__class__, "calculation_interval", "numeric", value))
-        if value < 0:
-            raise ValueError(ErrMsg.attr_negative(self.__class__, "calculation_interval", value))
-
+        _u.validate_attr_type(self, "calculation_interval", value, numbers.Number)
+        _u.validate_attr_not_negative(self, "calculation_interval", value)
         self._calculation_interval = value
-
-

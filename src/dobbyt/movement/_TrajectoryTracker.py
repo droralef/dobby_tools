@@ -33,7 +33,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
     #----------------------------------------------------
     @property
     def tracking_active(self):
-        """ Whether tracking is currently active (boolean). When inactive, calls to mouse_at() will be ignored. """
+        """ Whether tracking is currently active (boolean). When inactive, calls to update_xyt() will be ignored. """
         return self._tracking_active
 
     @tracking_active.setter
@@ -59,7 +59,7 @@ class TrajectoryTracker(dobbyt._Dobby_Object):
             expyriment._active_exp._event_file_log("Trajectory,Reset", 1)
 
     #----------------------------------------------------
-    def track(self, x_coord, y_coord, time):
+    def update_xyt(self, x_coord, y_coord, time):
         """
         Track a point.
         If tracking is currently inactive, this function will do nothing.
