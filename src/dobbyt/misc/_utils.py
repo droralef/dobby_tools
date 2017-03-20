@@ -118,7 +118,8 @@ class BaseValidator(dobbyt._Dobby_Object):
     #============================================================================
 
     #--------------------------------------
-    def mouse_at_validate_xy(self, x_coord, y_coord):
+    @staticmethod
+    def _mouse_at_validate_xy(self, x_coord, y_coord):
         #-- Validate types
         if not isinstance(x_coord, numbers.Number):
             raise ValueError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "x_coord", x_coord))
@@ -127,9 +128,10 @@ class BaseValidator(dobbyt._Dobby_Object):
 
 
     #--------------------------------------
-    def mouse_at_validate_xyt(self, x_coord, y_coord, time):
+    @staticmethod
+    def _mouse_at_validate_xyt(self, x_coord, y_coord, time):
         #-- Validate types
-        self.mouse_at_validate_xy(x_coord, y_coord)
+        BaseValidator._mouse_at_validate_xy(self, x_coord, y_coord)
         if not isinstance(time, numbers.Number):
             raise ValueError(ErrMsg.invalid_method_arg_type(type(self), "mouse_at", "numeric", "time", time))
 

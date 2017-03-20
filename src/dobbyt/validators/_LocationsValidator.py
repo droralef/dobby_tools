@@ -22,6 +22,7 @@ class LocationsValidator(BaseValidator):
     """
 
     err_invalid_coordinates = "invalid_coords"
+    arg_color = 'color'  # ValidationFailed exception argument: the color in the invalid location
 
     def __init__(self, image, enabled=False, position=None, default_valid=False):
         """
@@ -121,7 +122,7 @@ class LocationsValidator(BaseValidator):
         :param x_coord: number
         :param y_coord: number
         """
-        self.mouse_at_validate_xy(x_coord, y_coord)
+        BaseValidator._mouse_at_validate_xy(self, x_coord, y_coord)
 
         if not self._enabled:
             return
@@ -133,6 +134,7 @@ class LocationsValidator(BaseValidator):
             ok = color in self._valid_colors
 
         if not ok:
-            raise ValidationFailed(self.err_invalid_coordinates, "You moved to an invalid location", self)
+            raise ValidationFailed(self.err_invalid_coordinates, "You moved to an invalid location",
+                                   self, { LocationsValidator.arg_color : color })
 
 

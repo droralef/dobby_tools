@@ -89,7 +89,7 @@ class GlobalSpeedValidator(BaseValidator):
         :param time: Time from start of trial
         :raises dobbyt.ValidationFailed:
         """
-        self.mouse_at_validate_xyt(x_coord, y_coord, time)
+        BaseValidator._mouse_at_validate_xyt(self, x_coord, y_coord, time)
 
         #-- If this is the first call in a trial: do nothing
         if self._time0 is None:

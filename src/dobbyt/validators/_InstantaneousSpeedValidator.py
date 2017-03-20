@@ -14,7 +14,7 @@ import numpy as np
 
 import dobbyt
 from dobbyt.misc._utils import BaseValidator, ErrMsg
-from dobbyt.validators import ValidationAxis, SpeedError, ValidationFailed
+from dobbyt.validators import ValidationAxis, ValidationFailed
 
 
 # noinspection PyAttributeOutsideInit
@@ -29,6 +29,7 @@ class InstantaneousSpeedValidator(BaseValidator):
 
     err_too_slow = "too_slow"
     err_too_fast = "too_fast"
+    arg_speed = 'speed'  # ValidationFailed exception argument: the speed observed
 
     #-----------------------------------------------------------------------------------
     def __init__(self, units_per_mm, axis=ValidationAxis.y, enabled=False, min_speed=None, max_speed=None,
@@ -91,7 +92,7 @@ class InstantaneousSpeedValidator(BaseValidator):
         if not self._enabled:
             return
 
-        self.mouse_at_validate_xyt(x_coord, y_coord, time)
+        BaseValidator._mouse_at_validate_xyt(self, x_coord, y_coord, time)
         self._mouse_at_validate_time(time)
 
         if self._time0 is None:
@@ -113,10 +114,10 @@ class InstantaneousSpeedValidator(BaseValidator):
             speed = self._calc_speed_func(self._prev_locations[0], curr_xyt)
 
             if self._min_speed is not None and speed < self._min_speed:
-                raise ValidationFailed(self.err_too_slow, "You moved too slowly", self)
+                raise ValidationFailed(self.err_too_slow, "You moved too slowly", self, { self.arg_speed : speed })
 
             if self._max_speed is not None and speed > self._max_speed:
-                raise ValidationFailed(self.err_too_fast, "You moved too fast", self)
+                raise ValidationFailed(self.err_too_fast, "You moved too fast", self, { self.arg_speed : speed })
 
 
     #--------------------------------------

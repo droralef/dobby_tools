@@ -138,7 +138,7 @@ class MoveByGradientValidator(BaseValidator):
         :param x_coord: number
         :param y_coord: number
         """
-        self.mouse_at_validate_xy(x_coord, y_coord)
+        BaseValidator._mouse_at_validate_xy(self, x_coord, y_coord)
 
         if not self._enabled:
             return

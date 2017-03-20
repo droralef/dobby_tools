@@ -11,7 +11,6 @@ import enum
 
 
 ValidationAxis = enum.Enum('ValidationAxis', 'x y xy')
-SpeedError = enum.Enum('SpeedError', 'OK TooSlow TooFast')
 
 
 from _ValidationFailed import ValidationFailed

@@ -24,6 +24,7 @@ class MovementAngleValidator(BaseValidator):
 
 
     err_invalid_angle = "invalid_angle"
+    arg_angle = 'angle'  # ValidationFailed exception argument: the angle actually observed
 
 
     def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None,
@@ -78,7 +79,7 @@ class MovementAngleValidator(BaseValidator):
         if not self._enabled or self._min_angle == self._max_angle or self._min_angle is None or self._max_angle is None:
             return False
 
-        self.mouse_at_validate_xyt(x_coord, y_coord, time)
+        BaseValidator._mouse_at_validate_xyt(self, x_coord, y_coord, time)
         self._validate_time(time)
 
         x_coord /= self._units_per_mm
@@ -101,13 +102,19 @@ class MovementAngleValidator(BaseValidator):
             #-- Validate direction
             angle = u.get_angle((x0, y0), (x_coord, y_coord))
             if self._angle_is_ok(angle):
-                # all is OK
+                #-- all is OK
                 return
+
             else:
+                #-- Error
+                angle_deg = angle / (np.pi * 2) * 360
+
                 if self._logging:
                     # noinspection PyProtectedMember
-                    expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(self.__class__), angle / (np.pi*2) * 360), 1)
-                raise ValidationFailed(self.err_invalid_angle, "You moved in an incorrect direction", self)
+                    expyriment._active_exp._event_file_log("%s,InvalidAngle,%.1f" % (str(self.__class__), angle_deg), 1)
+
+                raise ValidationFailed(self.err_invalid_angle, "You moved in an incorrect direction", self,
+                                       { self.arg_angle : angle_deg })
 
         else:
             #-- Direction cannot be validated - the finger hasn't moved enough yet

@@ -1,7 +1,7 @@
 import unittest
 
 from dobbyt.validators import LocationsValidator, ValidationFailed
-
+from dobbyt.misc.utils import color_rgb_to_num
 
 z = (0, 0, 0)
 w = (255, 255, 255)
@@ -104,6 +104,16 @@ class LocationsValidatorTests(unittest.TestCase):
         val = LocationsValidator(testimage)
         val.valid_colors = w
         val.mouse_at(0, -2)
+
+    #------------------------------------------------------------
+    def test_validate_color(self):
+        val = LocationsValidator(testimage, enabled=True)
+        val.valid_colors = w
+
+        try:
+            val.mouse_at(0, -2)
+        except ValidationFailed as e:
+            self.assertEqual(e.arg(LocationsValidator.arg_color), color_rgb_to_num(z))
 
 
 if __name__ == '__main__':
