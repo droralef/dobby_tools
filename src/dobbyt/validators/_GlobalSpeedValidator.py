@@ -27,6 +27,9 @@ class GlobalSpeedValidator(_BaseValidator):
 
     err_too_slow = "too_slow"
 
+    arg_expected_coord = "expected_coord"
+    arg_actual_coord = "actual_coord"
+
 
     class Section(object):
         def __init__(self, time_percentage, distance_percentage):
@@ -113,7 +116,8 @@ class GlobalSpeedValidator(_BaseValidator):
 
         #-- Actual coordinate must be ahead of the expected minimum
         if np.sign(d_coord) != np.sign(self._end_coord - self._origin_coord):
-            return self._create_validation_error(self.err_too_slow, "You moved too slowly")
+            return self._create_validation_error(self.err_too_slow, "You moved too slowly",
+                                                 {self.arg_expected_coord: expected_coord, self.arg_actual_coord: coord})
 
         return None
 

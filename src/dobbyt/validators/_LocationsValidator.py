@@ -148,6 +148,6 @@ class LocationsValidator(_BaseValidator):
 
         else:
             return self._create_validation_error(self.err_invalid_coordinates, "You moved to an invalid location",
-                                                 {LocationsValidator.arg_color: color})
+                                                 {self.arg_color: color})
 
 

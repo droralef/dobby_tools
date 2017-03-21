@@ -32,7 +32,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
 
 
     #-------------------------------------------------------------------------
-    def __init__(self, units_per_mm, min_distance=0, angle_units=Units.Degrees):
+    def __init__(self, units_per_mm, min_distance=0, angle_units=Units.Degrees, zero_angle=0):
         """
         Constructor
         :param units_per_mm: See :func:`~dobbyt.movement.DirectionMonitor.units_per_mm`
@@ -47,6 +47,9 @@ class DirectionMonitor(dobbyt._DobbyObject):
 
         self.min_distance = min_distance
         self.angle_units = angle_units
+        self.zero_angle = zero_angle
+
+        self.reset()
 
 
 
@@ -63,7 +66,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
         self._recent_near_coords = []
         self._pre_recent_coord = None
 
-        self._last_angle = None
+        self._curr_angle = None
         self._curr_curve_direction = None
         self._curr_curve_start_angle = None
         self._curr_curve_start_index = None
@@ -107,10 +110,11 @@ class DirectionMonitor(dobbyt._DobbyObject):
 
         if self._zero_angle != 0:
             angle -= self._zero_angle
-            max_angle = self._max_angle()
-            angle = angle % max_angle
-            if angle > max_angle / 2:
-                angle -= max_angle
+
+        max_angle = self._max_angle()
+        angle = angle % max_angle
+        if angle > max_angle / 2:
+            angle -= max_angle
 
         self._curr_angle = angle
 
@@ -156,7 +160,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
         self._pre_recent_coord = None
 
         #-- Find the latest coordinate that is far enough
-        for i in range(len(self._recent_near_coords)-1, 0, -1):
+        for i in range(len(self._recent_near_coords)-1, -1, -1):
             x, y, t = self._recent_near_coords[i]
             if (x - x_coord) ** 2 + (y - y_coord) ** 2 >= sq_min_distance:
                 #-- This coordinate is far enough
@@ -228,7 +232,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
     #-------------------------------------
     @property
     def min_distance(self):
-        """ The minimal distance between points required for calculating direction """
+        """ The minimal distance (in mm) between points required for calculating direction """
         return self._min_distance
 
     @min_distance.setter
