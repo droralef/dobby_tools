@@ -7,7 +7,8 @@ Dobby tools - misc package
 
 """
 
+from _shapes import shapes
 
 from _LocationColorMap import LocationColorMap
 from _PictureSet import PictureSet
-from _ShapeMap import ShapeMap
+from _StartPoint import RectStartPoint
