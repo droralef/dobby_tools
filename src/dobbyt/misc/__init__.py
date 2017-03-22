@@ -11,4 +11,3 @@ from _shapes import shapes
 
 from _LocationColorMap import LocationColorMap
 from _PictureSet import PictureSet
-from _StartPoint import RectStartPoint

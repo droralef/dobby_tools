@@ -16,7 +16,7 @@ import dobbyt._utils as _u
 from dobbyt.misc import shapes
 
 
-class RectStartPoint(dobbyt._DobbyObject):
+class StartPoint(dobbyt._DobbyObject):
     """
     A rectangular starting point.
     The starting point defines two areas:
@@ -31,12 +31,12 @@ class RectStartPoint(dobbyt._DobbyObject):
         """
         Constructor.
         :param start_area: The area where you must touch/click to initiate a trial.
-                           This object must support the overlapping_with_position() method. It can be
-                           an expyriment stimulus, a shape from :func:`~dobbyt.misc.shapes`, or your own object
+                           This object must support an overlapping_with_position() method and a "center" property.
+                           It can be an expyriment stimulus, a shape from :func:`~dobbyt.misc.shapes`, or your own object
         :param exit_area: See :func:`~dobbyt.misc.RectStartPoint.exit_area`
         """
 
-        super(RectStartPoint, self).__init__()
+        super(StartPoint, self).__init__()
 
         if "center" not in dir(start_area):
             raise ValueError("dobbyt error: invalid start_area provided to %s.__init__" % type(self).__name__)
@@ -91,7 +91,7 @@ class RectStartPoint(dobbyt._DobbyObject):
         else:
             raise ValueError("dobbyt error: unsupported exit area '%s'" % name)
 
-        return shapes.Sector(self._start_area.x, self._start_area.y, 10000, f, t)
+        return shapes.Sector(self._start_area.center[0], self._start_area.center[1], 10000, f, t)
 
 
     #==========================================================================
