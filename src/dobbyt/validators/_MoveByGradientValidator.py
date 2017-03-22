@@ -6,12 +6,10 @@
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
-import numbers
-
 import dobbyt._utils as _u
-import dobbyt.misc.utils as u
+import dobbyt.utils as u
 from dobbyt.misc import LocationColorMap
-from dobbyt.validators import ValidationFailed, _BaseValidator
+from dobbyt.validators import _BaseValidator
 
 
 

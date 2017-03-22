@@ -15,7 +15,7 @@ from scipy import misc
 
 import dobbyt
 import dobbyt._utils as _u
-from dobbyt.misc.utils import color_rgb_to_num
+from dobbyt.utils import color_rgb_to_num
 
 
 # noinspection PyAttributeOutsideInit
@@ -74,14 +74,17 @@ class LocationColorMap(dobbyt._DobbyObject):
                 self._image[row][col] = tuple(self._image[row][col])
 
 
+    #====================================================================================
+    #  Configure
+    #====================================================================================
+
     #-------------------------------------------------
     @property
     def position(self):
         """
-        The top-left coordinate of the image provided in the constructor
-        The coordinate should be an (x,y) tuple/list
-        If top_left_coord=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at`(a,b) will return the
-        color of the top-left point of the image.
+        The coordinate of the image provided in the constructor (middle of the image) - an (x,y) tuple/list
+        If position=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at`(a,b) will return the
+        color of the middle of the image.
         """
         return self._position
 
@@ -123,14 +126,6 @@ class LocationColorMap(dobbyt._DobbyObject):
         self._use_mapping = value
         self._log_setter("use_mapping")
 
-
-    #-------------------------------------------------
-    @property
-    def available_colors(self):
-        """
-        Return a set with all colors that exist in the image
-        """
-        return frozenset(self._available_colors)
 
     #-------------------------------------------------
     @property
@@ -184,6 +179,19 @@ class LocationColorMap(dobbyt._DobbyObject):
                     self.__class__, value))
 
         self._log_setter("colormap", value)
+
+
+    #====================================================================================
+    #  Access colors
+    #====================================================================================
+
+    #-------------------------------------------------
+    @property
+    def available_colors(self):
+        """
+        Return a set with all colors that exist in the image
+        """
+        return frozenset(self._available_colors)
 
 
     #-------------------------------------------------

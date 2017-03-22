@@ -6,7 +6,8 @@ Dobby tools - movement package - public utilities
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
-from numpy import pi, arctan
+from __future__ import division
+from numpy import pi, arctan, cos, sin
 
 
 #--------------------------------------------------------------------------
@@ -52,3 +53,26 @@ def is_rgb(rgb):
            and isinstance(rgb[1], int) and 0 <= rgb[1] <= 255 \
            and isinstance(rgb[2], int) and 0 <= rgb[2] <= 255
 
+
+
+#--------------------------------------------------------------------------
+def rotate_coord(coord, angle, origin=(0,0), is_radians=False):
+    """
+    Rotate the given coordinate about the origin
+    :param coord: The x,y coordinate to rotate
+    :param angle: The rotation angle (positive = clockwise)
+    :param origin: The point to rotate around (default=0,0)
+    :param is_radians: whether angle is provided as radians (True) or degrees (False)
+    :return: The new x,y coordinates
+    """
+
+    if not is_radians:
+        angle = angle / 360 * pi*2
+
+    x = coord[0] - origin[0]
+    y = coord[1] - origin[1]
+
+    x1 = x * cos(angle) + y * sin(angle)
+    y1 = y * cos(angle) - x * sin(angle)
+
+    return x1 + origin[0], y1 + origin[1]

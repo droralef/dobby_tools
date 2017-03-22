@@ -1,7 +1,7 @@
 import unittest
 
-from dobbyt.validators import LocationsValidator, ValidationFailed
-from dobbyt.misc.utils import color_rgb_to_num
+from dobbyt.utils import color_rgb_to_num
+from dobbyt.validators import LocationsValidator
 
 z = (0, 0, 0)
 w = (255, 255, 255)

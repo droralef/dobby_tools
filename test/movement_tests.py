@@ -1,7 +1,8 @@
 import unittest
 
 import numpy as np
-from dobbyt.misc.utils import get_angle
+
+from dobbyt.utils import get_angle
 
 
 class MovementTestCase(unittest.TestCase):

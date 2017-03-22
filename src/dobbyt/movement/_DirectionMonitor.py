@@ -9,12 +9,13 @@ Movement monitor: continuously track the movement direction
 from __future__ import division
 
 import numbers
+
 import numpy as np
 from enum import Enum
 
 import dobbyt
 import dobbyt._utils as _u
-import dobbyt.misc.utils as u
+import dobbyt.utils as u
 
 
 # todo: in curve counting - require a minimal change from start_angle to count as a curve

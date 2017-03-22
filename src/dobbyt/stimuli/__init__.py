@@ -9,4 +9,3 @@ Dobby tools - stimuli package
 
 #  Import the package classes
 from _NumberLine import NumberLine
-from _PictureSet import PictureSet

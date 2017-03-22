@@ -15,8 +15,8 @@ import numpy as np
 
 import dobbyt
 import dobbyt._utils as _u
-import dobbyt.misc.utils as u
-from dobbyt.validators import ValidationFailed, _BaseValidator
+import dobbyt.utils as u
+from dobbyt.validators import _BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
