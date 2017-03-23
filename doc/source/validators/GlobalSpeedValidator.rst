@@ -5,5 +5,6 @@ GlobalSpeedValidator class
 
 .. autoclass:: dobbyt.validators.GlobalSpeedValidator
    :members:
+   :inherited-members:
    :member-order: bysource
 

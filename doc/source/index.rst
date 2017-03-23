@@ -14,8 +14,9 @@ Visual objects.
 
 .. toctree::
    :maxdepth: 2
+   :glob:
 
-   stimuli/NumberLine
+   stimuli/*
 
 
 dobbyt.movement:
@@ -23,11 +24,9 @@ dobbyt.movement:
 
 .. toctree::
    :maxdepth: 2
+   :glob:
 
-   movement/DirectionMonitor
-   movement/SpeedMonitor
-   movement/StartPoint
-   movement/TrajectoryTracker
+   movement/*
 
 
 dobbyt.validators:
@@ -40,12 +39,9 @@ observe a mouse/finger movement.
 
 .. toctree::
    :maxdepth: 2
+   :glob:
 
-   validators/GlobalSpeedValidator
-   validators/InstantaneousSpeedValidator
-   validators/LocationsValidator
-   validators/MoveByGradientValidator
-   validators/MovementAngleValidator
+   validators/*
 
 
 dobbyt.misc:
@@ -53,8 +49,9 @@ dobbyt.misc:
 
 .. toctree::
    :maxdepth: 2
+   :glob:
 
-   misc/PictureSet
+   misc/*
 
 
 Indices and tables
