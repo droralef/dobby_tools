@@ -29,7 +29,8 @@ class StartPoint(dobbyt._DobbyObject):
     #-----------------------------------------------------------
     def __init__(self, start_area, exit_area="above"):
         """
-        Constructor.
+        Constructor
+
         :param start_area: The area where you must touch/click to initiate a trial.
                            This object must support an overlapping_with_position() method and a "center" property.
                            It can be an expyriment stimulus, a shape from :func:`~dobbyt.misc.shapes`, or your own object
@@ -110,6 +111,7 @@ class StartPoint(dobbyt._DobbyObject):
     def check_xy(self, x_coord, y_coord):
         """
         Check whether the new finger coordinates imply starting a trial
+
         :return: State.init - if the finger/mouse touched in the start area for the first time
                  State.start - if the finger/mouse left the start area in a valid way (into the exit area)
                  State.error - if the finger/mouse left the start area in an invalid way (not to the exit area)

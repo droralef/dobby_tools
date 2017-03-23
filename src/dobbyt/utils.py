@@ -14,6 +14,7 @@ from numpy import pi, arctan, cos, sin
 def get_angle(xy1, xy2, as_degrees=False):
     """
     Get the direction of finger movement, in radians. 0 = upwards.
+
     :param xy1: Coordinates in time point #1
     :param xy2: Coordinates in a later time point
     """
@@ -65,6 +66,7 @@ def is_rgb(rgb):
 def rotate_coord(coord, angle, origin=(0,0), is_radians=False):
     """
     Rotate the given coordinate about the origin
+
     :param coord: The x,y coordinate to rotate
     :param angle: The rotation angle (positive = clockwise)
     :param origin: The point to rotate around (default=0,0)

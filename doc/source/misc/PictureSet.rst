@@ -3,7 +3,7 @@
 PictureSet class
 ================
 
-.. autoclass:: dobbyt.controls.PictureSet
+.. autoclass:: dobbyt.misc.PictureSet
    :members:
    :member-order: bysource
 

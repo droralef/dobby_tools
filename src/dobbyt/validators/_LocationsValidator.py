@@ -6,6 +6,7 @@
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
+# noinspection PyProtectedMember
 import dobbyt._utils as _u
 import dobbyt.utils as u
 from dobbyt.misc import LocationColorMap
@@ -28,10 +29,11 @@ class LocationsValidator(_BaseValidator):
     def __init__(self, image, enabled=False, position=None, default_valid=False):
         """
         Constructor
+
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param enabled: See :func:`~dobbyt.movement.LocationsValidator.enabled`
-        :param position: See :func:`~dobbyt.movement.LocationsValidator.position`
-        :param default_valid: See :func:`~dobbyt.movement.LocationsValidator.default_valid`
+        :param enabled: See :func:`~dobbyt.validators.LocationsValidator.enabled`
+        :param position: See :func:`~dobbyt.validators.LocationsValidator.position`
+        :param default_valid: See :func:`~dobbyt.validators.LocationsValidator.default_valid`
         """
         super(LocationsValidator, self).__init__(enabled=enabled)
 
@@ -127,6 +129,7 @@ class LocationsValidator(_BaseValidator):
     def check_xyt(self, x_coord, y_coord, time=None):
         """
         Check whether the given coordinate is a valid one
+
         :param time: ignored
         :return: None if all OK, ValidationFailed if error
         """

@@ -25,7 +25,8 @@ import dobbyt.utils as u
 class DirectionMonitor(dobbyt._DobbyObject):
     """
     Monitor the mouse/finger direction.
-    This class also maintains some information about curves in the trajectory
+
+    This class also maintains some information about curves in the trajectory.
     """
 
 
@@ -36,6 +37,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
     def __init__(self, units_per_mm, min_distance=0, angle_units=Units.Degrees, zero_angle=0):
         """
         Constructor
+
         :param units_per_mm: See :func:`~dobbyt.movement.DirectionMonitor.units_per_mm`
         :param min_distance: See :func:`~dobbyt.movement.DirectionMonitor.min_distance`
         :param angle_units: See :func:`~dobbyt.movement.DirectionMonitor.angle_units`
@@ -224,7 +226,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
     @property
     def units_per_mm(self):
         """
-        The ratio of units (provided in the call to :func:`~dobbyt.movement.DirectionMonitor.check_xyt`) per mm.
+        The ratio of units (provided in the call to :func:`~dobbyt.movement.DirectionMonitor.update_xyt`) per mm.
         This is relevant only for :func:`~dobbyt.movement.DirectionMonitor.min_distance`
         """
         return self._units_per_mm
@@ -264,7 +266,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
         """
         The angle that counts as zero (0=up).
         This means that:
-        - the value returned from :func:`~dobbyt.movement.DirectionMonitor.angle` will be rotated by this value
+        - the value returned from :func:`~dobbyt.movement.DirectionMonitor.curr_angle` will be rotated by this value
         - The counting of left/right curves will be relatively to this zero angle
         """
         return self._zero_angle

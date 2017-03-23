@@ -87,10 +87,11 @@ class GlobalSpeedValidator(_BaseValidator):
     def check_xyt(self, x_coord, y_coord, time):
         """
         Validate movement.
+
         :param x_coord: Current x coordinates
         :param y_coord: Current x coordinates
         :param time: Time from start of trial
-        :returns: None if all OK, ValidationFailed object if error
+        :returns: None if all OK; ValidationFailed object if error
         """
 
         self._check_xyt_validate_and_log(x_coord, y_coord, time)

@@ -25,6 +25,7 @@ class SpeedMonitor(dobbyt._DobbyObject):
     def __init__(self, units_per_mm, calculation_interval):
         """
         Constructor
+
         :param units_per_mm: See :func:`~dobbyt.movement.SpeedMonitor.units_per_mm`
         :param calculation_interval: See :func:`~dobbyt.movement.SpeedMonitor.calculation_interval`
         """
@@ -46,6 +47,7 @@ class SpeedMonitor(dobbyt._DobbyObject):
     def reset(self, time=None):
         """
         Called when a trial starts - reset any previous movement
+
         :param time: The time when the trial starts.
         """
         if time is not None and not isinstance(time, (int, float)):
@@ -61,6 +63,7 @@ class SpeedMonitor(dobbyt._DobbyObject):
     def update_xyt(self, x_coord, y_coord, time):
         """
         Call this method whenever the finger/mouse moves
+
         :param time: use the same time scale provided to reset()
         """
 

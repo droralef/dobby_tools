@@ -26,6 +26,7 @@ class MoveByGradientValidator(_BaseValidator):
                  enabled=False):
         """
         Constructor
+
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
         :param position: See :func:`~dobbyt.movement.MoveByGradientValidator.enabled`; default = False
         :param position: See :func:`~dobbyt.movement.MoveByGradientValidator.position`; default = (0,0)
@@ -138,6 +139,7 @@ class MoveByGradientValidator(_BaseValidator):
     def check_xyt(self, x_coord, y_coord, time=None):
         """
         Validate the movement
+
         :return: None if all OK, ValidationFailed if error
         """
 

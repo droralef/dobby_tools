@@ -7,14 +7,15 @@ Dobby Tools documentation!
 ==========================
 
 
-dobbyt.controls:
-----------------
+dobbyt.stimuli:
+---------------
+
+Visual objects.
 
 .. toctree::
    :maxdepth: 2
 
-   NumberLine
-   PictureSet
+   stimuli/NumberLine
 
 
 dobbyt.movement:
@@ -23,9 +24,37 @@ dobbyt.movement:
 .. toctree::
    :maxdepth: 2
 
-   GlobalSpeedValidator
-   InstantaneousSpeedValidator
-   TrajectoryTracker
+   movement/DirectionMonitor
+   movement/SpeedMonitor
+   movement/StartPoint
+   movement/TrajectoryTracker
+
+
+dobbyt.validators:
+------------------
+
+Perform various validations on mouse/finger movement during the trial.
+Typically, you'd call reset() for each validator when the trial starts, and check_xyt() each time you
+observe a mouse/finger movement.
+
+
+.. toctree::
+   :maxdepth: 2
+
+   validators/GlobalSpeedValidator
+   validators/InstantaneousSpeedValidator
+   validators/LocationsValidator
+   validators/MoveByGradientValidator
+   validators/MovementAngleValidator
+
+
+dobbyt.misc:
+------------
+
+.. toctree::
+   :maxdepth: 2
+
+   misc/PictureSet
 
 
 Indices and tables

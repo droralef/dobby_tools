@@ -31,6 +31,7 @@ class MovementAngleValidator(_BaseValidator):
                  grace_period=0, enabled=False):
         """
         Constructor
+
         :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.MovementAngleValidator.check_xyt`) per mm.
                              This is relevant for computation of :func:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
         :param min_angle: See :func:`~dobbyt.movement.MovementAngleValidator.min_angle`
@@ -70,6 +71,7 @@ class MovementAngleValidator(_BaseValidator):
     def check_xyt(self, x_coord, y_coord, time):
         """
         Given a current position, check whether the movement complies with the speed limits.
+
         :param x_coord: Current x coordinate (in the predefined coordinate system)
         :param y_coord: Current y coordinate (in the predefined coordinate system)
         :param time: Time, in seconds. The zero point doesn't matter, as long as you're consistent until reset() is called.

@@ -35,6 +35,7 @@ class PictureSet(dobbyt._DobbyObject):
     def __init__(self, width, height, base_dir='/'):
         """
         Constructor
+
         :param width: Width of the picture returned
         :param height: Height of the picture returned
         :param base_dir: Base directory for all picture files
@@ -80,7 +81,7 @@ class PictureSet(dobbyt._DobbyObject):
         """
         Add several images to the holder
         :param config_string: String of the format name1=file1;name2=file2;name3=file3 etc.
-                              You can use either comma or semicolon separators
+        You can use either comma or semicolon separators
         """
 
         config_list = re.split("[;,]", config_string)

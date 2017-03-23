@@ -22,6 +22,7 @@ class shapes:
         def __init__(self, x, y, width, height):
             """
             Constructor
+
             :param x: the rectangle's center
             :param y: the rectangle's center
             :param width:
@@ -57,6 +58,7 @@ class shapes:
         def __init__(self, x, y, radius):
             """
             Constructor
+
             :param x: the circle's center
             :param y: the circle's center
             :param radius:
@@ -90,6 +92,7 @@ class shapes:
         def __init__(self, x, y, radius, from_angle, to_angle):
             """
             Constructor
+
             :param x: the circle's center
             :param y: the circle's center
             :param radius:

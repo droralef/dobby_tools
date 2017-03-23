@@ -26,6 +26,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
     def __init__(self):
         """
         Constructor
+
         :param tracking_active: See :func:`~dobbyt.movement.TrajectoryTracker.tracking_active` (default=False).
         """
         super(TrajectoryTracker, self).__init__()
@@ -49,6 +50,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
     def reset(self, tracking_active=None):
         """
         Forget any previously-tracked points.
+
         :param tracking_active: Whether to activate or deactivate tracking. Default: None (don't change)
         """
         if tracking_active is not None:
@@ -96,6 +98,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
     def init_output_file(self, filename, xy_precision=5, time_precision=3):
         """
         Initialize a new CSV output file for saving the results
+
         :param filename: Full path
         :param xy_precision: Precision of x,y coordinates (default: 5)
         :param time_precision: Precision of time (default: 3)
@@ -116,6 +119,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
     def save_to_file(self, trial_num):
         """
         Save the tracked trajectory (ever since the last reset() call) to a CSV file
+
         :param trial_num:
         :return: The number of rows printed to the file
         """

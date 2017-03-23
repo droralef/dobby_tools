@@ -23,13 +23,24 @@ class NumberLine(dobbyt._DobbyObject):
     """
      A class that plots a number line and monitors its behavior.
 
-     Visual features:
+     **How to use this class:**
+
+     - configure the object via constructor/properties
+     - :func:`dobbyt.stimuli.NumberLine.plot` or :func:`dobbyt.stimuli.NumberLine.present` it
+     - call :func:`dobbyt.stimuli.NumberLine.reset` when mouse/finger starts moving
+     - call :func:`dobbyt.stimuli.NumberLine.update_xy` when the mouse/finger continues moving
+
+
+     **Visual features:**
+
      - Plot a number line, horizontal or vertical
      - Optional tick marks at the end of the line and in locations along the line
      - Optional text labels at the end of the line
      - Allow modifying all common properties of the line and the text labels
 
-     Behavioral features:
+
+     **Behavioral features:**
+
      - Detect when the finger/mouse clicks or crosses the number line
      - Support both the physical coordinate space and the logical position on the line
 
@@ -50,13 +61,6 @@ class NumberLine(dobbyt._DobbyObject):
         """
         Create a NumberLine object.
 
-        :type line_length: number
-        :type line_colour: tuple
-        :type line_width: number
-        :type min_value: number
-        :type max_value: number
-        :type end_tick_height: number
-
         :param position: the (x,y) coordinates of the middle of the line
         :param orientation: NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical
         :param line_length: the length of the line, in pixels
@@ -68,6 +72,15 @@ class NumberLine(dobbyt._DobbyObject):
         :param max_value: the logical value at the end of the line
 
         :param visible: set the line as visible/invisible in the next plotting
+
+        :type position: tuple
+        :type line_length: int
+        :type line_colour: tuple
+        :type line_width: number
+        :type min_value: number
+        :type max_value: number
+        :type end_tick_height: number
+
         """
 
         super(NumberLine, self).__init__()
@@ -113,13 +126,21 @@ class NumberLine(dobbyt._DobbyObject):
         Determine appearance of the two text labels at the ends of the line
 
         :param visible: Whether the labels are visible or not (boolean)
+        :type visible: bool
         :param box_size: Size of the text box in pixels (width, height)
+        :type box_size: int
         :param font_name: Name of font
+        :type font_name: str
         :param font_size: Size of font
+        :type font_size: int
         :param font_colour: Color of font
+        :type font_colour: Expyriment colour spec
         :param offset: (x,y) offset of a label (in pixels) relatively to the corresponding end of the number line
+        :type offset: tuple
         :param text_min: Text for the label at the MIN end of the number line (default: min value)
+        :type text_min: str
         :param text_max: Text for the label at the MAX end of the number line (default: max value)
+        :type text_max: str
         """
 
         self.labels_visible = visible
@@ -139,6 +160,7 @@ class NumberLine(dobbyt._DobbyObject):
     def preload(self):
         """
         Pre-load the number line - prepare for plotting
+
         :return: The time it took this function to run. (seconds)
         """
 
@@ -166,8 +188,11 @@ class NumberLine(dobbyt._DobbyObject):
     def present(self, clear=False, update=False):
         """
         Present the stimulus
+
         :param clear: Whether to clear the screen buffer prior to presenting. Default=False
+        :type clear: bool
         :param update: Whether to flip buffer after plotting. Default=False
+        :type update: bool
         :return: The time it took this function to run. (seconds)
         """
         start_time = get_time()
@@ -190,7 +215,8 @@ class NumberLine(dobbyt._DobbyObject):
         """
         Get the size of the rectangle surrounding the number line, with all its elements.
         The number line center will be at the center of the rectangle
-        :return: (width, height)
+
+        :return: tuple (width, height)
         """
 
         self._canvas_to_nl_coord_shift = (0, 0)
@@ -309,8 +335,9 @@ class NumberLine(dobbyt._DobbyObject):
     def plot(self, stim):
         """
         Plot the number line on another stimulus
+
         :param stim: Any Expyriment visual object
-        :return: The time it took this function to run. (seconds)
+        :return: The time it took this function to run (seconds)
         """
 
         start_time = get_time()
@@ -347,8 +374,13 @@ class NumberLine(dobbyt._DobbyObject):
     def update_xy(self, x_coord, y_coord):
         """
         This function is called when mouse/touch has moved. It checks whether the movement implies touching the number line.
+
         :param x_coord:
+        :type x_coord: int
+
         :param y_coord:
+        :type y_coord: int
+
         :return: True if the number line was touched
         """
         if not isinstance(x_coord, numbers.Number):

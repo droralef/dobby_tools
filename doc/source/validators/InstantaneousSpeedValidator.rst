@@ -3,7 +3,7 @@
 InstantaneousSpeedValidator class
 =================================
 
-.. autoclass:: dobbyt.movement.InstantaneousSpeedValidator
+.. autoclass:: dobbyt.validators.InstantaneousSpeedValidator
    :members:
    :member-order: bysource
 

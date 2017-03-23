@@ -3,7 +3,7 @@
 GlobalSpeedValidator class
 ==========================
 
-.. autoclass:: dobbyt.movement.GlobalSpeedValidator
+.. autoclass:: dobbyt.validators.GlobalSpeedValidator
    :members:
    :member-order: bysource
 

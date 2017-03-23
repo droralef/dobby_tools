@@ -28,6 +28,7 @@ class LocationColorMap(dobbyt._DobbyObject):
     def __init__(self, image, position=None, use_mapping=False, colormap=None):
         """
         Constructor
+
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
         :param position: See :func:`~dobbyt.misc.LocationColorMap.position`
         :param use_mapping: See :func:`~dobbyt.misc.LocationColorMap.use_mapping`
@@ -198,6 +199,7 @@ class LocationColorMap(dobbyt._DobbyObject):
     def get_color_at(self, x_coord, y_coord, use_mapping=None):
         """
         Return the color at a given coordinate
+
         :param x_coord:
         :param y_coord:
         :param use_mapping:

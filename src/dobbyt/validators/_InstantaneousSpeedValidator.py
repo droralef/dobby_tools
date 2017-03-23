@@ -34,6 +34,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
                  grace_period=0, calculation_interval=0, movement_monitor=None):
         """
         Constructor
+
         :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.check_xyt`) per mm
         :param axis: See :func:`~dobbyt.movement.ValidationAxis`
         :param enabled: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.enabled`
