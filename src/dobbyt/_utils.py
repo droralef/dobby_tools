@@ -62,7 +62,7 @@ def validate_attr_type(obj, attr_name, value, attr_type, none_allowed=False, typ
         if type_name is None:
             type_name = _get_type_name(attr_type)
 
-        raise ValueError(ErrMsg.attr_invalid_type(type(obj), attr_name, type_name, value))
+        raise ValueError(ErrMsg.attr_invalid_type(type(obj).__name__, attr_name, type_name, value))
 
 #--------------------------------------
 def validate_attr_is_coord(obj, attr_name, value, change_none_to_0=False):
@@ -86,27 +86,27 @@ def validate_attr_is_coord(obj, attr_name, value, change_none_to_0=False):
 def validate_attr_numeric(obj, attr_name, value, none_value=NoneValues.Invalid):
     if value is None:
         if none_value == NoneValues.Invalid:
-            raise ValueError(ErrMsg.attr_invalid_type(type(obj), attr_name, "numeric", "None"))
+            raise ValueError(ErrMsg.attr_invalid_type(type(obj).__name__, attr_name, "numeric", "None"))
         elif none_value == NoneValues.Valid:
             pass
         elif none_value == NoneValues.ChangeTo0:
             value = 0
 
     if value is not None and not isinstance(value, numbers.Number):
-        raise ValueError(ErrMsg.attr_invalid_type(type(obj), attr_name, "numeric", value))
+        raise ValueError(ErrMsg.attr_invalid_type(type(obj).__name__, attr_name, "numeric", value))
 
     return value
 
 #--------------------------------------
 def validate_attr_not_negative(obj, attr_name, value):
     if value is not None and value < 0:
-        msg = "dobbyt error: {0}.{1} was set to a negative value ({2})".format(type(obj), attr_name, value)
+        msg = "dobbyt error: {0}.{1} was set to a negative value ({2})".format(type(obj).__name__, attr_name, value)
         raise ValueError(msg)
 
 #--------------------------------------
 def validate_attr_positive(obj, attr_name, value):
     if value is not None and value <= 0:
-        msg = "dobbyt error: {0}.{1} was set to a negative/0 value ({2})".format(type(obj), attr_name, value)
+        msg = "dobbyt error: {0}.{1} was set to a negative/0 value ({2})".format(type(obj).__name__, attr_name, value)
         raise ValueError(msg)
 
 

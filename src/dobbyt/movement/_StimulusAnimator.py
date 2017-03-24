@@ -124,7 +124,7 @@ class StimulusAnimator(dobbyt._DobbyObject):
 
     @position_shift.setter
     def position_shift(self, value):
-        value = _u.validate_attr_is_coord(self, "position_shift", value)
+        value = _u.validate_attr_is_coord(self, "position_shift", value, change_none_to_0=True)
         self._position_shift = value
 
     #------------------------------------------------------------
