@@ -42,6 +42,26 @@ class GlobalSpeedValidator(_BaseValidator):
     #-----------------------------------------------------------------------------------
     def __init__(self, enabled=False, origin_coord=None, end_coord=None, axis=ValidationAxis.y,
                  grace_period=None, sections=None):
+        """
+
+        :param enabled: See :func:`dobbyt.validators.GlobalSpeedValidator.enabled`
+        :type enabled: bool
+
+        :param origin_coord: See :func:`dobbyt.validators.GlobalSpeedValidator.origin_coord`
+        :type origin_coord: int
+
+        :param end_coord: See :func:`dobbyt.validators.GlobalSpeedValidator.end_coord`
+        :type end_coord: int
+
+        :param axis: See :func:`dobbyt.validators.GlobalSpeedValidator.axis`
+        :type axis: dobbyt.validators.ValidationAxis
+
+        :param grace_period: See :func:`dobbyt.validators.GlobalSpeedValidator.grace_period`
+        :type grace_period: number
+
+        :param sections: See :func:`dobbyt.validators.sections`
+        :type sections: list of GlobalSpeedValidator.Section objects
+        """
 
         super(GlobalSpeedValidator, self).__init__(enabled=enabled)
 
@@ -63,6 +83,12 @@ class GlobalSpeedValidator(_BaseValidator):
 
     #----------------------------------------------------------------------------------
     def reset(self, time0=0):
+        """
+        Called when a trial starts - reset any previous movement
+
+        :param time0: The time when the trial started
+        :type time0: number
+        """
 
         if time0 is not None and not isinstance(time0, (int, float)):
             raise ValueError(_u.ErrMsg.invalid_method_arg_type(self.__class__, "reset", "numeric", "time", time0))
@@ -88,8 +114,12 @@ class GlobalSpeedValidator(_BaseValidator):
         """
         Validate movement.
 
-        :param x_coord: Current x coordinates
-        :param y_coord: Current x coordinates
+        :param x_coord:
+        :type x_coord: int
+
+        :param y_coord:
+        :type y_coord: int
+
         :param time: Time from start of trial
         :returns: None if all OK; ValidationFailed object if error
         """

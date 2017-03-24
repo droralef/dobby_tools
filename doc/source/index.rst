@@ -3,12 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Dobby Tools documentation!
-==========================
+Dobby Tools documentation
+=========================
+
+Expyriment-based tools for psychology experiments, focusing on finger/mouse tracking
 
 
-dobbyt.stimuli:
----------------
+dobbyt.stimuli module:
+----------------------
 
 Visual objects.
 
@@ -19,8 +21,8 @@ Visual objects.
    stimuli/*
 
 
-dobbyt.movement:
-----------------
+dobbyt.movement module:
+-----------------------
 
 .. toctree::
    :maxdepth: 2
@@ -29,8 +31,8 @@ dobbyt.movement:
    movement/*
 
 
-dobbyt.validators:
-------------------
+dobbyt.validators module:
+-------------------------
 
 Perform various validations on mouse/finger movement during the trial.
 Typically, you'd call reset() for each validator when the trial starts, and check_xyt() each time you
@@ -44,8 +46,8 @@ observe a mouse/finger movement.
    validators/*
 
 
-dobbyt.misc:
-------------
+dobbyt.misc module:
+-------------------
 
 .. toctree::
    :maxdepth: 2
@@ -58,6 +60,5 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
 

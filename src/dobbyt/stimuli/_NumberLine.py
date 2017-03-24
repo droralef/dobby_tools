@@ -10,12 +10,11 @@ from enum import Enum
 import numbers
 import numpy as np
 
-from expyriment.misc import geometry
-# noinspection PyProtectedMember
 from expyriment.misc._timer import get_time
 import expyriment as xpy
 
 import dobbyt
+import dobbyt._utils as _u
 
 
 # noinspection PyAttributeOutsideInit,PyProtectedMember
@@ -521,20 +520,7 @@ class NumberLine(dobbyt._DobbyObject):
     def position(self, value):
         self._validate_unlocked()
 
-        if isinstance(value, geometry.XYPoint):
-            self._mid_x = value.x
-            self._mid_y = value.y
-            return
-
-        if not hasattr(value, '__iter__'):
-            raise ValueError(NumberLine._errmsg_value_not_collection.format("position", value))
-        if len(value) != 2:
-            raise ValueError(NumberLine._errmsg_value_bad_length.format("position", value))
-        if not isinstance(value[0], numbers.Number):
-            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("position", value, "x coordinate"))
-        if not isinstance(value[1], numbers.Number):
-            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("position", value, "y coordinate"))
-
+        value = _u.validate_attr_is_coord(self, "position", value)
         self._mid_x = value[0]
         self._mid_y = value[1]
         self._log_setter("position")
@@ -719,20 +705,7 @@ class NumberLine(dobbyt._DobbyObject):
     def labels_offset(self, value):
         self._validate_unlocked()
 
-        if isinstance(value, geometry.XYPoint):
-            self._labels_offset_x = value.x
-            self._labels_offset_y = value.y
-            return
-
-        if not hasattr(value, '__iter__'):
-            raise ValueError(NumberLine._errmsg_value_not_collection.format("labels_offset", value))
-        if len(value) != 2:
-            raise ValueError(NumberLine._errmsg_value_bad_length.format("labels_offset", value))
-        if not isinstance(value[0], numbers.Number):
-            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_offset", value, "x"))
-        if not isinstance(value[1], numbers.Number):
-            raise ValueError(NumberLine._errmsg_set_to_non_numeric_entry.format("labels_offset", value, "y"))
-
+        value = _u.validate_attr_is_coord(self, "labels_offset", value, True)
         self._labels_offset_x = value[0]
         self._labels_offset_y = value[1]
         self._log_setter("labels_offset")

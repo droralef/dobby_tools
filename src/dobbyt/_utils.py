@@ -9,6 +9,8 @@ Dobby tools - movement package - private utilities
 from enum import Enum
 import numbers
 
+from expyriment.misc import geometry
+
 
 #--------------------------------------------------------------------------
 class ErrMsg(object):
@@ -61,6 +63,23 @@ def validate_attr_type(obj, attr_name, value, attr_type, none_allowed=False, typ
             type_name = _get_type_name(attr_type)
 
         raise ValueError(ErrMsg.attr_invalid_type(type(obj), attr_name, type_name, value))
+
+#--------------------------------------
+def validate_attr_is_coord(obj, attr_name, value, change_none_to_0=False):
+
+    if value is None and change_none_to_0:
+        return (0, 0)
+
+    if isinstance(value, geometry.XYPoint):
+        value = (value.x, value.y)
+
+    validate_attr_type(obj, attr_name, value, (tuple, list))
+    if len(value) != 2:
+        raise ValueError("dobbyt error: {:}.{:} was set to an invalid value ({:}) - expecting (x,y) coordinates".format(type(obj).__name__, attr_name, value))
+    validate_attr_type(obj, "{:}[0]".format(attr_name), value[0], int)
+    validate_attr_type(obj, "{:}[1]".format(attr_name), value[1], int)
+
+    return value
 
 
 #--------------------------------------

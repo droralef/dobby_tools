@@ -74,6 +74,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
     def reset(self, time0=None):
         """
         Called when a trial starts - reset any previous movement
+
         :param time0: The time when the trial starts. The grace period will be determined according to this time.
         """
         self._speed_monitor.reset(time0)
@@ -83,6 +84,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
     def check_xyt(self, x_coord, y_coord, time):
         """
         Given a current position, check whether the movement complies with the speed limits.
+
         :param x_coord: Current x coordinate (in the predefined coordinate system)
         :param y_coord: Current y coordinate (in the predefined coordinate system)
         :param time: Time, in seconds. The zero point doesn't matter, as long as you're consistent until reset() is called.
