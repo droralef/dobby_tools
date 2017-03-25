@@ -7,7 +7,8 @@ Dobby tools - movement package - public utilities
 """
 
 from __future__ import division
-from numpy import pi, arctan, cos, sin
+from numpy import pi
+import numpy as np
 
 
 #--------------------------------------------------------------------------
@@ -28,11 +29,11 @@ def get_angle(xy1, xy2, as_degrees=False):
 
     elif dx > 0:
         # Right movement; return angles from 0 to pi
-        angle = arctan(- dy / dx) + pi / 2
+        angle = np.arctan(- dy / dx) + pi / 2
 
     else:
         # Left movement; return angles from pi to pi*2
-        angle = arctan(- dy / dx) + pi * 3 / 2
+        angle = np.arctan(- dy / dx) + pi * 3 / 2
 
 
     if as_degrees:
@@ -49,6 +50,16 @@ def color_rgb_to_num(rgb):
     if not is_rgb(rgb):
         raise ValueError("dobbyt error: invalid argument to color_rgb_to_num(), expecting a 3*integer list/tuple")
     return (rgb[0]<<16) + (rgb[1]<<8) + rgb[2]
+
+
+def color_num_to_rgb(value):
+    """
+    Convert an int value (between 0 and 0xFFFFFF) to RGB color (3 integers, each 0-255)
+    """
+    if isinstance(value, int) and 0 <= value <= 0xFFFFFF:
+        return (int(np.floor(value / 2 ** 16)), int(np.floor(value / 256)) % 256, value % 256)
+    else:
+        raise ValueError("dobbyt error: invalid argument to color_num_to_rgb(), expecting a 3*integer list/tuple")
 
 
 def is_rgb(rgb):
@@ -80,7 +91,7 @@ def rotate_coord(coord, angle, origin=(0,0), is_radians=False):
     x = coord[0] - origin[0]
     y = coord[1] - origin[1]
 
-    x1 = x * cos(angle) + y * sin(angle)
-    y1 = y * cos(angle) - x * sin(angle)
+    x1 = x * np.cos(angle) + y * np.sin(angle)
+    y1 = y * np.cos(angle) - x * np.sin(angle)
 
     return x1 + origin[0], y1 + origin[1]

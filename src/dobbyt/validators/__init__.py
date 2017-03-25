@@ -66,7 +66,7 @@ class _BaseValidator(_DobbyObject):
 
 
 
-from _GlobalSpeedValidator import GlobalSpeedValidator
+from _GlobalSpeedValidator import GlobalSpeedValidator, GlobalSpeedGuide
 from _InstantaneousSpeedValidator import InstantaneousSpeedValidator
 from _LocationsValidator import LocationsValidator
 from _MovementAngleValidator import MovementAngleValidator

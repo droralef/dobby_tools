@@ -9,3 +9,4 @@ Dobby tools - utilities for testing
 
 #  Import the package classes
 from _DummyFileHandle import DummyFileHandle
+from _DummyStimulus import DummyStimulus

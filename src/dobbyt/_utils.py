@@ -8,6 +8,7 @@ Dobby tools - movement package - private utilities
 
 from enum import Enum
 import numbers
+import numpy as np
 
 from expyriment.misc import geometry
 
@@ -52,7 +53,7 @@ def _get_type_name(t):
     if t == numbers.Number:
         return "number"
     else:
-        return str(t)
+        return t.__name__
 
 
 #--------------------------------------
@@ -63,6 +64,21 @@ def validate_attr_type(obj, attr_name, value, attr_type, none_allowed=False, typ
             type_name = _get_type_name(attr_type)
 
         raise ValueError(ErrMsg.attr_invalid_type(type(obj).__name__, attr_name, type_name, value))
+
+#--------------------------------------
+def validate_attr_rgb(obj, attr_name, value, accept_single_num=False):
+
+    if accept_single_num and isinstance(value, int) and 0 <= value < 2**24:
+        return (int(np.floor(value / 2 ** 16)), int(np.floor(value / 256)) % 256, value % 256)
+
+    validate_attr_type(obj, attr_name, value, tuple, type_name="(red,green,blue)")
+    if len(value) != 3 or \
+            not isinstance(value[0], int) or not (0 <= value[0] < 256) or \
+            not isinstance(value[1], int) or not (0 <= value[1] < 256) or \
+            not isinstance(value[2], int) or not (0 <= value[2] < 256):
+        raise ValueError("dobbyt error: {:}.{:} was set to an invalid value ({:}) - expecting (red,green,blue)".format(type(obj).__name__, attr_name, value))
+
+    return value
 
 #--------------------------------------
 def validate_attr_is_coord(obj, attr_name, value, change_none_to_0=False):
@@ -124,7 +140,7 @@ def validate_func_arg_type(obj, func_name, arg_name, value, arg_type, none_allow
         if obj is None:
             raise ValueError(ErrMsg.invalid_func_arg_type(func_name, type_name, arg_name, value))
         else:
-            raise ValueError(ErrMsg.invalid_method_arg_type(type(obj), func_name, type_name, arg_name, value))
+            raise ValueError(ErrMsg.invalid_method_arg_type(type(obj).__name__, func_name, type_name, arg_name, value))
 
 #--------------------------------------
 def validate_func_arg_not_negative(obj, func_name, arg_name, value):
@@ -133,7 +149,7 @@ def validate_func_arg_not_negative(obj, func_name, arg_name, value):
         if obj is None:
             msg = "dobbyt error: Argument '{1}' of {0}() has a negative value ({2})".format(func_name, arg_name, value)
         else:
-            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative value ({3})".format(type(obj), func_name, arg_name, value)
+            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative value ({3})".format(type(obj).__name__, func_name, arg_name, value)
 
         raise ValueError(msg)
 
@@ -144,7 +160,7 @@ def validate_func_arg_positive(obj, func_name, arg_name, value):
         if obj is None:
             msg = "dobbyt error: Argument '{1}' of {0}() has a negative/0 value ({2})".format(func_name, arg_name, value)
         else:
-            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative/0 value ({3})".format(type(obj), func_name, arg_name, value)
+            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative/0 value ({3})".format(type(obj).__name__, func_name, arg_name, value)
 
         raise ValueError(msg)
 
