@@ -107,29 +107,34 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
             pass
 
     # --------------------------------------------------
-    def test_set_sections(self):
-        GlobalSpeedValidator(sections=None)
-        GlobalSpeedValidator(sections=[GlobalSpeedValidator.Section(1, 1)])
-        GlobalSpeedValidator(sections=[GlobalSpeedValidator.Section(.5, .3), GlobalSpeedValidator.Section(.5, .7)])
+    def test_set_milestones(self):
+        GlobalSpeedValidator(milestones=None)
+        GlobalSpeedValidator(milestones=[GlobalSpeedValidator.Milestone(1, 1)])
+        GlobalSpeedValidator(
+            milestones=[GlobalSpeedValidator.Milestone(.5, .3), GlobalSpeedValidator.Milestone(.5, .7)])
 
-        #-- section bounds can't reach 0 or 1
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(sections=[]))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(sections=[(.6, 1.01)]))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(sections=[(1.01, .6)]))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(sections=[(.5, 0)]))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(sections=[(0, .5)]))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(sections=[(.5, .5), (.51, .5)]))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(sections=[(.5, .5), (.5, .51)]))
+        #-- milestone bounds can't reach 0 or 1
+        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(milestones=[]))
+        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(milestones=[(.6, 1.01)]))
+        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(milestones=[(1.01, .6)]))
+        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(milestones=[(.5, 0)]))
+        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(milestones=[(0, .5)]))
+        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(milestones=[(.5, .5), (.51, .5)]))
+        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(milestones=[(.5, .5), (.5, .51)]))
 
-        #-- sections must progress
+        #-- milestones must progress
         self.assertRaises(ValueError, lambda:
-                    GlobalSpeedValidator(sections=[GlobalSpeedValidator.Section(.2, .2), GlobalSpeedValidator.Section(.2, .5)]))
+                    GlobalSpeedValidator(
+                        milestones=[GlobalSpeedValidator.Milestone(.2, .2), GlobalSpeedValidator.Milestone(.2, .5)]))
         self.assertRaises(ValueError, lambda:
-                    GlobalSpeedValidator(sections=[GlobalSpeedValidator.Section(.2, .2), GlobalSpeedValidator.Section(.1, .5)]))
+                    GlobalSpeedValidator(
+                        milestones=[GlobalSpeedValidator.Milestone(.2, .2), GlobalSpeedValidator.Milestone(.1, .5)]))
         self.assertRaises(ValueError, lambda:
-                    GlobalSpeedValidator(sections=[GlobalSpeedValidator.Section(.2, .2), GlobalSpeedValidator.Section(.5, .2)]))
+                    GlobalSpeedValidator(
+                        milestones=[GlobalSpeedValidator.Milestone(.2, .2), GlobalSpeedValidator.Milestone(.5, .2)]))
         self.assertRaises(ValueError, lambda:
-                    GlobalSpeedValidator(sections=[GlobalSpeedValidator.Section(.2, .2), GlobalSpeedValidator.Section(.5, .1)]))
+                    GlobalSpeedValidator(
+                        milestones=[GlobalSpeedValidator.Milestone(.2, .2), GlobalSpeedValidator.Milestone(.5, .1)]))
 
 
     #=================================================================================
@@ -149,7 +154,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
 
     #--------------------------------------------------
-    def test_validate_one_section(self):
+    def test_validate_one_milestone(self):
         v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=True)
 
         self.assertEqual(0, v.get_expected_coord_at_time(0))
@@ -170,9 +175,9 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
 
     #--------------------------------------------------
-    def test_validate_two_sections(self):
+    def test_validate_two_milestones(self):
         v = GlobalSpeedValidator(max_trial_duration=6, origin_coord=0, end_coord=100, enabled=True,
-                                 sections=[(.5, .25), (.5, .75)])
+                                 milestones=[(.5, .25), (.5, .75)])
         v.reset()
         self.assertIsNone(v.check_xyt(0, 25, 3))
         self.assertIsNone(v.check_xyt(0, 75, 5))
@@ -252,6 +257,24 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
         v.check_xyt(0, 55, .5)
         self.assertEqual(v.guide.LineMode.Error, v.guide._guide_line.selected_key)
 
+
+    #--------------------------------------------------
+    def test_guide_coords_y(self):
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=True, show_guide=True)
+        v._guide = DbgGlobalSpeedGuide(v)
+
+        v.reset()
+        v.check_xyt(0, 99, .5)
+        self.assertEqual((0, 50), v.guide._guide_line.selected_stimulus.position)
+
+    #--------------------------------------------------
+    def test_guide_coords_x(self):
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=True, show_guide=True, axis=ValidationAxis.x)
+        v._guide = DbgGlobalSpeedGuide(v)
+
+        v.reset()
+        v.check_xyt(99, 0, .5)
+        self.assertEqual((50, 0), v.guide._guide_line.selected_stimulus.position)
 
 
 

@@ -34,18 +34,18 @@ class GlobalSpeedValidator(_BaseValidator):
     arg_actual_coord = "actual_coord"
 
 
-    class Section(object):
+    class Milestone(object):
         def __init__(self, time_percentage, distance_percentage):
             self.time_percentage = time_percentage
             self.distance_percentage = distance_percentage
 
         def __str__(self):
-            return "GlobalSpeedValidator.Section(time={:}, distance={:})".format(self.time_percentage, self.distance_percentage)
+            return "GlobalSpeedValidator.Milestone(time={:}, distance={:})".format(self.time_percentage, self.distance_percentage)
 
 
     #-----------------------------------------------------------------------------------
     def __init__(self, enabled=False, origin_coord=None, end_coord=None, axis=ValidationAxis.y,
-                 grace_period=None, max_trial_duration=None, sections=None, show_guide=False):
+                 grace_period=None, max_trial_duration=None, milestones=None, show_guide=False):
         """
 
         :param enabled: See :func:`dobbyt.validators.GlobalSpeedValidator.enabled`
@@ -66,8 +66,8 @@ class GlobalSpeedValidator(_BaseValidator):
         :param max_trial_duration: See :func:`dobbyt.validators.GlobalSpeedValidator.max_trial_duration`
         :type max_trial_duration: number
 
-        :param sections: See :func:`dobbyt.validators.GlobalSpeedValidator.sections`
-        :type sections: list of GlobalSpeedValidator.Section objects
+        :param milestones: See :func:`dobbyt.validators.GlobalSpeedValidator.milestones`
+        :type milestones: list of GlobalSpeedValidator.Section objects
 
         :param show_guide: See :func:`dobbyt.validators.GlobalSpeedValidator.show_guide`
         :type show_guide: bool
@@ -78,10 +78,10 @@ class GlobalSpeedValidator(_BaseValidator):
         self.axis = axis
         self.grace_period = grace_period
 
-        if sections is None:
-            self.sections = [self.Section(1, 1)]
+        if milestones is None:
+            self.milestones = [self.Milestone(1, 1)]
         else:
-            self.sections = sections
+            self.milestones = milestones
 
         self._max_trial_duration = None
         if max_trial_duration is not None:
@@ -96,6 +96,7 @@ class GlobalSpeedValidator(_BaseValidator):
             self.end_coord = end_coord
 
         self.show_guide = show_guide
+        self.guide_warning_time_delta = 0
         self.guide_line_length = None
 
 
@@ -195,14 +196,14 @@ class GlobalSpeedValidator(_BaseValidator):
 
         remaining_time = time
         result = self._origin_coord
-        for section in self._sections:
-            section_duration = section.time_percentage * self._max_trial_duration
-            section_distance = section.distance_percentage * total_distance
-            if remaining_time > section_duration:
-                remaining_time -= section_duration
-                result += section_distance
+        for milestone in self._milestones:
+            ms_duration = milestone.time_percentage * self._max_trial_duration
+            ms_distance = milestone.distance_percentage * total_distance
+            if remaining_time > ms_duration:
+                remaining_time -= ms_duration
+                result += ms_distance
             else:
-                result += section_distance * (remaining_time / section_duration)
+                result += ms_distance * (remaining_time / ms_duration)
                 break
 
         return result
@@ -289,68 +290,81 @@ class GlobalSpeedValidator(_BaseValidator):
 
     #-----------------------------------------------------------------------------------
 
-    _errmsg_sections_not_percentage = "dobbyt error: invalid {0} for {1}.sections[{2}]: expecting a number between 0 and 1"
+    _errmsg_milestones_not_percentage = "dobbyt error: invalid {0} for {1}.milestones[{2}]: expecting a number between 0 and 1"
 
     @property
-    def sections(self):
-        #TODO: add comment
-        return self._sections #TODO: clone limits
+    def milestones(self):
+        """
+        This attribute indicates how the overall speed limit (:func:`dobbyt.validators.GlobalSpeedValidator.max_trial_duration`)
+        should be interpolated.
 
-    @sections.setter
-    def sections(self, value):
+        By default, the interpolation is linear. But you can define several milestones - e.g., "mouse/finger must complete X%
+        of the way within Y% of the trial's total duration". The milestones split the trials into sections and define the
+        speed goal per section. Within each section, the interpolation is linear.
+
+        Each milestone is defined by the duration and distance of the relevant section, specified as the percentage
+        out of the total trial duration / total movement distance. The durations and distances of all milestones must
+        sum to 1.0 (= 100%).
+
+        This property is an array of milestones. Each of them is a GlobalSpeedValidator.Milestone object (but when setting the
+        property value, you can use a (time, distance) tuple/list instead).
+        """
+        return list(self._milestones)
+
+    @milestones.setter
+    def milestones(self, value):
         if value is None:
             value = []
 
-        _u.validate_attr_type(self, "sections", value, (list, tuple))
+        _u.validate_attr_type(self, "milestones", value, (list, tuple))
 
         total_time = 0
         total_distance = 0
 
-        sections = []
+        milestones = []
         for i in range(len(value)):
-            section = value[i]
+            milestone = value[i]
 
-            _u.validate_attr_type(self, "sections[{:}]".format(i), section, (GlobalSpeedValidator.Section, tuple, list))
+            _u.validate_attr_type(self, "milestones[{:}]".format(i), milestone, (GlobalSpeedValidator.Milestone, tuple, list))
 
-            if not isinstance(section, GlobalSpeedValidator.Section):
-                #-- convert tuple/list to section
-                if len(section) != 2:
-                    raise ValueError("dobbyt error: {:}.section[{:}] should be either a Section object or a (time,distance) tuple/list. Invalid value: {:}".format(type(self).__name__, i, section))
-                section = GlobalSpeedValidator.Section(section[0], section[1])
+            if not isinstance(milestone, GlobalSpeedValidator.Milestone):
+                #-- convert tuple/list to milestone
+                if len(milestone) != 2:
+                    raise ValueError("dobbyt error: {:}.milestones[{:}] should be either a Milestone object or a (time,distance) tuple/list. Invalid value: {:}".format(type(self).__name__, i, milestone))
+                milestone = GlobalSpeedValidator.Milestone(milestone[0], milestone[1])
 
-            if not isinstance(section.distance_percentage, numbers.Number):
-                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", type(self).__name__, i))
-            if not (0 < section.distance_percentage <= 1):
-                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("distance_percentage", type(self).__name__, i))
+            if not isinstance(milestone.distance_percentage, numbers.Number):
+                raise ValueError(GlobalSpeedValidator._errmsg_milestones_not_percentage.format("distance_percentage", type(self).__name__, i))
+            if not (0 < milestone.distance_percentage <= 1):
+                raise ValueError(GlobalSpeedValidator._errmsg_milestones_not_percentage.format("distance_percentage", type(self).__name__, i))
 
-            if not isinstance(section.time_percentage, numbers.Number):
-                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", type(self).__name__, i))
-            if not (0 < section.time_percentage <= 1):
-                raise ValueError(GlobalSpeedValidator._errmsg_sections_not_percentage.format("time_percentage", type(self).__name__, i))
-            if section.distance_percentage <= total_distance:
-                raise ValueError("dobbyt error: {:}.sections[{:}] is invalid - the distance specified ({:}) must be later than in the previous section".format("distance_percentage", type(self).__name__, i, section.time_percentage))
+            if not isinstance(milestone.time_percentage, numbers.Number):
+                raise ValueError(GlobalSpeedValidator._errmsg_milestones_not_percentage.format("time_percentage", type(self).__name__, i))
+            if not (0 < milestone.time_percentage <= 1):
+                raise ValueError(GlobalSpeedValidator._errmsg_milestones_not_percentage.format("time_percentage", type(self).__name__, i))
+            if milestone.distance_percentage <= total_distance:
+                raise ValueError("dobbyt error: {:}.milestones[{:}] is invalid - the distance specified ({:}) must be later than in the previous milestone".format("distance_percentage", type(self).__name__, i, milestone.time_percentage))
 
-            total_time += section.time_percentage
-            total_distance += section.distance_percentage
+            total_time += milestone.time_percentage
+            total_distance += milestone.distance_percentage
 
             if total_time > 1:
-                raise ValueError("dobbyt error: {:}.sections is invalid - the total time of all sections exceeds 1.0".format(type(self).__name__))
+                raise ValueError("dobbyt error: {:}.milestones is invalid - the total time of all milestones exceeds 1.0".format(type(self).__name__))
             if total_distance > 1:
-                raise ValueError("dobbyt error: {:}.sections is invalid - the total distance of all sections exceeds 1.0".format(type(self).__name__))
+                raise ValueError("dobbyt error: {:}.milestones is invalid - the total distance of all milestones exceeds 1.0".format(type(self).__name__))
 
-            sections.append(GlobalSpeedValidator.Section(section.time_percentage, section.distance_percentage))
+            milestones.append(GlobalSpeedValidator.Milestone(milestone.time_percentage, milestone.distance_percentage))
 
         if total_time < 1:
             raise ValueError(
-                "dobbyt error: {:}.sections is invalid - the total time of all sections sums to {:} rather than to 1.0".format(
+                "dobbyt error: {:}.milestones is invalid - the total time of all milestones sums to {:} rather than to 1.0".format(
                     type(self).__name__, total_time))
         if total_distance < 1:
             raise ValueError(
-                "dobbyt error: {:}.sections is invalid - the total distance of all sections sums to {:} rather than to 1.0".format(
+                "dobbyt error: {:}.milestones is invalid - the total distance of all milestones sums to {:} rather than to 1.0".format(
                     type(self).__name__, total_distance))
 
-        self._sections = np.array(sections)
-        self._sections_times = np.array([s.time_percentage for s in sections])
+        self._milestones = np.array(milestones)
 
 
     #-------------------------------------------------------------
