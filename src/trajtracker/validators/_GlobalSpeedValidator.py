@@ -512,7 +512,7 @@ class GlobalSpeedGuide(trajtracker._TTrkObject):
         _u.validate_func_arg_type(self, "show", "coord", coord, int)
         _u.validate_func_arg_type(self, "show", "line_mode", line_mode, self.LineMode)
 
-        self._guide_line.select(line_mode)
+        self._guide_line.activate(line_mode)
 
         pos = (coord, 0) if self._validator.axis == ValidationAxis.x else (0, coord)
         self._guide_line.position = pos

@@ -5,6 +5,9 @@ from expyriment.misc import geometry
 
 import trajtracker
 
+def uw(xy):
+    return (xy['x'], xy['y'])
+
 
 class CircularTrajectoryGeneratorTests(unittest.TestCase):
 
@@ -80,37 +83,37 @@ class CircularTrajectoryGeneratorTests(unittest.TestCase):
     def test_generate_simple(self):
 
         gen = CircularTrajectoryGenerator(center=(0,0), radius=100, degrees_per_sec=90)
-        self.assertEqual((0, 100), gen.get_xy(0))
-        self.assertEqual((71, 71), gen.get_xy(0.5))
-        self.assertEqual((100, 0), gen.get_xy(1))
-        self.assertEqual((71, -71), gen.get_xy(1.5))
-        self.assertEqual((0, -100), gen.get_xy(2))
-        self.assertEqual((-71, -71), gen.get_xy(2.5))
-        self.assertEqual((-100, 0), gen.get_xy(3))
-        self.assertEqual((-71, 71), gen.get_xy(3.5))
-        self.assertEqual((100, 0), gen.get_xy(5))
+        self.assertEqual((0, 100), uw(gen.get_traj_point(0)))
+        self.assertEqual((71, 71), uw(gen.get_traj_point(0.5)))
+        self.assertEqual((100, 0), uw(gen.get_traj_point(1)))
+        self.assertEqual((71, -71), uw(gen.get_traj_point(1.5)))
+        self.assertEqual((0, -100), uw(gen.get_traj_point(2)))
+        self.assertEqual((-71, -71), uw(gen.get_traj_point(2.5)))
+        self.assertEqual((-100, 0), uw(gen.get_traj_point(3)))
+        self.assertEqual((-71, 71), uw(gen.get_traj_point(3.5)))
+        self.assertEqual((100, 0), uw(gen.get_traj_point(5)))
 
     #--------------------------------------------------------
     def test_generate_change_center(self):
         gen = CircularTrajectoryGenerator(center=(10,-10), radius=100, degrees_per_sec=90)
-        self.assertEqual((10, 90), gen.get_xy(0))
+        self.assertEqual((10, 90), uw(gen.get_traj_point(0)))
 
     #--------------------------------------------------------
     def test_generate_change_angle0(self):
         gen = CircularTrajectoryGenerator(center=(0,0), radius=100, degrees_per_sec=90, degrees_at_t0=90)
-        self.assertEqual((100, 0), gen.get_xy(0))
+        self.assertEqual((100, 0), uw(gen.get_traj_point(0)))
 
     #--------------------------------------------------------
     def test_generate_change_duration(self):
         gen = CircularTrajectoryGenerator(center=(0,0), radius=100)
         gen.full_rotation_duration = 4
-        self.assertEqual((0, -100), gen.get_xy(2))
+        self.assertEqual((0, -100), uw(gen.get_traj_point(2)))
 
     #--------------------------------------------------------
     def test_missing_info(self):
-        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), radius=100).get_xy(0))
-        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), degrees_per_sec=90).get_xy(0))
-        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(radius=100, degrees_per_sec=90).get_xy(0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), radius=100).get_traj_point(0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), degrees_per_sec=90).get_traj_point(0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(radius=100, degrees_per_sec=90).get_traj_point(0))
 
 
 
