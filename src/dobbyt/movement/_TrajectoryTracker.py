@@ -16,27 +16,40 @@ import dobbyt._utils as _u
 
 # noinspection PyAttributeOutsideInit
 class TrajectoryTracker(dobbyt._DobbyObject):
+    """
+    Track mouse/finger trajectory and save results to a CSV file.
 
-    _errmsg_set_to_non_boolean = "dobbyt error: invalid attempt to set TrajectoryTracker.{0} to a non-boolean value ({1})"
-    _errmsg_non_numeric_coord = "dobbyt error in TrajectoryTracker.mouse_at(): the {0} is a non-numeric value ({1})"
-    _errmsg_negative_time = "dobbyt error in TrajectoryTracker.mouse_at(): negative time ({1}) is invalid"
+     **How to use this class:**
+
+    - Call :func:`~dobbyt.movement.TrajectoryTracker.init_output_file` when the experiment starts
+    - Call :func:`~dobbyt.movement.TrajectoryTracker.reset` when the trial starts
+    - Set :attr:`~dobbyt.movement.TrajectoryTracker.tracking_active` to True and False in order to
+      enable/disable tracking during a trial
+    - Call :func:`~dobbyt.movement.TrajectoryTracker.update_xyt` whenever the finger/mouse moves
+    - Call :func:`~dobbyt.movement.TrajectoryTracker.save_to_file` when the trial ends
+    """
 
 
     #----------------------------------------------------
-    def __init__(self):
+    def __init__(self, filename=None):
         """
         Constructor
 
-        :param tracking_active: See :func:`~dobbyt.movement.TrajectoryTracker.tracking_active` (default=False).
+        :param filename: See :attr:`~dobbyt.movement.TrajectoryTracker.filename` (default=None).
         """
         super(TrajectoryTracker, self).__init__()
         self.reset(False)
-        self._filename = None
+        self._filename = filename
+        self.tracking_active = False
+
 
     #----------------------------------------------------
     @property
     def tracking_active(self):
-        """ Whether tracking is currently active (boolean). When inactive, calls to update_xyt() will be ignored. """
+        """
+        Whether tracking is currently active (boolean). When inactive, calls to
+        :func:`~dobbyt.movement.TrajectoryTracker.update_xyt` will be ignored.
+        """
         return self._tracking_active
 
     @tracking_active.setter
@@ -74,10 +87,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
         _u.validate_func_arg_type(self, "update_xyt", "x_coord", x_coord, numbers.Number)
         _u.validate_func_arg_type(self, "update_xyt", "y_coord", y_coord, numbers.Number)
         _u.validate_func_arg_type(self, "update_xyt", "time", time, numbers.Number)
-        _u.validate_func_arg_type(self, "update_xyt", "time", time, numbers.Number)
-
-        if time < 0:
-            raise ValueError(TrajectoryTracker._errmsg_negative_time.format(time))
+        _u.validate_func_arg_not_negative(self, "update_xyt", "time", time)
 
         self._trajectory['x'].append(x_coord)
         self._trajectory['y'].append(y_coord)

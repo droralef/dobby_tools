@@ -31,9 +31,9 @@ class LocationsValidator(_BaseValidator):
         Constructor
 
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param enabled: See :func:`~dobbyt.validators.LocationsValidator.enabled`
-        :param position: See :func:`~dobbyt.validators.LocationsValidator.position`
-        :param default_valid: See :func:`~dobbyt.validators.LocationsValidator.default_valid`
+        :param enabled: See :attr:`~dobbyt.validators.LocationsValidator.enabled`
+        :param position: See :attr:`~dobbyt.validators.LocationsValidator.position`
+        :param default_valid: See :attr:`~dobbyt.validators.LocationsValidator.default_valid`
         """
         super(LocationsValidator, self).__init__(enabled=enabled)
 

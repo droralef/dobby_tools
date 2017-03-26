@@ -30,9 +30,9 @@ class LocationColorMap(dobbyt._DobbyObject):
         Constructor
 
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param position: See :func:`~dobbyt.misc.LocationColorMap.position`
-        :param use_mapping: See :func:`~dobbyt.misc.LocationColorMap.use_mapping`
-        :param colormap: See :func:`~dobbyt.misc.LocationColorMap.colormap`
+        :param position: See :attr:`~dobbyt.misc.LocationColorMap.position`
+        :param use_mapping: See :attr:`~dobbyt.misc.LocationColorMap.use_mapping`
+        :param colormap: See :attr:`~dobbyt.misc.LocationColorMap.colormap`
         """
 
         super(LocationColorMap, self).__init__()
@@ -84,8 +84,8 @@ class LocationColorMap(dobbyt._DobbyObject):
     def position(self):
         """
         The coordinate of the image provided in the constructor (middle of the image) - an (x,y) tuple/list
-        If position=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at`(a,b) will return the
-        color of the middle of the image.
+        If position=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at` with arguments (a,b) will
+        return the color of the middle of the image.
         """
         return self._position
 

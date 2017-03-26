@@ -34,7 +34,7 @@ class StartPoint(dobbyt._DobbyObject):
         :param start_area: The area where you must touch/click to initiate a trial.
                            This object must support an overlapping_with_position() method and a "center" property.
                            It can be an expyriment stimulus, a shape from :func:`~dobbyt.misc.shapes`, or your own object
-        :param exit_area: See :func:`~dobbyt.misc.RectStartPoint.exit_area`
+        :param exit_area: See :attr:`~dobbyt.misc.RectStartPoint.exit_area`
         """
 
         super(StartPoint, self).__init__()

@@ -26,8 +26,8 @@ class SpeedMonitor(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param units_per_mm: See :func:`~dobbyt.movement.SpeedMonitor.units_per_mm`
-        :param calculation_interval: See :func:`~dobbyt.movement.SpeedMonitor.calculation_interval`
+        :param units_per_mm: See :attr:`~dobbyt.movement.SpeedMonitor.units_per_mm`
+        :param calculation_interval: See :attr:`~dobbyt.movement.SpeedMonitor.calculation_interval`
         """
         super(SpeedMonitor, self).__init__()
 

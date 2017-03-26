@@ -265,7 +265,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
         v.reset()
         v.check_xyt(0, 99, .5)
-        self.assertEqual((0, 50), v.guide._guide_line.selected_stimulus.position)
+        self.assertEqual((0, 50), v.guide._guide_line.active_stimulus.position)
 
     #--------------------------------------------------
     def test_guide_coords_x(self):
@@ -274,7 +274,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
         v.reset()
         v.check_xyt(99, 0, .5)
-        self.assertEqual((50, 0), v.guide._guide_line.selected_stimulus.position)
+        self.assertEqual((50, 0), v.guide._guide_line.active_stimulus.position)
 
 
 

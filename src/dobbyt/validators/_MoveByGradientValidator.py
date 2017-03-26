@@ -22,17 +22,17 @@ class MoveByGradientValidator(_BaseValidator):
     err_gradient = "gradient_violation"
 
 
-    def __init__(self, image, position=None, rgb_should_ascend=True, max_valid_back_movement=0, last_validated_rgb=None,
-                 enabled=False):
+    def __init__(self, image, position=(0, 0), rgb_should_ascend=True, max_valid_back_movement=0,
+                 last_validated_rgb=None, enabled=False):
         """
         Constructor
 
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param position: See :func:`~dobbyt.movement.MoveByGradientValidator.enabled`; default = False
-        :param position: See :func:`~dobbyt.movement.MoveByGradientValidator.position`; default = (0,0)
-        :param rgb_should_ascend: See :func:`~dobbyt.movement.MoveByGradientValidator.rgb_should_ascend`; default = True
-        :param max_valid_back_movement: See :func:`~dobbyt.movement.MoveByGradientValidator.max_valid_back_movement`; default = 0
-        :param last_validated_rgb: See :func:`~dobbyt.movement.MoveByGradientValidator.last_validated_rgb`; default = None
+        :param position: See :attr:`~dobbyt.movement.MoveByGradientValidator.enabled`
+        :param position: See :attr:`~dobbyt.movement.MoveByGradientValidator.position`
+        :param rgb_should_ascend: See :attr:`~dobbyt.movement.MoveByGradientValidator.rgb_should_ascend`
+        :param max_valid_back_movement: See :attr:`~dobbyt.movement.MoveByGradientValidator.max_valid_back_movement`
+        :param last_validated_rgb: See :attr:`~dobbyt.movement.MoveByGradientValidator.last_validated_rgb`
         """
         super(MoveByGradientValidator, self).__init__(enabled=enabled)
 

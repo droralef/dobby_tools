@@ -20,10 +20,10 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param center: See :func:`dobbyt.movement.CircularTrajectoryGenerator.center`
-        :param radius: See :func:`dobbyt.movement.CircularTrajectoryGenerator.radius`
-        :param degrees_per_sec: See :func:`dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`
-        :param degrees_at_t0: See :func:`dobbyt.movement.CircularTrajectoryGenerator.degrees_at_t0`
+        :param center: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.center`
+        :param radius: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.radius`
+        :param degrees_per_sec: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`
+        :param degrees_at_t0: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.degrees_at_t0`
         """
         super(CircularTrajectoryGenerator, self).__init__()
 

@@ -22,12 +22,12 @@ class StimulusAnimator(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param animated_object: See :func:`dobbyt.movement.StimulusAnimator.animated_object`
+        :param animated_object: See :attr:`dobbyt.movement.StimulusAnimator.animated_object`
         :type animated_object: Expyriment stimulus
 
-        :param trajectory_generator: See :func:`dobbyt.movement.StimulusAnimator.trajectory_generator`
+        :param trajectory_generator: See :attr:`dobbyt.movement.StimulusAnimator.trajectory_generator`
 
-        :param position_shift: See :func:`dobbyt.movement.StimulusAnimator.position_shift`
+        :param position_shift: See :attr:`dobbyt.movement.StimulusAnimator.position_shift`
         :type position_shift: tuple
         """
         super(StimulusAnimator, self).__init__()

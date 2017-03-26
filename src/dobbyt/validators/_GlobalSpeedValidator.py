@@ -48,28 +48,28 @@ class GlobalSpeedValidator(_BaseValidator):
                  grace_period=None, max_trial_duration=None, milestones=None, show_guide=False):
         """
 
-        :param enabled: See :func:`dobbyt.validators.GlobalSpeedValidator.enabled`
+        :param enabled: See :attr:`~dobbyt.validators.GlobalSpeedValidator.enabled`
         :type enabled: bool
 
-        :param origin_coord: See :func:`dobbyt.validators.GlobalSpeedValidator.origin_coord`
+        :param origin_coord: See :attr:`~dobbyt.validators.GlobalSpeedValidator.origin_coord`
         :type origin_coord: int
 
-        :param end_coord: See :func:`dobbyt.validators.GlobalSpeedValidator.end_coord`
+        :param end_coord: See :attr:`~dobbyt.validators.GlobalSpeedValidator.end_coord`
         :type end_coord: int
 
-        :param axis: See :func:`dobbyt.validators.GlobalSpeedValidator.axis`
+        :param axis: See :attr:`~dobbyt.validators.GlobalSpeedValidator.axis`
         :type axis: dobbyt.validators.ValidationAxis
 
-        :param grace_period: See :func:`dobbyt.validators.GlobalSpeedValidator.grace_period`
+        :param grace_period: See :attr:`~dobbyt.validators.GlobalSpeedValidator.grace_period`
         :type grace_period: number
 
-        :param max_trial_duration: See :func:`dobbyt.validators.GlobalSpeedValidator.max_trial_duration`
+        :param max_trial_duration: See :attr:`~dobbyt.validators.GlobalSpeedValidator.max_trial_duration`
         :type max_trial_duration: number
 
-        :param milestones: See :func:`dobbyt.validators.GlobalSpeedValidator.milestones`
-        :type milestones: list of GlobalSpeedValidator.Section objects
+        :param milestones: See :attr:`~dobbyt.validators.GlobalSpeedValidator.milestones`
+        :type milestones: list
 
-        :param show_guide: See :func:`dobbyt.validators.GlobalSpeedValidator.show_guide`
+        :param show_guide: See :attr:`~dobbyt.validators.GlobalSpeedValidator.show_guide`
         :type show_guide: bool
         """
 
@@ -217,8 +217,9 @@ class GlobalSpeedValidator(_BaseValidator):
     def axis(self):
         """
         The ValidationAxis on which speed is validated
-        ValidationAxis.x or ValidationAxis.y: limit the speed in the relevant axis.
-        ValidationAxis.xy: limit the diagonal speed
+
+        - ValidationAxis.x or ValidationAxis.y: limit the speed in the relevant axis.
+        - ValidationAxis.xy: limit the diagonal speed
         """
         return self._axis
 
@@ -295,7 +296,7 @@ class GlobalSpeedValidator(_BaseValidator):
     @property
     def milestones(self):
         """
-        This attribute indicates how the overall speed limit (:func:`dobbyt.validators.GlobalSpeedValidator.max_trial_duration`)
+        This attribute indicates how the overall speed limit (:attr:`~dobbyt.validators.GlobalSpeedValidator.max_trial_duration`)
         should be interpolated.
 
         By default, the interpolation is linear. But you can define several milestones - e.g., "mouse/finger must complete X%
@@ -370,7 +371,7 @@ class GlobalSpeedValidator(_BaseValidator):
     #-------------------------------------------------------------
     @property
     def show_guide(self):
-        """ Whether to visualize the speed limit as a moving line """
+        """ Whether to visualize the speed limit as a moving line (bool) """
         return self._show_guide
 
     @show_guide.setter
@@ -397,7 +398,7 @@ class GlobalSpeedValidator(_BaseValidator):
     @property
     def guide_line_length(self):
         """
-        The length of the speed guide line
+        The length of the speed guide line (int)
         """
         return self._guide_line_length
 
@@ -413,8 +414,7 @@ class GlobalSpeedValidator(_BaseValidator):
     @property
     def guide(self):
         """
-        A :class:`dobbyt.validators.GlobalSpeedGuide` that takes care of showing a visual guide for the speed limit
-        (read-only property)
+        An object (dobbyt.validators.GlobalSpeedGuide) that takes care of showing a visual guide for the speed limit (read-only property)
         """
         return self._guide
 
@@ -437,7 +437,7 @@ class GlobalSpeedGuide(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param validator: See :class:`dobbyt.validators.GlobalSpeedValidator`
+        :param validator: See :class:`~dobbyt.validators.GlobalSpeedValidator`
         """
 
         super(GlobalSpeedGuide, self).__init__()
@@ -503,6 +503,7 @@ class GlobalSpeedGuide(dobbyt._DobbyObject):
 
     #------------------------------------------------------------------------
     def show(self, coord, line_mode):
+
         if self._guide_line is None:
             self._create_guide_line()  # try creating again. Maybe the experiment was inactive
             if self._guide_line is None:

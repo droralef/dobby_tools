@@ -35,13 +35,13 @@ class InstantaneousSpeedValidator(_BaseValidator):
         """
         Constructor
 
-        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.InstantaneousSpeedValidator.check_xyt`) per mm
-        :param axis: See :func:`~dobbyt.movement.ValidationAxis`
-        :param enabled: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.enabled`
-        :param min_speed: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.min_speed`
-        :param max_speed: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.max_speed`
-        :param grace_period: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.grace_period`
-        :param calculation_interval: See :func:`~dobbyt.validators.InstantaneousSpeedValidator.calc_speed_interval`
+        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.validators.InstantaneousSpeedValidator.check_xyt`) per mm
+        :param axis: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.axis`
+        :param enabled: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.enabled`
+        :param min_speed: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.min_speed`
+        :param max_speed: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.max_speed`
+        :param grace_period: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.grace_period`
+        :param calculation_interval: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.calculation_interval`
         """
 
         super(InstantaneousSpeedValidator, self).__init__(enabled=enabled)

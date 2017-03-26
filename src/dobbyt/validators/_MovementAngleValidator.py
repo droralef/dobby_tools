@@ -34,11 +34,11 @@ class MovementAngleValidator(_BaseValidator):
 
         :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.MovementAngleValidator.check_xyt`) per mm.
                              This is relevant for computation of :func:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
-        :param min_angle: See :func:`~dobbyt.movement.MovementAngleValidator.min_angle`
-        :param max_angle: See :func:`~dobbyt.movement.MovementAngleValidator.max_angle`
-        :param calc_angle_interval: See :func:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
-        :param grace_period: See :func:`~dobbyt.movement.MovementAngleValidator.grace_period`
-        :param enabled: See :func:`~dobbyt.movement.MovementAngleValidator.enabloed`
+        :param min_angle: See :attr:`~dobbyt.movement.MovementAngleValidator.min_angle`
+        :param max_angle: See :attr:`~dobbyt.movement.MovementAngleValidator.max_angle`
+        :param calc_angle_interval: See :attr:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
+        :param grace_period: See :attr:`~dobbyt.movement.MovementAngleValidator.grace_period`
+        :param enabled: See :attr:`~dobbyt.movement.MovementAngleValidator.enabloed`
         """
         super(MovementAngleValidator, self).__init__(enabled=enabled)
 

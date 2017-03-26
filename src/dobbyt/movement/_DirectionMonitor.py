@@ -38,9 +38,9 @@ class DirectionMonitor(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param units_per_mm: See :func:`~dobbyt.movement.DirectionMonitor.units_per_mm`
-        :param min_distance: See :func:`~dobbyt.movement.DirectionMonitor.min_distance`
-        :param angle_units: See :func:`~dobbyt.movement.DirectionMonitor.angle_units`
+        :param units_per_mm: See :attr:`~dobbyt.movement.DirectionMonitor.units_per_mm`
+        :param min_distance: See :attr:`~dobbyt.movement.DirectionMonitor.min_distance`
+        :param angle_units: See :attr:`~dobbyt.movement.DirectionMonitor.angle_units`
         """
         super(DirectionMonitor, self).__init__()
 

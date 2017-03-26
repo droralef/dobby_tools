@@ -12,19 +12,19 @@ class StimulusSelectorTests(unittest.TestCase):
         a = DummyStimulus()
         b = DummyStimulus()
         sel = StimulusSelector([["a", a], ["b", b]])
-        self.assertIsNone(sel.selected_stimulus)
+        self.assertIsNone(sel.active_stimulus)
 
-        sel.select("a")
-        self.assertEqual(a, sel.selected_stimulus)
+        sel.activate("a")
+        self.assertEqual(a, sel.active_stimulus)
 
-        sel.select("b")
-        self.assertEqual(b, sel.selected_stimulus)
+        sel.activate("b")
+        self.assertEqual(b, sel.active_stimulus)
 
 
     def test_select_invalid(self):
         a = DummyStimulus()
         sel = StimulusSelector([["a", a]])
-        self.assertRaises(ValueError, lambda: sel.select("c"))
+        self.assertRaises(ValueError, lambda: sel.activate("c"))
 
 
 if __name__ == '__main__':
