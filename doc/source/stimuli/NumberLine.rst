@@ -3,7 +3,7 @@
 NumberLine class
 ================
 
-.. autoclass:: dobbyt.stimuli.NumberLine
+.. autoclass:: trajtracker.stimuli.NumberLine
    :members:
    :member-order: bysource
 

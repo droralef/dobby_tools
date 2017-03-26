@@ -3,7 +3,7 @@
 StartPoint class
 ================
 
-.. autoclass:: dobbyt.movement.StartPoint
+.. autoclass:: trajtracker.movement.StartPoint
    :members:
    :member-order: bysource
 

@@ -3,7 +3,7 @@
 SpeedMonitor class
 ==================
 
-.. autoclass:: dobbyt.movement.SpeedMonitor
+.. autoclass:: trajtracker.movement.SpeedMonitor
    :members:
    :member-order: bysource
 

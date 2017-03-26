@@ -3,7 +3,7 @@
 PictureSet class
 ================
 
-.. autoclass:: dobbyt.misc.PictureSet
+.. autoclass:: trajtracker.misc.PictureSet
    :members:
    :member-order: bysource
 

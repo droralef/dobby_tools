@@ -3,7 +3,7 @@
 CircularTrajectoryGenerator class
 =================================
 
-.. autoclass:: dobbyt.movement.CircularTrajectoryGenerator
+.. autoclass:: trajtracker.movement.CircularTrajectoryGenerator
    :members:
    :member-order: bysource
 

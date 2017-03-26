@@ -3,7 +3,7 @@
 DirectionMonitor class
 ======================
 
-.. autoclass:: dobbyt.movement.DirectionMonitor
+.. autoclass:: trajtracker.movement.DirectionMonitor
    :members:
    :member-order: bysource
 

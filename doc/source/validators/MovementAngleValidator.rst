@@ -3,7 +3,7 @@
 MovementAngleValidator class
 ============================
 
-.. autoclass:: dobbyt.validators.MovementAngleValidator
+.. autoclass:: trajtracker.validators.MovementAngleValidator
    :members:
    :inherited-members:
    :member-order: bysource

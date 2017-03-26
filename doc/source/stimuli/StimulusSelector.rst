@@ -3,7 +3,7 @@
 StimulusSelector class
 ======================
 
-.. autoclass:: dobbyt.stimuli.StimulusSelector
+.. autoclass:: trajtracker.stimuli.StimulusSelector
    :members:
    :member-order: bysource
 

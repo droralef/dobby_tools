@@ -3,7 +3,7 @@
 MoveByGradientValidator class
 =============================
 
-.. autoclass:: dobbyt.validators.MoveByGradientValidator
+.. autoclass:: trajtracker.validators.MoveByGradientValidator
    :members:
    :inherited-members:
    :member-order: bysource

@@ -3,7 +3,7 @@
 LocationsValidator class
 ========================
 
-.. autoclass:: dobbyt.validators.LocationsValidator
+.. autoclass:: trajtracker.validators.LocationsValidator
    :members:
    :inherited-members:
    :member-order: bysource

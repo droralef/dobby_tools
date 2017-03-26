@@ -3,7 +3,7 @@
 LocationColorMap class
 ======================
 
-.. autoclass:: dobbyt.misc.LocationColorMap
+.. autoclass:: trajtracker.misc.LocationColorMap
    :members:
    :member-order: bysource
 

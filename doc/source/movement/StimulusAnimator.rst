@@ -3,7 +3,7 @@
 StimulusAnimator class
 ======================
 
-.. autoclass:: dobbyt.movement.StimulusAnimator
+.. autoclass:: trajtracker.movement.StimulusAnimator
    :members:
    :member-order: bysource
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Dobby Tools documentation build configuration file, created by
+# TrajTracker documentation build configuration file, created by
 # sphinx-quickstart on Mon Feb 20 15:35:23 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -20,7 +20,7 @@ import os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
-sys.path.insert(0, '/git/dobby_tools/src')
+sys.path.insert(0, '/git/trajtracker_py/src')
 
 
 # -- General configuration ------------------------------------------------
@@ -53,7 +53,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Dobby Tools'
+project = u'TrajTracker'
 copyright = u'2017, Dror Dotan'
 author = u'Dror Dotan'
 
@@ -128,7 +128,7 @@ html_theme = 'alabaster'
 
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
-#html_title = u'Dobby Tools v0.0.1'
+#html_title = u'TrajTracker v0.0.1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -210,7 +210,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DobbyToolsdoc'
+htmlhelp_basename = 'TrajTrackerdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -232,7 +232,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'DobbyTools.tex', u'Dobby Tools Documentation',
+    (master_doc, 'TrajTracker.tex', u'TrajTracker Documentation',
      u'Dror Dotan', 'manual'),
 ]
 
@@ -262,7 +262,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'dobbytools', u'Dobby Tools Documentation',
+    (master_doc, 'trajtracker', u'TrajTracker Documentation',
      [author], 1)
 ]
 
@@ -276,8 +276,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'DobbyTools', u'Dobby Tools Documentation',
-     author, 'DobbyTools', 'One line description of project.',
+    (master_doc, 'TrajTracker', u'TrajTracker Documentation',
+     author, 'TrajTracker', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -298,7 +298,7 @@ texinfo_domain_indices = False
 intersphinx_mapping = {'https://docs.python.org/': None}
 
 
-import dobbyt
+import trajtracker
 
 # autoclass_content = 'both'
 def skip(app, what, name, obj, skip, options):

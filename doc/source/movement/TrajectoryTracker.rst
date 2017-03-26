@@ -3,7 +3,7 @@
 TrajectoryTracker class
 =======================
 
-.. autoclass:: dobbyt.movement.TrajectoryTracker
+.. autoclass:: trajtracker.movement.TrajectoryTracker
    :members:
    :member-order: bysource
 

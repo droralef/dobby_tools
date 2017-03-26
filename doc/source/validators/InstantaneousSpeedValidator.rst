@@ -3,7 +3,7 @@
 InstantaneousSpeedValidator class
 =================================
 
-.. autoclass:: dobbyt.validators.InstantaneousSpeedValidator
+.. autoclass:: trajtracker.validators.InstantaneousSpeedValidator
    :members:
    :inherited-members:
    :member-order: bysource
