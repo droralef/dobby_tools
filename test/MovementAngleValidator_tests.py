@@ -1,7 +1,7 @@
 import unittest
 
 
-from dobbyt.validators import MovementAngleValidator, ValidationFailed
+from trajtracker.validators import MovementAngleValidator, ValidationFailed
 
 
 class DirectionValidatorTestCase(unittest.TestCase):

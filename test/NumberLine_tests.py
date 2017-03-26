@@ -1,6 +1,6 @@
 import unittest
 
-from dobbyt.stimuli import NumberLine
+from trajtracker.stimuli import NumberLine
 
 
 class NumberLineTestCase(unittest.TestCase):

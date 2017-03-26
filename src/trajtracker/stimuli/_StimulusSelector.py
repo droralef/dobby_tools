@@ -6,11 +6,11 @@ Stimulus selector: show one of several stimuli
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
-import dobbyt
-import dobbyt._utils as _u
+import trajtracker
+import trajtracker._utils as _u
 
 
-class StimulusSelector(dobbyt._DobbyObject):
+class StimulusSelector(trajtracker._TTrkObject):
     """
     This object keeps several expyriment stimuli, and can define one of them as active.
 
@@ -23,10 +23,10 @@ class StimulusSelector(dobbyt._DobbyObject):
     - Define two rectangles with the same size, one red and one green (this is better than repeatedly
       changing the color of a single rectangle, because you don't want to redraw the stimulus on every frame)
     - Wrap the two rectangles as a StimulusSelector object
-    - Use a :class:`~dobbyt.movement.StimulusAnimator` to move the stimulus around screen. The animator
+    - Use a :class:`~trajtracker.movement.StimulusAnimator` to move the stimulus around screen. The animator
       will not control the rectangles directly, but the StimulusSelector
-    - Repeatedly call :func:`~dobbyt.movement.StimulusAnimator.update` to move the rectangle, and
-      :func:`~dobbyt.stimuli.StimulusSelector.activate` to change its color.
+    - Repeatedly call :func:`~trajtracker.movement.StimulusAnimator.update` to move the rectangle, and
+      :func:`~trajtracker.stimuli.StimulusSelector.activate` to change its color.
     """
 
     def __init__(self, stimuli=()):
@@ -34,7 +34,7 @@ class StimulusSelector(dobbyt._DobbyObject):
         Constructor
 
         :param stimuli: A list of stimuli to add. Each entry in the list is a (key, stimulus) pair -
-                        see :func:`~dobbyt.stimuli.StimulusSelector.add_stimulus`
+                        see :func:`~trajtracker.stimuli.StimulusSelector.add_stimulus`
         """
 
         super(StimulusSelector, self).__init__()
@@ -62,12 +62,12 @@ class StimulusSelector(dobbyt._DobbyObject):
         """
         Set one of the stimuli as the active one.
 
-        :param key: The key of the stimulus, as set in :func:`~dobbyt.stimuli.StimulusSelector.add_stimulus`
+        :param key: The key of the stimulus, as set in :func:`~trajtracker.stimuli.StimulusSelector.add_stimulus`
         """
         if key is None or key in self._stimuli:
             self._active_key = key
         else:
-            raise ValueError("dobbyt error: {:}.select(key={:}) - this stimulus was not defined".format(type(self).__name__, key))
+            raise ValueError("trajtracker error: {:}.select(key={:}) - this stimulus was not defined".format(type(self).__name__, key))
 
 
     #--------------------------------------------------

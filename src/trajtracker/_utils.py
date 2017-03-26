@@ -1,6 +1,6 @@
 """
 
-Dobby tools - movement package - private utilities
+TrajTracker - movement package - private utilities
 
 @author: Dror Dotan
 @copyright: Copyright (c) 2017, Dror Dotan
@@ -16,27 +16,27 @@ from expyriment.misc import geometry
 #--------------------------------------------------------------------------
 class ErrMsg(object):
 
-    _invalid_attr_type = "dobbyt error: invalid attempt to set {0}.{1} to a non-{2} value ({3})"
-    _set_to_non_positive = "dobbyt error: invalid attempt to set {0}.{1} to a non-positive value ({2})"
-    _set_to_negative = "dobbyt error: invalid attempt to set {0}.{1} to a negative value ({2})"
-    _set_to_invalid_value = "dobbyt error: {0}.{1} was set to an invalid value ({2})"
+    _invalid_attr_type = "trajtracker error: invalid attempt to set {0}.{1} to a non-{2} value ({3})"
+    _set_to_non_positive = "trajtracker error: invalid attempt to set {0}.{1} to a non-positive value ({2})"
+    _set_to_negative = "trajtracker error: invalid attempt to set {0}.{1} to a negative value ({2})"
+    _set_to_invalid_value = "trajtracker error: {0}.{1} was set to an invalid value ({2})"
 
     @staticmethod
     def attr_invalid_type(class_name, attr_name, expected_type, arg_value):
-        return "dobbyt error: {0}.{1} was set to a non-{2} value ({3})".format(class_name, attr_name, expected_type, arg_value)
+        return "trajtracker error: {0}.{1} was set to a non-{2} value ({3})".format(class_name, attr_name, expected_type, arg_value)
 
     @staticmethod
     def attr_invalid_value(class_name, attr_name, arg_value):
-        "dobbyt error: {0}.{1} was set to an invalid value ({2})".format(class_name, attr_name, arg_value)
+        "trajtracker error: {0}.{1} was set to an invalid value ({2})".format(class_name, attr_name, arg_value)
 
 
     @staticmethod
     def invalid_func_arg_type(method_name, expected_type, arg_name, arg_value):
-        return "dobbyt error: {0}() was called with a non-{1} {2} ({3})".format(method_name, expected_type, arg_name, arg_value)
+        return "trajtracker error: {0}() was called with a non-{1} {2} ({3})".format(method_name, expected_type, arg_name, arg_value)
 
     @staticmethod
     def invalid_method_arg_type(class_name, method_name, expected_type, arg_name, arg_value):
-        return "dobbyt error: {0}.{1}() was called with a non-{2} {3} ({4})".format(class_name, method_name, expected_type, arg_name, arg_value)
+        return "trajtracker error: {0}.{1}() was called with a non-{2} {3} ({4})".format(class_name, method_name, expected_type, arg_name, arg_value)
 
 
 #============================================================================
@@ -76,7 +76,7 @@ def validate_attr_rgb(obj, attr_name, value, accept_single_num=False):
             not isinstance(value[0], int) or not (0 <= value[0] < 256) or \
             not isinstance(value[1], int) or not (0 <= value[1] < 256) or \
             not isinstance(value[2], int) or not (0 <= value[2] < 256):
-        raise ValueError("dobbyt error: {:}.{:} was set to an invalid value ({:}) - expecting (red,green,blue)".format(type(obj).__name__, attr_name, value))
+        raise ValueError("trajtracker error: {:}.{:} was set to an invalid value ({:}) - expecting (red,green,blue)".format(type(obj).__name__, attr_name, value))
 
     return value
 
@@ -91,7 +91,7 @@ def validate_attr_is_coord(obj, attr_name, value, change_none_to_0=False):
 
     validate_attr_type(obj, attr_name, value, (tuple, list))
     if len(value) != 2:
-        raise ValueError("dobbyt error: {:}.{:} was set to an invalid value ({:}) - expecting (x,y) coordinates".format(type(obj).__name__, attr_name, value))
+        raise ValueError("trajtracker error: {:}.{:} was set to an invalid value ({:}) - expecting (x,y) coordinates".format(type(obj).__name__, attr_name, value))
     validate_attr_type(obj, "{:}[0]".format(attr_name), value[0], int)
     validate_attr_type(obj, "{:}[1]".format(attr_name), value[1], int)
 
@@ -116,13 +116,13 @@ def validate_attr_numeric(obj, attr_name, value, none_value=NoneValues.Invalid):
 #--------------------------------------
 def validate_attr_not_negative(obj, attr_name, value):
     if value is not None and value < 0:
-        msg = "dobbyt error: {0}.{1} was set to a negative value ({2})".format(type(obj).__name__, attr_name, value)
+        msg = "trajtracker error: {0}.{1} was set to a negative value ({2})".format(type(obj).__name__, attr_name, value)
         raise ValueError(msg)
 
 #--------------------------------------
 def validate_attr_positive(obj, attr_name, value):
     if value is not None and value <= 0:
-        msg = "dobbyt error: {0}.{1} was set to a negative/0 value ({2})".format(type(obj).__name__, attr_name, value)
+        msg = "trajtracker error: {0}.{1} was set to a negative/0 value ({2})".format(type(obj).__name__, attr_name, value)
         raise ValueError(msg)
 
 
@@ -147,9 +147,9 @@ def validate_func_arg_not_negative(obj, func_name, arg_name, value):
 
     if value is not None and value < 0:
         if obj is None:
-            msg = "dobbyt error: Argument '{1}' of {0}() has a negative value ({2})".format(func_name, arg_name, value)
+            msg = "trajtracker error: Argument '{1}' of {0}() has a negative value ({2})".format(func_name, arg_name, value)
         else:
-            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative value ({3})".format(type(obj).__name__, func_name, arg_name, value)
+            msg = "trajtracker error: Argument '{2}' of {0}.{1}() has a negative value ({3})".format(type(obj).__name__, func_name, arg_name, value)
 
         raise ValueError(msg)
 
@@ -158,9 +158,9 @@ def validate_func_arg_positive(obj, func_name, arg_name, value):
 
     if value is not None and value <= 0:
         if obj is None:
-            msg = "dobbyt error: Argument '{1}' of {0}() has a negative/0 value ({2})".format(func_name, arg_name, value)
+            msg = "trajtracker error: Argument '{1}' of {0}() has a negative/0 value ({2})".format(func_name, arg_name, value)
         else:
-            msg = "dobbyt error: Argument '{2}' of {0}.{1}() has a negative/0 value ({3})".format(type(obj).__name__, func_name, arg_name, value)
+            msg = "trajtracker error: Argument '{2}' of {0}.{1}() has a negative/0 value ({3})".format(type(obj).__name__, func_name, arg_name, value)
 
         raise ValueError(msg)
 

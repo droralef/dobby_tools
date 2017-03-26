@@ -13,10 +13,10 @@ import numbers
 import expyriment
 import numpy as np
 
-import dobbyt
-import dobbyt._utils as _u
-import dobbyt.utils as u
-from dobbyt.validators import _BaseValidator
+import trajtracker
+import trajtracker._utils as _u
+import trajtracker.utils as u
+from trajtracker.validators import _BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
@@ -32,18 +32,18 @@ class MovementAngleValidator(_BaseValidator):
         """
         Constructor
 
-        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.movement.MovementAngleValidator.check_xyt`) per mm.
-                             This is relevant for computation of :func:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
-        :param min_angle: See :attr:`~dobbyt.movement.MovementAngleValidator.min_angle`
-        :param max_angle: See :attr:`~dobbyt.movement.MovementAngleValidator.max_angle`
-        :param calc_angle_interval: See :attr:`~dobbyt.movement.MovementAngleValidator.calc_angle_interval`
-        :param grace_period: See :attr:`~dobbyt.movement.MovementAngleValidator.grace_period`
-        :param enabled: See :attr:`~dobbyt.movement.MovementAngleValidator.enabloed`
+        :param units_per_mm: The ratio of units (provided in the call to :func:`~trajtracker.movement.MovementAngleValidator.check_xyt`) per mm.
+                             This is relevant for computation of :func:`~trajtracker.movement.MovementAngleValidator.calc_angle_interval`
+        :param min_angle: See :attr:`~trajtracker.movement.MovementAngleValidator.min_angle`
+        :param max_angle: See :attr:`~trajtracker.movement.MovementAngleValidator.max_angle`
+        :param calc_angle_interval: See :attr:`~trajtracker.movement.MovementAngleValidator.calc_angle_interval`
+        :param grace_period: See :attr:`~trajtracker.movement.MovementAngleValidator.grace_period`
+        :param enabled: See :attr:`~trajtracker.movement.MovementAngleValidator.enabloed`
         """
         super(MovementAngleValidator, self).__init__(enabled=enabled)
 
         if not isinstance(units_per_mm, numbers.Number) or units_per_mm <= 0:
-            raise ValueError("dobbyt error: invalid units_per_mm argument ({0}) to constructor of {1}".format(units_per_mm, self.__class__))
+            raise ValueError("trajtracker error: invalid units_per_mm argument ({0}) to constructor of {1}".format(units_per_mm, self.__class__))
 
         self._units_per_mm = units_per_mm
 
@@ -129,7 +129,7 @@ class MovementAngleValidator(_BaseValidator):
     def _validate_time(self, time):
 
         if len(self._prev_locations) > 0 and self._prev_locations[-1][2] > time:
-            raise dobbyt.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, self._prev_locations[-1][2]))
+            raise trajtracker.InvalidStateError("{0}.mouse_at() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, self._prev_locations[-1][2]))
 
 
     #-------------------------------------
@@ -178,7 +178,7 @@ class MovementAngleValidator(_BaseValidator):
     def min_angle(self):
         """
         The minimal valid angle (in degrees)
-        This value can be either smaller or larger than :func:`~dobbyt.movement.MovementAngleValidator.max_angle`
+        This value can be either smaller or larger than :func:`~trajtracker.movement.MovementAngleValidator.max_angle`
         """
         return self._min_angle
 
@@ -203,7 +203,7 @@ class MovementAngleValidator(_BaseValidator):
     def max_angle(self):
         """
         The maximal valid angle (in degrees)
-        This value can be either smaller or larger than :func:`~dobbyt.movement.MovementAngleValidator.min_angle`
+        This value can be either smaller or larger than :func:`~trajtracker.movement.MovementAngleValidator.min_angle`
         """
         return self._max_angle
 

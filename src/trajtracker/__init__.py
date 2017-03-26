@@ -1,6 +1,6 @@
 """
 
-dobbyt (Dobby Tools package) - a set of tools for psychological experiments under expyriment
+ traj tracker - a set of tools for psychological experiments under expyriment
 
 @author: Dror Dotan
 @copyright: Copyright (c) 2017, Dror Dotan
@@ -24,7 +24,7 @@ class InvalidStateError(StandardError):
 import expyriment as xpy
 
 
-class _DobbyObject(object):
+class _TTrkObject(object):
 
     def __init__(self):
         self.log_level = self.log_none
@@ -47,7 +47,7 @@ class _DobbyObject(object):
     def log_level(self, level):
         """
         Set the log level of this object
-        :param level: Use the constants _DobbyObject.log_xxxxx
+        :param level: Use the constants _TTrkObject.log_xxxxx
         """
         self._log_level = level
 
@@ -79,9 +79,9 @@ class _DobbyObject(object):
         xpy._active_exp._event_file_log(msg, 1)
 
 
-import dobbyt._utils as _utils
+import trajtracker._utils as _utils
 
-import dobbyt.misc as misc
-import dobbyt.stimuli as stimuli
-import dobbyt.movement as movement
-import dobbyt.validators as validators
+import trajtracker.misc as misc
+import trajtracker.stimuli as stimuli
+import trajtracker.movement as movement
+import trajtracker.validators as validators

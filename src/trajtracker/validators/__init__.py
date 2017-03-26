@@ -1,6 +1,6 @@
 """
 
-Dobby tools - validators package
+TrajTracker - validators package
 
 @author: Dror Dotan
 @copyright: Copyright (c) 2017, Dror Dotan
@@ -10,8 +10,8 @@ Dobby tools - validators package
 import enum
 import numbers
 
-import dobbyt._utils as _u
-from dobbyt import _DobbyObject
+import trajtracker._utils as _u
+from trajtracker import _TTrkObject
 
 ValidationAxis = enum.Enum('ValidationAxis', 'x y xy')
 
@@ -19,7 +19,7 @@ from _ValidationFailed import ValidationFailed
 
 
 #-------------------------------------------------------------------
-class _BaseValidator(_DobbyObject):
+class _BaseValidator(_TTrkObject):
     """
     Base class for validators
     """

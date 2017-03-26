@@ -13,21 +13,21 @@ import numpy as np
 from expyriment.misc._timer import get_time
 import expyriment as xpy
 
-import dobbyt
-import dobbyt._utils as _u
+import trajtracker
+import trajtracker._utils as _u
 
 
 # noinspection PyAttributeOutsideInit,PyProtectedMember
-class NumberLine(dobbyt._DobbyObject):
+class NumberLine(trajtracker._TTrkObject):
     """
      A class that plots a number line and monitors its behavior.
 
      **How to use this class:**
 
      - configure the object via constructor/properties
-     - :func:`dobbyt.stimuli.NumberLine.plot` or :func:`dobbyt.stimuli.NumberLine.present` it
-     - call :func:`dobbyt.stimuli.NumberLine.reset` when mouse/finger starts moving
-     - call :func:`dobbyt.stimuli.NumberLine.update_xy` when the mouse/finger continues moving
+     - :func:`trajtracker.stimuli.NumberLine.plot` or :func:`trajtracker.stimuli.NumberLine.present` it
+     - call :func:`trajtracker.stimuli.NumberLine.reset` when mouse/finger starts moving
+     - call :func:`trajtracker.stimuli.NumberLine.update_xy` when the mouse/finger continues moving
 
 
      **Visual features:**
@@ -355,7 +355,7 @@ class NumberLine(dobbyt._DobbyObject):
     #      Track movement
     #===================================================================================
 
-    _errmsg_mouseat_non_numeric_coord = "dobbyt error in NumberLine.mouseAt(): a non-numeric {0} coordinate was provided ({1})"
+    _errmsg_mouseat_non_numeric_coord = "trajtracker error in NumberLine.mouseAt(): a non-numeric {0} coordinate was provided ({1})"
 
     #---------------------------------------------------------
     def reset(self):
@@ -450,15 +450,15 @@ class NumberLine(dobbyt._DobbyObject):
     #      Property setters / getters
     #===================================================================================
 
-    _errmsg_set_to_non_numeric = "dobbyt error: invalid attempt to set NumberLine.{0} to a non-numeric value ({1})"
-    _errmsg_set_to_non_positive = "dobbyt error: invalid attempt to set NumberLine.{0} to a non-positive value ({1})"
-    _errmsg_set_to_non_boolean = "dobbyt error: invalid attempt to set NumberLine.{0} to a non-boolean value ({1})"
-    _errmsg_set_to_non_string = "dobbyt error: invalid attempt to set NumberLine.{0} to a non-string value ({1})"
+    _errmsg_set_to_non_numeric = "trajtracker error: invalid attempt to set NumberLine.{0} to a non-numeric value ({1})"
+    _errmsg_set_to_non_positive = "trajtracker error: invalid attempt to set NumberLine.{0} to a non-positive value ({1})"
+    _errmsg_set_to_non_boolean = "trajtracker error: invalid attempt to set NumberLine.{0} to a non-boolean value ({1})"
+    _errmsg_set_to_non_string = "trajtracker error: invalid attempt to set NumberLine.{0} to a non-string value ({1})"
 
-    _errmsg_value_not_collection = "dobbyt error: invalid value for NumberLine.{0} ({1}) - expecting a tuple or list"
-    _errmsg_value_bad_length = "dobbyt error: invalid value for NumberLine.{0} ({1}) - expecting a 2-element tuple"
-    _errmsg_set_to_non_numeric_entry = "dobbyt error: invalid value for NumberLine.{0} - {2} is not a number ({1})"
-    _errmsg_set_to_non_positive_entry = "dobbyt error: invalid value for NumberLine.{0} - {2} is a non-positive number({1})"
+    _errmsg_value_not_collection = "trajtracker error: invalid value for NumberLine.{0} ({1}) - expecting a tuple or list"
+    _errmsg_value_bad_length = "trajtracker error: invalid value for NumberLine.{0} ({1}) - expecting a 2-element tuple"
+    _errmsg_set_to_non_numeric_entry = "trajtracker error: invalid value for NumberLine.{0} - {2} is not a number ({1})"
+    _errmsg_set_to_non_positive_entry = "trajtracker error: invalid value for NumberLine.{0} - {2} is a non-positive number({1})"
 
     #-----------------------------------------------------------
     def validate(self):
@@ -468,24 +468,24 @@ class NumberLine(dobbyt._DobbyObject):
         """
 
         if self._min_value >= self._max_value:
-            raise ValueError("dobbyt error: NumberLine.min_value({0}) >= NumberLine.max_value({1})".format(self._min_value, self._max_value))
+            raise ValueError("trajtracker error: NumberLine.min_value({0}) >= NumberLine.max_value({1})".format(self._min_value, self._max_value))
 
         if self._labels_visible:
             if self._labels_box_size is None:
-                raise ValueError("dobbyt error: NumberLine - labels textbox size was not specified")
+                raise ValueError("trajtracker error: NumberLine - labels textbox size was not specified")
             if self._labels_font_name is None or self._labels_font_name == "":
-                raise ValueError("dobbyt error: NumberLine - labels font name was not specified")
+                raise ValueError("trajtracker error: NumberLine - labels font name was not specified")
             if self._labels_font_size is None:
-                raise ValueError("dobbyt error: NumberLine - labels font size was not specified")
+                raise ValueError("trajtracker error: NumberLine - labels font size was not specified")
             if self._labels_font_colour is None:
-                raise ValueError("dobbyt error: NumberLine - labels font color was not specified")
+                raise ValueError("trajtracker error: NumberLine - labels font color was not specified")
 
 
 
     #-----------------------------------------------------------
     def _validate_unlocked(self):
         if self._preloaded:
-            raise dobbyt.InvalidStateError('An attempt was made to change the visual properties of a NumberLine after it was already plotted')
+            raise trajtracker.InvalidStateError('An attempt was made to change the visual properties of a NumberLine after it was already plotted')
 
     ###################################
     #  Line properties
@@ -502,8 +502,8 @@ class NumberLine(dobbyt._DobbyObject):
     def orientation(self, value):
         self._validate_unlocked()
 
-        if not isinstance(value, dobbyt.stimuli.NumberLine.Orientation):
-            raise ValueError("dobbyt error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical".format(value))
+        if not isinstance(value, trajtracker.stimuli.NumberLine.Orientation):
+            raise ValueError("trajtracker error: invalid value for NumberLine.orientation ({0}) - expecting NumberLine.Orientation.Horizontal or NumberLine.Orientation.Vertical".format(value))
 
         self._orientation = value
         self._log_setter("orientation")

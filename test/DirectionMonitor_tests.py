@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from dobbyt.movement import DirectionMonitor
+from trajtracker.movement import DirectionMonitor
 
 
 class DirectionMonitorTests(unittest.TestCase):

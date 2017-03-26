@@ -1,7 +1,7 @@
 import unittest
 
-from dobbyt.utils import color_rgb_to_num
-from dobbyt.validators import LocationsValidator
+from trajtracker.utils import color_rgb_to_num
+from trajtracker.validators import LocationsValidator
 
 z = (0, 0, 0)
 w = (255, 255, 255)

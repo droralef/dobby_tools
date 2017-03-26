@@ -1,6 +1,6 @@
 """
 
-Dobby tools - movement package
+TrajTracker - movement package
 
 @author: Dror Dotan
 @copyright: Copyright (c) 2017, Dror Dotan

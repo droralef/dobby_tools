@@ -2,8 +2,8 @@ import unittest
 
 import numpy as np
 
-import dobbyt
-from dobbyt.movement import SpeedMonitor
+import trajtracker
+from trajtracker.movement import SpeedMonitor
 
 
 class SpeedMonitorTests(unittest.TestCase):
@@ -75,13 +75,13 @@ class SpeedMonitorTests(unittest.TestCase):
         m = SpeedMonitor(2, 10)
         m.update_xyt(1, 1, 1)
         m.update_xyt(1, 1, 2)
-        self.assertRaises(dobbyt.InvalidStateError, lambda: m.update_xyt(1, 1, 1))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: m.update_xyt(1, 1, 1))
 
     #---------------------------------------------------------
     def test_time_moves_backwards_from_reset(self):
         m = SpeedMonitor(2, 10)
         m.reset(1)
-        self.assertRaises(dobbyt.InvalidStateError, lambda: m.update_xyt(1, 1, 0.5))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: m.update_xyt(1, 1, 0.5))
 
 
     #=====================================================================================

@@ -7,8 +7,8 @@
 """
 
 import numpy as np
-import dobbyt.utils as u
-import dobbyt._utils as _u
+import trajtracker.utils as u
+import trajtracker._utils as _u
 
 
 class shapes:

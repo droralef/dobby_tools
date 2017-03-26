@@ -1,6 +1,6 @@
 import unittest
 
-from dobbyt.misc import LocationColorMap
+from trajtracker.misc import LocationColorMap
 
 testimage = [
     [0, 0, 0, 10, 10, 10, 0],

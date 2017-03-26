@@ -13,13 +13,13 @@ import numbers
 import numpy as np
 from scipy import misc
 
-import dobbyt
-import dobbyt._utils as _u
-from dobbyt.utils import color_rgb_to_num
+import trajtracker
+import trajtracker._utils as _u
+from trajtracker.utils import color_rgb_to_num
 
 
 # noinspection PyAttributeOutsideInit
-class LocationColorMap(dobbyt._DobbyObject):
+class LocationColorMap(trajtracker._TTrkObject):
     """
     Translate the finger location into a code, according to a BMP image
     """
@@ -30,9 +30,9 @@ class LocationColorMap(dobbyt._DobbyObject):
         Constructor
 
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param position: See :attr:`~dobbyt.misc.LocationColorMap.position`
-        :param use_mapping: See :attr:`~dobbyt.misc.LocationColorMap.use_mapping`
-        :param colormap: See :attr:`~dobbyt.misc.LocationColorMap.colormap`
+        :param position: See :attr:`~trajtracker.misc.LocationColorMap.position`
+        :param use_mapping: See :attr:`~trajtracker.misc.LocationColorMap.use_mapping`
+        :param colormap: See :attr:`~trajtracker.misc.LocationColorMap.colormap`
         """
 
         super(LocationColorMap, self).__init__()
@@ -84,7 +84,7 @@ class LocationColorMap(dobbyt._DobbyObject):
     def position(self):
         """
         The coordinate of the image provided in the constructor (middle of the image) - an (x,y) tuple/list
-        If position=(a,b), then :func:`~dobbyt.misc.LocationColorMap.get_color_at` with arguments (a,b) will
+        If position=(a,b), then :func:`~trajtracker.misc.LocationColorMap.get_color_at` with arguments (a,b) will
         return the color of the middle of the image.
         """
         return self._position
@@ -96,13 +96,13 @@ class LocationColorMap(dobbyt._DobbyObject):
             value = (0, 0)
 
         if not isinstance(value, (list, tuple)):
-            raise ValueError("dobbyt error: invalid {0}.position ({1})".format(self.__class__, value))
+            raise ValueError("trajtracker error: invalid {0}.position ({1})".format(self.__class__, value))
 
         if not isinstance(value[0], numbers.Number):
-            raise ValueError("dobbyt error: invalid {0}.position[0] ({1})".format(self.__class__, value[0]))
+            raise ValueError("trajtracker error: invalid {0}.position[0] ({1})".format(self.__class__, value[0]))
 
         if not isinstance(value[1], numbers.Number):
-            raise ValueError("dobbyt error: invalid {0}.position[1] ({1})".format(self.__class__, value[1]))
+            raise ValueError("trajtracker error: invalid {0}.position[1] ({1})".format(self.__class__, value[1]))
 
 
         self._position = (value[0], value[1])
@@ -170,13 +170,13 @@ class LocationColorMap(dobbyt._DobbyObject):
                 if color not in value:
                     missing_colors.add(color)
             if len(missing_colors) > 0:
-                raise ValueError("dobbyt error: Invalid value for {0}.color_codes - some colors are missing: {1}".format(self.__class__, missing_colors))
+                raise ValueError("trajtracker error: Invalid value for {0}.color_codes - some colors are missing: {1}".format(self.__class__, missing_colors))
 
             self._color_to_code = value.copy()
 
         else:
             raise ValueError(
-                "dobbyt error: {0}.color_codes can only be set to None, 'default', or a dict. Invalid value: {1}".format(
+                "trajtracker error: {0}.color_codes can only be set to None, 'default', or a dict. Invalid value: {1}".format(
                     self.__class__, value))
 
         self._log_setter("colormap", value)
@@ -214,7 +214,7 @@ class LocationColorMap(dobbyt._DobbyObject):
             use_mapping = self._use_mapping
 
         if self._color_to_code is None and use_mapping:
-            raise ValueError("dobbyt error: a call to %s.get_color_at(use_mapping=True) is invalid because color_codes were not specified" % self.__class__)
+            raise ValueError("trajtracker error: a call to %s.get_color_at(use_mapping=True) is invalid because color_codes were not specified" % self.__class__)
 
         if x_coord < self._top_left_x or x_coord >= self._top_left_x+self._width or \
                y_coord < self._top_left_y or y_coord >= self._top_left_y + self._height:

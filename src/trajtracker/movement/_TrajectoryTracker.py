@@ -10,23 +10,23 @@ import numbers
 
 import expyriment
 
-import dobbyt
-import dobbyt._utils as _u
+import trajtracker
+import trajtracker._utils as _u
 
 
 # noinspection PyAttributeOutsideInit
-class TrajectoryTracker(dobbyt._DobbyObject):
+class TrajectoryTracker(trajtracker._TTrkObject):
     """
     Track mouse/finger trajectory and save results to a CSV file.
 
      **How to use this class:**
 
-    - Call :func:`~dobbyt.movement.TrajectoryTracker.init_output_file` when the experiment starts
-    - Call :func:`~dobbyt.movement.TrajectoryTracker.reset` when the trial starts
-    - Set :attr:`~dobbyt.movement.TrajectoryTracker.tracking_active` to True and False in order to
+    - Call :func:`~trajtracker.movement.TrajectoryTracker.init_output_file` when the experiment starts
+    - Call :func:`~trajtracker.movement.TrajectoryTracker.reset` when the trial starts
+    - Set :attr:`~trajtracker.movement.TrajectoryTracker.tracking_active` to True and False in order to
       enable/disable tracking during a trial
-    - Call :func:`~dobbyt.movement.TrajectoryTracker.update_xyt` whenever the finger/mouse moves
-    - Call :func:`~dobbyt.movement.TrajectoryTracker.save_to_file` when the trial ends
+    - Call :func:`~trajtracker.movement.TrajectoryTracker.update_xyt` whenever the finger/mouse moves
+    - Call :func:`~trajtracker.movement.TrajectoryTracker.save_to_file` when the trial ends
     """
 
 
@@ -35,7 +35,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param filename: See :attr:`~dobbyt.movement.TrajectoryTracker.filename` (default=None).
+        :param filename: See :attr:`~trajtracker.movement.TrajectoryTracker.filename` (default=None).
         """
         super(TrajectoryTracker, self).__init__()
         self.reset(False)
@@ -48,7 +48,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
     def tracking_active(self):
         """
         Whether tracking is currently active (boolean). When inactive, calls to
-        :func:`~dobbyt.movement.TrajectoryTracker.update_xyt` will be ignored.
+        :func:`~trajtracker.movement.TrajectoryTracker.update_xyt` will be ignored.
         """
         return self._tracking_active
 
@@ -134,7 +134,7 @@ class TrajectoryTracker(dobbyt._DobbyObject):
         :return: The number of rows printed to the file
         """
         if self._filename is None:
-            raise dobbyt.InvalidStateError('TrajectoryTracker.save_to_file() was called before calling init_output_file()')
+            raise trajtracker.InvalidStateError('TrajectoryTracker.save_to_file() was called before calling init_output_file()')
 
         fh = self._open_file(self._filename, 'a')
 

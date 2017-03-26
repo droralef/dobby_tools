@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from dobbyt.utils import get_angle
+from trajtracker.utils import get_angle
 
 
 class MovementTestCase(unittest.TestCase):

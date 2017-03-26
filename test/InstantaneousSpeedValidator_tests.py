@@ -1,7 +1,7 @@
 import unittest
 
 
-from dobbyt.validators import InstantaneousSpeedValidator, ValidationAxis, ValidationFailed
+from trajtracker.validators import InstantaneousSpeedValidator, ValidationAxis, ValidationFailed
 
 
 

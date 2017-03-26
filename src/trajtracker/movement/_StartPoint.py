@@ -11,12 +11,12 @@ from __future__ import division
 import numbers
 from enum import Enum
 
-import dobbyt
-import dobbyt._utils as _u
-from dobbyt.misc import shapes
+import trajtracker
+import trajtracker._utils as _u
+from trajtracker.misc import shapes
 
 
-class StartPoint(dobbyt._DobbyObject):
+class StartPoint(trajtracker._TTrkObject):
     """
     A rectangular starting point.
     The starting point defines two areas:
@@ -33,14 +33,14 @@ class StartPoint(dobbyt._DobbyObject):
 
         :param start_area: The area where you must touch/click to initiate a trial.
                            This object must support an overlapping_with_position() method and a "center" property.
-                           It can be an expyriment stimulus, a shape from :func:`~dobbyt.misc.shapes`, or your own object
-        :param exit_area: See :attr:`~dobbyt.misc.RectStartPoint.exit_area`
+                           It can be an expyriment stimulus, a shape from :func:`~trajtracker.misc.shapes`, or your own object
+        :param exit_area: See :attr:`~trajtracker.misc.RectStartPoint.exit_area`
         """
 
         super(StartPoint, self).__init__()
 
         if "center" not in dir(start_area):
-            raise ValueError("dobbyt error: invalid start_area provided to %s.__init__" % type(self).__name__)
+            raise ValueError("trajtracker error: invalid start_area provided to %s.__init__" % type(self).__name__)
 
         self._start_area = start_area
         self.exit_area = exit_area
@@ -55,7 +55,7 @@ class StartPoint(dobbyt._DobbyObject):
         After the mouse/finger leaves the start area, it must enter immediately the exit_area in order
         for the trial to start. Otherwise, it would count as an error.
         This object must support the overlapping_with_position() method. It can be
-        an expyriment stimulus, a shape from :func:`~dobbyt.misc.shapes`, or your own object.
+        an expyriment stimulus, a shape from :func:`~trajtracker.misc.shapes`, or your own object.
         Also, you can use any of the predefined keywords "above", "below", "right" and "left". Each of those
         define a region that is a 90-degrees sector, centered on start_area's center
         ("above" = -45 degrees to 45 degrees; the others accordingly),
@@ -72,7 +72,7 @@ class StartPoint(dobbyt._DobbyObject):
             self._exit_area = value
             self._log_setter("exit_area", value="shape")
         else:
-            raise ValueError("dobbyt error: invalid value for %s.exit_area" % type(self).__name__)
+            raise ValueError("trajtracker error: invalid value for %s.exit_area" % type(self).__name__)
 
 
     def _create_default_exit_area(self, name):
@@ -90,7 +90,7 @@ class StartPoint(dobbyt._DobbyObject):
             f, t = 215, -45
 
         else:
-            raise ValueError("dobbyt error: unsupported exit area '%s'" % name)
+            raise ValueError("trajtracker error: unsupported exit area '%s'" % name)
 
         return shapes.Sector(self._start_area.center[0], self._start_area.center[1], 10000, f, t)
 

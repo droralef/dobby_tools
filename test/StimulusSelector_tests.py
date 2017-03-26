@@ -1,9 +1,9 @@
 import unittest
 
 
-import dobbyt
-from dobbyt.stimuli import StimulusSelector
-from dobbyt_testing import DummyStimulus
+import trajtracker
+from trajtracker.stimuli import StimulusSelector
+from ttrk_testing import DummyStimulus
 
 
 class StimulusSelectorTests(unittest.TestCase):

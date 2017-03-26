@@ -1,7 +1,7 @@
 import unittest
 
-from dobbyt.movement import TrajectoryTracker
-from dobbyt_testing import DummyFileHandle
+from trajtracker.movement import TrajectoryTracker
+from ttrk_testing import DummyFileHandle
 
 
 class TrajectoryTrackerForTesting(TrajectoryTracker):

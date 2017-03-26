@@ -13,16 +13,16 @@ import numbers
 import numpy as np
 from enum import Enum
 
-import dobbyt
-import dobbyt._utils as _u
-import dobbyt.utils as u
+import trajtracker
+import trajtracker._utils as _u
+import trajtracker.utils as u
 
 
 # todo: in curve counting - require a minimal change from start_angle to count as a curve
 #       (this means that when curve changes, we register a tentative place for the new start-of-curve, and we confirm
 #        it only when the finger changed its direction enough)
 
-class DirectionMonitor(dobbyt._DobbyObject):
+class DirectionMonitor(trajtracker._TTrkObject):
     """
     Monitor the mouse/finger direction.
 
@@ -38,9 +38,9 @@ class DirectionMonitor(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param units_per_mm: See :attr:`~dobbyt.movement.DirectionMonitor.units_per_mm`
-        :param min_distance: See :attr:`~dobbyt.movement.DirectionMonitor.min_distance`
-        :param angle_units: See :attr:`~dobbyt.movement.DirectionMonitor.angle_units`
+        :param units_per_mm: See :attr:`~trajtracker.movement.DirectionMonitor.units_per_mm`
+        :param min_distance: See :attr:`~trajtracker.movement.DirectionMonitor.min_distance`
+        :param angle_units: See :attr:`~trajtracker.movement.DirectionMonitor.angle_units`
         """
         super(DirectionMonitor, self).__init__()
 
@@ -226,8 +226,8 @@ class DirectionMonitor(dobbyt._DobbyObject):
     @property
     def units_per_mm(self):
         """
-        The ratio of units (provided in the call to :func:`~dobbyt.movement.DirectionMonitor.update_xyt`) per mm.
-        This is relevant only for :func:`~dobbyt.movement.DirectionMonitor.min_distance`
+        The ratio of units (provided in the call to :func:`~trajtracker.movement.DirectionMonitor.update_xyt`) per mm.
+        This is relevant only for :func:`~trajtracker.movement.DirectionMonitor.min_distance`
         """
         return self._units_per_mm
 
@@ -266,7 +266,7 @@ class DirectionMonitor(dobbyt._DobbyObject):
         """
         The angle that counts as zero (0=up).
         This means that:
-        - the value returned from :func:`~dobbyt.movement.DirectionMonitor.curr_angle` will be rotated by this value
+        - the value returned from :func:`~trajtracker.movement.DirectionMonitor.curr_angle` will be rotated by this value
         - The counting of left/right curves will be relatively to this zero angle
         """
         return self._zero_angle

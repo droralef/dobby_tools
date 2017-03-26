@@ -6,10 +6,10 @@
 @copyright: Copyright (c) 2017, Dror Dotan
 """
 
-import dobbyt._utils as _u
-import dobbyt.utils as u
-from dobbyt.misc import LocationColorMap
-from dobbyt.validators import _BaseValidator
+import trajtracker._utils as _u
+import trajtracker.utils as u
+from trajtracker.misc import LocationColorMap
+from trajtracker.validators import _BaseValidator
 
 
 
@@ -28,11 +28,11 @@ class MoveByGradientValidator(_BaseValidator):
         Constructor
 
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param position: See :attr:`~dobbyt.movement.MoveByGradientValidator.enabled`
-        :param position: See :attr:`~dobbyt.movement.MoveByGradientValidator.position`
-        :param rgb_should_ascend: See :attr:`~dobbyt.movement.MoveByGradientValidator.rgb_should_ascend`
-        :param max_valid_back_movement: See :attr:`~dobbyt.movement.MoveByGradientValidator.max_valid_back_movement`
-        :param last_validated_rgb: See :attr:`~dobbyt.movement.MoveByGradientValidator.last_validated_rgb`
+        :param position: See :attr:`~trajtracker.movement.MoveByGradientValidator.enabled`
+        :param position: See :attr:`~trajtracker.movement.MoveByGradientValidator.position`
+        :param rgb_should_ascend: See :attr:`~trajtracker.movement.MoveByGradientValidator.rgb_should_ascend`
+        :param max_valid_back_movement: See :attr:`~trajtracker.movement.MoveByGradientValidator.max_valid_back_movement`
+        :param last_validated_rgb: See :attr:`~trajtracker.movement.MoveByGradientValidator.last_validated_rgb`
         """
         super(MoveByGradientValidator, self).__init__(enabled=enabled)
 

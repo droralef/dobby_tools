@@ -7,10 +7,10 @@
 """
 
 # noinspection PyProtectedMember
-import dobbyt._utils as _u
-import dobbyt.utils as u
-from dobbyt.misc import LocationColorMap
-from dobbyt.validators import _BaseValidator
+import trajtracker._utils as _u
+import trajtracker.utils as u
+from trajtracker.misc import LocationColorMap
+from trajtracker.validators import _BaseValidator
 
 
 
@@ -31,9 +31,9 @@ class LocationsValidator(_BaseValidator):
         Constructor
 
         :param image: Name of a BMP file, or the actual image (rectangular matrix of colors)
-        :param enabled: See :attr:`~dobbyt.validators.LocationsValidator.enabled`
-        :param position: See :attr:`~dobbyt.validators.LocationsValidator.position`
-        :param default_valid: See :attr:`~dobbyt.validators.LocationsValidator.default_valid`
+        :param enabled: See :attr:`~trajtracker.validators.LocationsValidator.enabled`
+        :param position: See :attr:`~trajtracker.validators.LocationsValidator.position`
+        :param default_valid: See :attr:`~trajtracker.validators.LocationsValidator.default_valid`
         """
         super(LocationsValidator, self).__init__(enabled=enabled)
 
@@ -68,8 +68,8 @@ class LocationsValidator(_BaseValidator):
     def default_valid(self):
         """
         Indicates whether by default, all points are valid or not.
-        If True: use :func:`~dobbyt.misc.LocationColorMap.invalid_colors` to indicate exceptions
-        If False: use :func:`~dobbyt.misc.LocationColorMap.valid_colors` to indicate exceptions
+        If True: use :func:`~trajtracker.misc.LocationColorMap.invalid_colors` to indicate exceptions
+        If False: use :func:`~trajtracker.misc.LocationColorMap.valid_colors` to indicate exceptions
         """
         return self._default_valid
 

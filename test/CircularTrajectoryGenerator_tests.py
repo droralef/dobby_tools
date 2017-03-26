@@ -1,9 +1,9 @@
 import unittest
 
-from dobbyt.movement import CircularTrajectoryGenerator
+from trajtracker.movement import CircularTrajectoryGenerator
 from expyriment.misc import geometry
 
-import dobbyt
+import trajtracker
 
 
 class CircularTrajectoryGeneratorTests(unittest.TestCase):
@@ -108,9 +108,9 @@ class CircularTrajectoryGeneratorTests(unittest.TestCase):
 
     #--------------------------------------------------------
     def test_missing_info(self):
-        self.assertRaises(dobbyt.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), radius=100).get_xy(0))
-        self.assertRaises(dobbyt.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), degrees_per_sec=90).get_xy(0))
-        self.assertRaises(dobbyt.InvalidStateError, lambda: CircularTrajectoryGenerator(radius=100, degrees_per_sec=90).get_xy(0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), radius=100).get_xy(0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(center=(0, 0), degrees_per_sec=90).get_xy(0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: CircularTrajectoryGenerator(radius=100, degrees_per_sec=90).get_xy(0))
 
 
 

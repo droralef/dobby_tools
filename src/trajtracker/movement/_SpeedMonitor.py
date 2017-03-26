@@ -11,11 +11,11 @@ from __future__ import division
 import numbers
 import numpy as np
 
-import dobbyt
-import dobbyt._utils as _u
+import trajtracker
+import trajtracker._utils as _u
 
 
-class SpeedMonitor(dobbyt._DobbyObject):
+class SpeedMonitor(trajtracker._TTrkObject):
     """
     Monitor the mouse/finger instantaneous speed
     """
@@ -26,8 +26,8 @@ class SpeedMonitor(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param units_per_mm: See :attr:`~dobbyt.movement.SpeedMonitor.units_per_mm`
-        :param calculation_interval: See :attr:`~dobbyt.movement.SpeedMonitor.calculation_interval`
+        :param units_per_mm: See :attr:`~trajtracker.movement.SpeedMonitor.units_per_mm`
+        :param calculation_interval: See :attr:`~trajtracker.movement.SpeedMonitor.calculation_interval`
         """
         super(SpeedMonitor, self).__init__()
 
@@ -98,7 +98,7 @@ class SpeedMonitor(dobbyt._DobbyObject):
         #-- Validate that times are provided in increasing order
         prev_time = self._recent_points[-1][2] if len(self._recent_points) > 0 else self._time0
         if prev_time is not None and prev_time > time:
-            raise dobbyt.InvalidStateError("{0}.update_xyt() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, prev_time))
+            raise trajtracker.InvalidStateError("{0}.update_xyt() was called with time={1} after it was previously called with time={2}".format(self.__class__, time, prev_time))
 
 
     #--------------------------------------
@@ -188,7 +188,7 @@ class SpeedMonitor(dobbyt._DobbyObject):
     @property
     def units_per_mm(self):
         """
-        The ratio of units (provided in the call to :func:`~dobbyt.movement.SpeedMonitor.update_xyt`) per mm
+        The ratio of units (provided in the call to :func:`~trajtracker.movement.SpeedMonitor.update_xyt`) per mm
         """
         return self._units_per_mm
 

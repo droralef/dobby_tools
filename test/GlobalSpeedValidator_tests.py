@@ -3,9 +3,9 @@ from __future__ import division
 import unittest
 import numpy as np
 
-import dobbyt
-from dobbyt.validators import GlobalSpeedValidator, ValidationAxis, ValidationFailed
-from dobbyt_testing import DummyStimulus
+import trajtracker
+from trajtracker.validators import GlobalSpeedValidator, ValidationAxis, ValidationFailed
+from ttrk_testing import DummyStimulus
 
 
 class GlobalSpeedValidatorTests(unittest.TestCase):
@@ -144,13 +144,13 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
     #--------------------------------------------------
     def test_validate_uninitialized(self):
         v = GlobalSpeedValidator(origin_coord=0, end_coord=100, enabled=True)
-        self.assertRaises(dobbyt.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
 
         v = GlobalSpeedValidator(max_trial_duration=1, end_coord=100, enabled=True)
-        self.assertRaises(dobbyt.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
 
         v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, enabled=True)
-        self.assertRaises(dobbyt.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
+        self.assertRaises(trajtracker.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
 
 
     #--------------------------------------------------
@@ -279,7 +279,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
 
 
-class DbgGlobalSpeedGuide(dobbyt.validators.GlobalSpeedGuide):
+class DbgGlobalSpeedGuide(trajtracker.validators.GlobalSpeedGuide):
 
     def __init__(self, validator):
         super(DbgGlobalSpeedGuide, self).__init__(validator)

@@ -1,6 +1,6 @@
 import unittest
 
-from dobbyt.validators import MoveByGradientValidator, ValidationFailed
+from trajtracker.validators import MoveByGradientValidator, ValidationFailed
 
 grad = [[(0, 0, i) for i in range(0,100)]]
 

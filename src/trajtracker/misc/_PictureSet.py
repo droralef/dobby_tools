@@ -11,9 +11,9 @@ import re
 
 from expyriment.stimuli import Picture
 
-import dobbyt
+import trajtracker
 
-class PictureSet(dobbyt._DobbyObject):
+class PictureSet(trajtracker._TTrkObject):
     """
      A class that holds a set of expyriment.stimuli.Picture objects, each with a logical name.
      It can retrieve each picture, and rescale all pictures to the same size
@@ -62,10 +62,10 @@ class PictureSet(dobbyt._DobbyObject):
         :param pic_spec: The picture file name, or an expyriment.stimuli.Picture object
         """
         if self._preloaded:
-            raise dobbyt.InvalidStateError('Pictures cannot be added to a PictureSet after it was preloaded')
+            raise trajtracker.InvalidStateError('Pictures cannot be added to a PictureSet after it was preloaded')
 
         if pic_name in self._pics or pic_name in self._unloaded_pic_configs:
-            print('dobbyt warning: Picture "{0}" already exists in the PictureSet, definition is overriden'.format(pic_name))
+            print('trajtracker warning: Picture "{0}" already exists in the PictureSet, definition is overriden'.format(pic_name))
 
         if isinstance(pic_spec, str):
             self._unloaded_pic_configs[pic_name] = pic_spec
@@ -74,7 +74,7 @@ class PictureSet(dobbyt._DobbyObject):
             self._preload_pic(pic_name, pic_spec)
 
         else:
-            raise ValueError('dobbyt error in ImageHolder.set_image() - Invalid file name: %s' % pic_spec)
+            raise ValueError('trajtracker error in ImageHolder.set_image() - Invalid file name: %s' % pic_spec)
 
     #------------------------------------------------------------------
     def add_pictures(self, config_string):
@@ -90,7 +90,7 @@ class PictureSet(dobbyt._DobbyObject):
                 ind = cfg.index('=')
                 self.add_picture(cfg[:ind], cfg[ind + 1:])
             except ValueError:
-                raise ValueError('dobbyt error in ImageHolder.set_images() - Invalid value given: %s' % cfg)
+                raise ValueError('trajtracker error in ImageHolder.set_images() - Invalid value given: %s' % cfg)
 
     #------------------------------------------------------------------
     def preload(self):
@@ -136,7 +136,7 @@ class PictureSet(dobbyt._DobbyObject):
     #
     def _run_per_picture(self, callable):
         if not self._preloaded:
-            raise dobbyt.InvalidStateError('The pictures in PictureSet cannot be manipulated before the set is pre-loaded')
+            raise trajtracker.InvalidStateError('The pictures in PictureSet cannot be manipulated before the set is pre-loaded')
 
         for name in self._pics:
             callable(self._pics[name])

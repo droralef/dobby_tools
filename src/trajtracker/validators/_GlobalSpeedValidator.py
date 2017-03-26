@@ -14,10 +14,10 @@ import numpy as np
 
 import expyriment as xpy
 
-import dobbyt
-import dobbyt._utils as _u
-from dobbyt.validators import ValidationAxis, ValidationFailed, _BaseValidator
-from dobbyt.movement import StimulusAnimator
+import trajtracker
+import trajtracker._utils as _u
+from trajtracker.validators import ValidationAxis, ValidationFailed, _BaseValidator
+from trajtracker.movement import StimulusAnimator
 
 
 # noinspection PyAttributeOutsideInit
@@ -48,28 +48,28 @@ class GlobalSpeedValidator(_BaseValidator):
                  grace_period=None, max_trial_duration=None, milestones=None, show_guide=False):
         """
 
-        :param enabled: See :attr:`~dobbyt.validators.GlobalSpeedValidator.enabled`
+        :param enabled: See :attr:`~trajtracker.validators.GlobalSpeedValidator.enabled`
         :type enabled: bool
 
-        :param origin_coord: See :attr:`~dobbyt.validators.GlobalSpeedValidator.origin_coord`
+        :param origin_coord: See :attr:`~trajtracker.validators.GlobalSpeedValidator.origin_coord`
         :type origin_coord: int
 
-        :param end_coord: See :attr:`~dobbyt.validators.GlobalSpeedValidator.end_coord`
+        :param end_coord: See :attr:`~trajtracker.validators.GlobalSpeedValidator.end_coord`
         :type end_coord: int
 
-        :param axis: See :attr:`~dobbyt.validators.GlobalSpeedValidator.axis`
-        :type axis: dobbyt.validators.ValidationAxis
+        :param axis: See :attr:`~trajtracker.validators.GlobalSpeedValidator.axis`
+        :type axis: trajtracker.validators.ValidationAxis
 
-        :param grace_period: See :attr:`~dobbyt.validators.GlobalSpeedValidator.grace_period`
+        :param grace_period: See :attr:`~trajtracker.validators.GlobalSpeedValidator.grace_period`
         :type grace_period: number
 
-        :param max_trial_duration: See :attr:`~dobbyt.validators.GlobalSpeedValidator.max_trial_duration`
+        :param max_trial_duration: See :attr:`~trajtracker.validators.GlobalSpeedValidator.max_trial_duration`
         :type max_trial_duration: number
 
-        :param milestones: See :attr:`~dobbyt.validators.GlobalSpeedValidator.milestones`
+        :param milestones: See :attr:`~trajtracker.validators.GlobalSpeedValidator.milestones`
         :type milestones: list
 
-        :param show_guide: See :attr:`~dobbyt.validators.GlobalSpeedValidator.show_guide`
+        :param show_guide: See :attr:`~trajtracker.validators.GlobalSpeedValidator.show_guide`
         :type show_guide: bool
         """
 
@@ -148,7 +148,7 @@ class GlobalSpeedValidator(_BaseValidator):
             return None
 
         if time < self._time0:
-            raise dobbyt.InvalidStateError("{0}.check_xyt() was called with time={1}, but the trial started at time={2}".format(self.__class__, time, self._time0))
+            raise trajtracker.InvalidStateError("{0}.check_xyt() was called with time={1}, but the trial started at time={2}".format(self.__class__, time, self._time0))
 
         time -= self._time0
 
@@ -182,7 +182,7 @@ class GlobalSpeedValidator(_BaseValidator):
 
     def _assert_initialized(self, value, attr_name):
         if value is None:
-            raise dobbyt.InvalidStateError("{:}.check_xyt() was called before {:} was initalized".format(type(self).__name__, attr_name))
+            raise trajtracker.InvalidStateError("{:}.check_xyt() was called before {:} was initalized".format(type(self).__name__, attr_name))
 
     #----------------------------------------------------------------------------------
     # Get the coordinate expected
@@ -291,12 +291,12 @@ class GlobalSpeedValidator(_BaseValidator):
 
     #-----------------------------------------------------------------------------------
 
-    _errmsg_milestones_not_percentage = "dobbyt error: invalid {0} for {1}.milestones[{2}]: expecting a number between 0 and 1"
+    _errmsg_milestones_not_percentage = "trajtracker error: invalid {0} for {1}.milestones[{2}]: expecting a number between 0 and 1"
 
     @property
     def milestones(self):
         """
-        This attribute indicates how the overall speed limit (:attr:`~dobbyt.validators.GlobalSpeedValidator.max_trial_duration`)
+        This attribute indicates how the overall speed limit (:attr:`~trajtracker.validators.GlobalSpeedValidator.max_trial_duration`)
         should be interpolated.
 
         By default, the interpolation is linear. But you can define several milestones - e.g., "mouse/finger must complete X%
@@ -331,7 +331,7 @@ class GlobalSpeedValidator(_BaseValidator):
             if not isinstance(milestone, GlobalSpeedValidator.Milestone):
                 #-- convert tuple/list to milestone
                 if len(milestone) != 2:
-                    raise ValueError("dobbyt error: {:}.milestones[{:}] should be either a Milestone object or a (time,distance) tuple/list. Invalid value: {:}".format(type(self).__name__, i, milestone))
+                    raise ValueError("trajtracker error: {:}.milestones[{:}] should be either a Milestone object or a (time,distance) tuple/list. Invalid value: {:}".format(type(self).__name__, i, milestone))
                 milestone = GlobalSpeedValidator.Milestone(milestone[0], milestone[1])
 
             if not isinstance(milestone.distance_percentage, numbers.Number):
@@ -344,25 +344,25 @@ class GlobalSpeedValidator(_BaseValidator):
             if not (0 < milestone.time_percentage <= 1):
                 raise ValueError(GlobalSpeedValidator._errmsg_milestones_not_percentage.format("time_percentage", type(self).__name__, i))
             if milestone.distance_percentage <= total_distance:
-                raise ValueError("dobbyt error: {:}.milestones[{:}] is invalid - the distance specified ({:}) must be later than in the previous milestone".format("distance_percentage", type(self).__name__, i, milestone.time_percentage))
+                raise ValueError("trajtracker error: {:}.milestones[{:}] is invalid - the distance specified ({:}) must be later than in the previous milestone".format("distance_percentage", type(self).__name__, i, milestone.time_percentage))
 
             total_time += milestone.time_percentage
             total_distance += milestone.distance_percentage
 
             if total_time > 1:
-                raise ValueError("dobbyt error: {:}.milestones is invalid - the total time of all milestones exceeds 1.0".format(type(self).__name__))
+                raise ValueError("trajtracker error: {:}.milestones is invalid - the total time of all milestones exceeds 1.0".format(type(self).__name__))
             if total_distance > 1:
-                raise ValueError("dobbyt error: {:}.milestones is invalid - the total distance of all milestones exceeds 1.0".format(type(self).__name__))
+                raise ValueError("trajtracker error: {:}.milestones is invalid - the total distance of all milestones exceeds 1.0".format(type(self).__name__))
 
             milestones.append(GlobalSpeedValidator.Milestone(milestone.time_percentage, milestone.distance_percentage))
 
         if total_time < 1:
             raise ValueError(
-                "dobbyt error: {:}.milestones is invalid - the total time of all milestones sums to {:} rather than to 1.0".format(
+                "trajtracker error: {:}.milestones is invalid - the total time of all milestones sums to {:} rather than to 1.0".format(
                     type(self).__name__, total_time))
         if total_distance < 1:
             raise ValueError(
-                "dobbyt error: {:}.milestones is invalid - the total distance of all milestones sums to {:} rather than to 1.0".format(
+                "trajtracker error: {:}.milestones is invalid - the total distance of all milestones sums to {:} rather than to 1.0".format(
                     type(self).__name__, total_distance))
 
         self._milestones = np.array(milestones)
@@ -414,7 +414,7 @@ class GlobalSpeedValidator(_BaseValidator):
     @property
     def guide(self):
         """
-        An object (dobbyt.validators.GlobalSpeedGuide) that takes care of showing a visual guide for the speed limit (read-only property)
+        An object (trajtracker.validators.GlobalSpeedGuide) that takes care of showing a visual guide for the speed limit (read-only property)
         """
         return self._guide
 
@@ -424,7 +424,7 @@ class GlobalSpeedValidator(_BaseValidator):
 # Show a moving line to visualize the validator's speed
 #==========================================================================================
 
-class GlobalSpeedGuide(dobbyt._DobbyObject):
+class GlobalSpeedGuide(trajtracker._TTrkObject):
     """
     This class displays a moving line that visualizes the global speed limit.
 
@@ -437,7 +437,7 @@ class GlobalSpeedGuide(dobbyt._DobbyObject):
         """
         Constructor
 
-        :param validator: See :class:`~dobbyt.validators.GlobalSpeedValidator`
+        :param validator: See :class:`~trajtracker.validators.GlobalSpeedValidator`
         """
 
         super(GlobalSpeedGuide, self).__init__()
@@ -473,7 +473,7 @@ class GlobalSpeedGuide(dobbyt._DobbyObject):
             start_pt = (-line_length/2, 0)
             end_pt = (line_length/2, 0)
 
-        self._guide_line = dobbyt.stimuli.StimulusSelector()
+        self._guide_line = trajtracker.stimuli.StimulusSelector()
         self._guide_line.add_stimulus(self.LineMode.Grace, self._create_line(start_pt, end_pt, self._colour_grace))
         self._guide_line.add_stimulus(self.LineMode.Error, self._create_line(start_pt, end_pt, self._colour_err))
         self._guide_line.add_stimulus(self.LineMode.OK, self._create_line(start_pt, end_pt, self._colour_ok))
@@ -507,7 +507,7 @@ class GlobalSpeedGuide(dobbyt._DobbyObject):
         if self._guide_line is None:
             self._create_guide_line()  # try creating again. Maybe the experiment was inactive
             if self._guide_line is None:
-                raise dobbyt.InvalidStateError("The visual guide for {:} cannot be created because the experiment is inactive".format(GlobalSpeedValidator.__name__))
+                raise trajtracker.InvalidStateError("The visual guide for {:} cannot be created because the experiment is inactive".format(GlobalSpeedValidator.__name__))
 
         _u.validate_func_arg_type(self, "show", "coord", coord, int)
         _u.validate_func_arg_type(self, "show", "line_mode", line_mode, self.LineMode)

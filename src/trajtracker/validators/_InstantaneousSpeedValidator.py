@@ -10,9 +10,9 @@ from __future__ import division
 
 import numbers
 
-import dobbyt._utils as _u
-from dobbyt.movement import SpeedMonitor
-from dobbyt.validators import ValidationAxis, ValidationFailed, _BaseValidator
+import trajtracker._utils as _u
+from trajtracker.movement import SpeedMonitor
+from trajtracker.validators import ValidationAxis, ValidationFailed, _BaseValidator
 
 
 # noinspection PyAttributeOutsideInit
@@ -35,13 +35,13 @@ class InstantaneousSpeedValidator(_BaseValidator):
         """
         Constructor
 
-        :param units_per_mm: The ratio of units (provided in the call to :func:`~dobbyt.validators.InstantaneousSpeedValidator.check_xyt`) per mm
-        :param axis: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.axis`
-        :param enabled: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.enabled`
-        :param min_speed: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.min_speed`
-        :param max_speed: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.max_speed`
-        :param grace_period: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.grace_period`
-        :param calculation_interval: See :attr:`~dobbyt.validators.InstantaneousSpeedValidator.calculation_interval`
+        :param units_per_mm: The ratio of units (provided in the call to :func:`~trajtracker.validators.InstantaneousSpeedValidator.check_xyt`) per mm
+        :param axis: See :attr:`~trajtracker.validators.InstantaneousSpeedValidator.axis`
+        :param enabled: See :attr:`~trajtracker.validators.InstantaneousSpeedValidator.enabled`
+        :param min_speed: See :attr:`~trajtracker.validators.InstantaneousSpeedValidator.min_speed`
+        :param max_speed: See :attr:`~trajtracker.validators.InstantaneousSpeedValidator.max_speed`
+        :param grace_period: See :attr:`~trajtracker.validators.InstantaneousSpeedValidator.grace_period`
+        :param calculation_interval: See :attr:`~trajtracker.validators.InstantaneousSpeedValidator.calculation_interval`
         """
 
         super(InstantaneousSpeedValidator, self).__init__(enabled=enabled)

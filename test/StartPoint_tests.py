@@ -1,7 +1,7 @@
 import unittest
 
-from dobbyt.movement import StartPoint
-from dobbyt.misc import shapes
+from trajtracker.movement import StartPoint
+from trajtracker.misc import shapes
 
 
 class StartPointTests(unittest.TestCase):

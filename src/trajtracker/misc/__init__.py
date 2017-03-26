@@ -1,6 +1,6 @@
 """
 
-Dobby tools - misc package
+TrajTracker - misc package
 
 @author: Dror Dotan
 @copyright: Copyright (c) 2017, Dror Dotan

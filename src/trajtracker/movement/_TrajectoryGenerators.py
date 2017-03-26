@@ -10,25 +10,25 @@ from __future__ import division
 import numbers
 import numpy as np
 
-import dobbyt
-import dobbyt._utils as _u
+import trajtracker
+import trajtracker._utils as _u
 
 
-class CircularTrajectoryGenerator(dobbyt._DobbyObject):
+class CircularTrajectoryGenerator(trajtracker._TTrkObject):
     """
     Generate a circular movement trajectory for a stimulus.
 
-    Use this class in conjunction with :class:`~dobbyt.movement.StimulusAnimator`
+    Use this class in conjunction with :class:`~trajtracker.movement.StimulusAnimator`
     """
 
     def __init__(self, center=None, radius=None, degrees_per_sec=None, degrees_at_t0=None):
         """
         Constructor
 
-        :param center: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.center`
-        :param radius: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.radius`
-        :param degrees_per_sec: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`
-        :param degrees_at_t0: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.degrees_at_t0`
+        :param center: See :attr:`~trajtracker.movement.CircularTrajectoryGenerator.center`
+        :param radius: See :attr:`~trajtracker.movement.CircularTrajectoryGenerator.radius`
+        :param degrees_per_sec: See :attr:`~trajtracker.movement.CircularTrajectoryGenerator.degrees_per_sec`
+        :param degrees_at_t0: See :attr:`~trajtracker.movement.CircularTrajectoryGenerator.degrees_at_t0`
         """
         super(CircularTrajectoryGenerator, self).__init__()
 
@@ -58,11 +58,11 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
 
         _u.validate_func_arg_type(self, "get_xy", "time", time, numbers.Number)
         if not hasattr(self, "_center"):
-            raise dobbyt.InvalidStateError("dobbyt error: {:}.get_xy() was called without setting center".format(type(self).__name__))
+            raise trajtracker.InvalidStateError("trajtracker error: {:}.get_xy() was called without setting center".format(type(self).__name__))
         if not hasattr(self, "_degrees_per_sec"):
-            raise dobbyt.InvalidStateError("dobbyt error: {:}.get_xy() was called without setting degrees_per_sec".format(type(self).__name__))
+            raise trajtracker.InvalidStateError("trajtracker error: {:}.get_xy() was called without setting degrees_per_sec".format(type(self).__name__))
         if not hasattr(self, "_radius"):
-            raise dobbyt.InvalidStateError("dobbyt error: {:}.get_xy() was called without setting radius".format(type(self).__name__))
+            raise trajtracker.InvalidStateError("trajtracker error: {:}.get_xy() was called without setting radius".format(type(self).__name__))
 
         curr_degrees = (self._degrees_at_t0 + self._degrees_per_sec * time) % 360
 
@@ -116,7 +116,7 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
     def degrees_per_sec(self):
         """
         The radial speed of movement (you can also specify the speed as
-        :attr:`~dobbyt.movement.CircularTrajectoryGenerator.full_rotation_duration`)
+        :attr:`~trajtracker.movement.CircularTrajectoryGenerator.full_rotation_duration`)
         """
         return self._degrees_per_sec
 
@@ -131,7 +131,7 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
     def full_rotation_duration(self):
         """
         The radial speed of movement, in seconds (you can also specify the speed as
-        :attr:`~dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`)
+        :attr:`~trajtracker.movement.CircularTrajectoryGenerator.degrees_per_sec`)
         """
         return 360 / self._degrees_per_sec
 
