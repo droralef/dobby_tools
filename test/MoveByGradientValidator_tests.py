@@ -17,22 +17,22 @@ class MoveByGradientValidatorTests(unittest.TestCase):
 
         try:
             val.position = ""
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.position = 1
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.position = ("", "")
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.position = (0.1, 0)
-        except ValueError:
+        except TypeError:
             pass
 
     #-------------------------------------------------------
@@ -43,12 +43,12 @@ class MoveByGradientValidatorTests(unittest.TestCase):
 
         try:
             val.enabled = 1
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.enabled = None
-        except ValueError:
+        except TypeError:
             pass
 
 
@@ -61,27 +61,27 @@ class MoveByGradientValidatorTests(unittest.TestCase):
 
         try:
             val.last_validated_rgb = (-1, 0, 50)
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.last_validated_rgb = (0, 0, 256)
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.last_validated_rgb = (1.5, 0, 50)
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.last_validated_rgb = ("", 0, 50)
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.last_validated_rgb = (0, 0)
-        except ValueError:
+        except TypeError:
             pass
 
         try:
@@ -96,12 +96,12 @@ class MoveByGradientValidatorTests(unittest.TestCase):
 
         try:
             val.last_validated_rgb = ""
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.last_validated_rgb = None
-        except ValueError:
+        except TypeError:
             pass
 
 
@@ -114,7 +114,7 @@ class MoveByGradientValidatorTests(unittest.TestCase):
 
         try:
             val.max_valid_back_movement = None
-        except ValueError:
+        except TypeError:
             pass
 
         try:
@@ -124,7 +124,7 @@ class MoveByGradientValidatorTests(unittest.TestCase):
 
         try:
             val.max_valid_back_movement = ""
-        except ValueError:
+        except TypeError:
             pass
 
 
@@ -135,12 +135,12 @@ class MoveByGradientValidatorTests(unittest.TestCase):
 
         try:
             val.rgb_should_ascend = 0
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             val.rgb_should_ascend = None
-        except ValueError:
+        except TypeError:
             pass
 
 

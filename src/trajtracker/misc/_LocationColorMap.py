@@ -95,15 +95,9 @@ class LocationColorMap(trajtracker._TTrkObject):
         if value is None:
             value = (0, 0)
 
-        if not isinstance(value, (list, tuple)):
-            raise ValueError("trajtracker error: invalid {0}.position ({1})".format(self.__class__, value))
-
-        if not isinstance(value[0], numbers.Number):
-            raise ValueError("trajtracker error: invalid {0}.position[0] ({1})".format(self.__class__, value[0]))
-
-        if not isinstance(value[1], numbers.Number):
-            raise ValueError("trajtracker error: invalid {0}.position[1] ({1})".format(self.__class__, value[1]))
-
+        _u.validate_attr_anylist(self, "position", value, 2, 2)
+        _u.validate_attr_type(self, "position[0]", value[0], numbers.Number)
+        _u.validate_attr_type(self, "position[1]", value[1], numbers.Number)
 
         self._position = (value[0], value[1])
         self._log_setter("position")

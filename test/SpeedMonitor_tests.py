@@ -19,13 +19,13 @@ class SpeedMonitorTests(unittest.TestCase):
         try:
             m.units_per_mm = ""
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             m.units_per_mm = None
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
         try:
@@ -50,13 +50,13 @@ class SpeedMonitorTests(unittest.TestCase):
         try:
             m.calculation_interval = ""
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             m.calculation_interval = None
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
         try:

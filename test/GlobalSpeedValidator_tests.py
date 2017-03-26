@@ -18,8 +18,8 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
     # noinspection PyTypeChecker
     def test_set_enabled(self):
         GlobalSpeedValidator(enabled=True)
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(enabled=None))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(enabled=1))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(enabled=None))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(enabled=1))
 
 
     #--------------------------------------------------
@@ -27,35 +27,35 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
         GlobalSpeedValidator(axis=ValidationAxis.x)
         GlobalSpeedValidator(axis=ValidationAxis.y)
         self.assertRaises(ValueError, lambda: GlobalSpeedValidator(axis=ValidationAxis.xy))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(axis=""))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(axis=None))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(axis=""))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(axis=None))
 
     #--------------------------------------------------
     # noinspection PyTypeChecker
     def test_set_origin_coord(self):
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(origin_coord=""))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(origin_coord=(1,2)))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(origin_coord=""))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(origin_coord=(1,2)))
 
         v = GlobalSpeedValidator(origin_coord=1)
 
         try:
             v.origin_coord = None
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
     #--------------------------------------------------
     # noinspection PyTypeChecker
     def test_set_end_coord(self):
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(end_coord=""))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(end_coord=(1,2)))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(end_coord=""))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(end_coord=(1,2)))
 
         v = GlobalSpeedValidator(end_coord=1)
 
         try:
             v.end_coord = None
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
     #--------------------------------------------------
@@ -64,22 +64,22 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
         GlobalSpeedValidator(grace_period=0)
         GlobalSpeedValidator(grace_period=None)
         self.assertRaises(ValueError, lambda: GlobalSpeedValidator(grace_period=-1))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(grace_period=""))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(grace_period=(1,2)))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(grace_period=""))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(grace_period=(1,2)))
 
     #--------------------------------------------------
     def test_set_max_trial_duration(self):
         GlobalSpeedValidator(max_trial_duration=1)
         GlobalSpeedValidator(max_trial_duration=None)
         self.assertRaises(ValueError, lambda: GlobalSpeedValidator(max_trial_duration=0))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(max_trial_duration=""))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(max_trial_duration=""))
 
     #--------------------------------------------------
     # noinspection PyTypeChecker
     def test_set_show_guide(self):
         GlobalSpeedValidator(show_guide=True)
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(show_guide=1))
-        self.assertRaises(ValueError, lambda: GlobalSpeedValidator(show_guide=None))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(show_guide=1))
+        self.assertRaises(TypeError, lambda: GlobalSpeedValidator(show_guide=None))
 
     #--------------------------------------------------
     # noinspection PyTypeChecker
@@ -91,13 +91,13 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
         try:
             v.guide_warning_time_delta = None
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             v.guide_warning_time_delta = ""
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
         try:
@@ -107,6 +107,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
             pass
 
     # --------------------------------------------------
+    # noinspection PyTypeChecker
     def test_set_milestones(self):
         GlobalSpeedValidator(milestones=None)
         GlobalSpeedValidator(milestones=[GlobalSpeedValidator.Milestone(1, 1)])

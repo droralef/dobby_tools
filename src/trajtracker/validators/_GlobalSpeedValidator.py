@@ -317,7 +317,7 @@ class GlobalSpeedValidator(_BaseValidator):
         if value is None:
             value = []
 
-        _u.validate_attr_type(self, "milestones", value, (list, tuple))
+        _u.validate_attr_anylist(self, "milestones", value)
 
         total_time = 0
         total_distance = 0

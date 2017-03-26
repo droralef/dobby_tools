@@ -23,10 +23,10 @@ class CircularTrajectoryGeneratorTests(unittest.TestCase):
         self.assertEqual((1,2), CircularTrajectoryGenerator(center=(1,2)).center)
         self.assertEqual((1,2), CircularTrajectoryGenerator(center=geometry.XYPoint(1, 2)).center)
 
-        self.assertRaises(ValueError, lambda: CircularTrajectoryGenerator(center=0))
-        self.assertRaises(ValueError, lambda: CircularTrajectoryGenerator(center=(1,2,3)))
-        self.assertRaises(ValueError, lambda: CircularTrajectoryGenerator(center=(0.3, 1)))
-        self.assertRaises(ValueError, lambda: CircularTrajectoryGenerator(center=(0, None)))
+        self.assertRaises(TypeError, lambda: CircularTrajectoryGenerator(center=0))
+        self.assertRaises(TypeError, lambda: CircularTrajectoryGenerator(center=(1,2,3)))
+        self.assertRaises(TypeError, lambda: CircularTrajectoryGenerator(center=(0.3, 1)))
+        self.assertRaises(TypeError, lambda: CircularTrajectoryGenerator(center=(0, None)))
 
     #--------------------------------------------------------
     def test_set_degrees_per_sec(self):
@@ -35,12 +35,12 @@ class CircularTrajectoryGeneratorTests(unittest.TestCase):
         self.assertEqual(2, gen.full_rotation_duration)
 
         self.assertRaises(ValueError, lambda: CircularTrajectoryGenerator(degrees_per_sec=0))
-        self.assertRaises(ValueError, lambda: CircularTrajectoryGenerator(degrees_per_sec=""))
+        self.assertRaises(TypeError, lambda: CircularTrajectoryGenerator(degrees_per_sec=""))
 
         try:
             gen.degrees_per_sec = None
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
 
@@ -60,13 +60,13 @@ class CircularTrajectoryGeneratorTests(unittest.TestCase):
         try:
             gen.full_rotation_duration = None
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
         try:
             gen.full_rotation_duration = ""
             self.fail()
-        except ValueError:
+        except TypeError:
             pass
 
 
@@ -75,7 +75,7 @@ class CircularTrajectoryGeneratorTests(unittest.TestCase):
         gen = CircularTrajectoryGenerator(degrees_at_t0=90)
         self.assertEqual(90, gen.degrees_at_t0)
 
-        self.assertRaises(ValueError, lambda: CircularTrajectoryGenerator(degrees_at_t0=""))
+        self.assertRaises(TypeError, lambda: CircularTrajectoryGenerator(degrees_at_t0=""))
 
     #============================ generate ====================
 

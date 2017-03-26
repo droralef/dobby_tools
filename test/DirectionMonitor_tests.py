@@ -121,14 +121,14 @@ class DirectionMonitorTests(unittest.TestCase):
 
         dm.update_xyt(0, 0, 0)
 
-        self.assertRaises(ValueError, lambda: dm.update_xyt("", 0, 0))
-        self.assertRaises(ValueError, lambda: dm.update_xyt(None, 0, 0))
+        self.assertRaises(TypeError, lambda: dm.update_xyt("", 0, 0))
+        self.assertRaises(TypeError, lambda: dm.update_xyt(None, 0, 0))
 
-        self.assertRaises(ValueError, lambda: dm.update_xyt(0, "", 0))
-        self.assertRaises(ValueError, lambda: dm.update_xyt(0, None, 0))
+        self.assertRaises(TypeError, lambda: dm.update_xyt(0, "", 0))
+        self.assertRaises(TypeError, lambda: dm.update_xyt(0, None, 0))
 
-        self.assertRaises(ValueError, lambda: dm.update_xyt(0, 0, ""))
-        self.assertRaises(ValueError, lambda: dm.update_xyt(0, 0, None))
+        self.assertRaises(TypeError, lambda: dm.update_xyt(0, 0, ""))
+        self.assertRaises(TypeError, lambda: dm.update_xyt(0, 0, None))
 
 
 

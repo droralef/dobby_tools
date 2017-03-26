@@ -86,13 +86,13 @@ class LocationColorMapTests(unittest.TestCase):
         try:
             lcm.use_mapping = ""
             self.fail("Succeeded setting an invalid value for LocationColorMap.use_mapping")
-        except:
+        except TypeError:
             pass
 
         try:
             lcm.use_mapping = None
             self.fail("Succeeded setting an invalid value for LocationColorMap.use_mapping")
-        except:
+        except TypeError:
             pass
 
 
@@ -149,11 +149,11 @@ class LocationColorMapTests(unittest.TestCase):
     #-------------------------------------------------------------------------
     def test_invalid_get_color_at_args(self):
         lcm = LocationColorMap(testimage)
-        self.assertRaises(ValueError, lambda: lcm.get_color_at("", 0))
-        self.assertRaises(ValueError, lambda: lcm.get_color_at(0.5, 0))
-        self.assertRaises(ValueError, lambda: lcm.get_color_at(0, ""))
-        self.assertRaises(ValueError, lambda: lcm.get_color_at(0, 0.5))
-        self.assertRaises(ValueError, lambda: lcm.get_color_at(0, 0, use_mapping=""))
+        self.assertRaises(TypeError, lambda: lcm.get_color_at("", 0))
+        self.assertRaises(TypeError, lambda: lcm.get_color_at(0.5, 0))
+        self.assertRaises(TypeError, lambda: lcm.get_color_at(0, ""))
+        self.assertRaises(TypeError, lambda: lcm.get_color_at(0, 0.5))
+        self.assertRaises(TypeError, lambda: lcm.get_color_at(0, 0, use_mapping=""))
 
 
     #-------------------------------------------------------------------------
