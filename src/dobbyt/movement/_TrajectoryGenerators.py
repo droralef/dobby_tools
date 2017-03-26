@@ -15,15 +15,20 @@ import dobbyt._utils as _u
 
 
 class CircularTrajectoryGenerator(dobbyt._DobbyObject):
+    """
+    Generate a circular movement trajectory for a stimulus.
+
+    Use this class in conjunction with :class:`~dobbyt.movement.StimulusAnimator`
+    """
 
     def __init__(self, center=None, radius=None, degrees_per_sec=None, degrees_at_t0=None):
         """
         Constructor
 
-        :param center: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.center`
-        :param radius: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.radius`
-        :param degrees_per_sec: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`
-        :param degrees_at_t0: See :attr:`dobbyt.movement.CircularTrajectoryGenerator.degrees_at_t0`
+        :param center: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.center`
+        :param radius: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.radius`
+        :param degrees_per_sec: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`
+        :param degrees_at_t0: See :attr:`~dobbyt.movement.CircularTrajectoryGenerator.degrees_at_t0`
         """
         super(CircularTrajectoryGenerator, self).__init__()
 
@@ -43,7 +48,13 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
     #     Generate trajectory
     #============================================================================
 
-    def get_xy(self, time):
+    def get_traj_point(self, time):
+        """
+        Return the trajectory info at a certain time
+
+        :param time: in seconds
+        :returns: a dict with the coordinates ('x' and 'y' entries).
+        """
 
         _u.validate_func_arg_type(self, "get_xy", "time", time, numbers.Number)
         if not hasattr(self, "_center"):
@@ -65,7 +76,7 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
         if 90 < curr_degrees < 270:
             y = -y
 
-        return x + self._center[0], y + self._center[1]
+        return {'x': x + self._center[0], 'y': y + self._center[1]}
 
 
     #============================================================================
@@ -104,7 +115,8 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
     @property
     def degrees_per_sec(self):
         """
-        The radial speed of movement (you can also specify the speed as :func:`dobbyt.movement.CircularTrajectoryGenerator.full_rotation_duration`)
+        The radial speed of movement (you can also specify the speed as
+        :attr:`~dobbyt.movement.CircularTrajectoryGenerator.full_rotation_duration`)
         """
         return self._degrees_per_sec
 
@@ -118,7 +130,8 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
     @property
     def full_rotation_duration(self):
         """
-        The radial speed of movement, in seconds (you can also specify the speed as :func:`dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`)
+        The radial speed of movement, in seconds (you can also specify the speed as
+        :attr:`~dobbyt.movement.CircularTrajectoryGenerator.degrees_per_sec`)
         """
         return 360 / self._degrees_per_sec
 
@@ -132,7 +145,7 @@ class CircularTrajectoryGenerator(dobbyt._DobbyObject):
     @property
     def degrees_at_t0(self):
         """
-        The position (in degrees) at t = 0
+        Position (specified as degrees) where the stimulus should be at time=0
         """
         return self._degrees_at_t0
 
