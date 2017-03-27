@@ -9,8 +9,8 @@ TrajTracker documentation
 Expyriment-based tools for psychology experiments, focusing on finger/mouse tracking
 
 
-trajtracker.stimuli module:
----------------------------
+trajtracker.stimuli
+-------------------
 
 Visual objects.
 
@@ -21,8 +21,8 @@ Visual objects.
    stimuli/*
 
 
-trajtracker.movement module:
-----------------------------
+trajtracker.movement
+--------------------
 
 .. toctree::
    :maxdepth: 2
@@ -31,8 +31,8 @@ trajtracker.movement module:
    movement/*
 
 
-trajtracker.validators module:
-------------------------------
+trajtracker.validators
+----------------------
 
 Perform various validations on mouse/finger movement during the trial.
 Typically, you'd call reset() for each validator when the trial starts, and check_xyt() each time you
@@ -46,14 +46,25 @@ observe a mouse/finger movement.
    validators/*
 
 
-trajtracker.misc module:
-------------------------
+trajtracker.misc
+----------------
 
 .. toctree::
    :maxdepth: 2
    :glob:
 
    misc/*
+
+
+other modules
+-------------
+
+.. toctree::
+   :maxdepth: 2
+   :glob:
+
+   utils
+
 
 
 Indices and tables
