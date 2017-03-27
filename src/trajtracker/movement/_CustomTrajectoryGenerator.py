@@ -14,7 +14,6 @@ import csv
 import trajtracker
 import trajtracker._utils as _u
 
-#todo: comment this class
 
 class CustomTrajectoryGenerator(trajtracker._TTrkObject):
     """
@@ -60,7 +59,7 @@ class CustomTrajectoryGenerator(trajtracker._TTrkObject):
     #---------------------------------------------------------------
     def get_traj_point(self, time):
         """
-        Generate the trajectory.
+        Generate the trajectory - get one time point data
 
         :param time: in seconds
         :return: (x, y, visible)
