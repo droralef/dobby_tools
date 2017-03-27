@@ -268,7 +268,7 @@ class DirectionMonitor(trajtracker._TTrkObject):
     def units_per_mm(self):
         """
         The ratio of units (provided in the call to :func:`~trajtracker.movement.DirectionMonitor.update_xyt`) per mm.
-        This is relevant only for :func:`~trajtracker.movement.DirectionMonitor.min_distance`
+        This is relevant only for :attr:`~trajtracker.movement.DirectionMonitor.min_distance`
         """
         return self._units_per_mm
 
@@ -307,7 +307,7 @@ class DirectionMonitor(trajtracker._TTrkObject):
         """
         The angle that counts as zero (0=up).
         This means that:
-        - the value returned from :func:`~trajtracker.movement.DirectionMonitor.curr_angle` will be rotated by this value
+        - the value returned from :attr:`~trajtracker.movement.DirectionMonitor.curr_angle` will be rotated by this value
         - The counting of left/right curves will be relatively to this zero angle
         """
         return self._zero_angle

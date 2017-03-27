@@ -28,7 +28,7 @@ class MovementAngleValidator(_BaseValidator):
 
 
     def __init__(self, units_per_mm, min_angle=None, max_angle=None, calc_angle_interval=None,
-                 grace_period=0, enabled=False):
+                 grace_period=0, enabled=True):
         """
         Constructor
 
@@ -38,7 +38,7 @@ class MovementAngleValidator(_BaseValidator):
         :param max_angle: See :attr:`~trajtracker.movement.MovementAngleValidator.max_angle`
         :param calc_angle_interval: See :attr:`~trajtracker.movement.MovementAngleValidator.calc_angle_interval`
         :param grace_period: See :attr:`~trajtracker.movement.MovementAngleValidator.grace_period`
-        :param enabled: See :attr:`~trajtracker.movement.MovementAngleValidator.enabloed`
+        :param enabled: See :attr:`~trajtracker.movement.MovementAngleValidator.enabled`
         """
         super(MovementAngleValidator, self).__init__(enabled=enabled)
 
@@ -179,7 +179,7 @@ class MovementAngleValidator(_BaseValidator):
     def min_angle(self):
         """
         The minimal valid angle (in degrees)
-        This value can be either smaller or larger than :func:`~trajtracker.movement.MovementAngleValidator.max_angle`
+        This value can be either smaller or larger than :attr:`~trajtracker.validators.MovementAngleValidator.max_angle`
         """
         return self._min_angle
 
@@ -204,7 +204,7 @@ class MovementAngleValidator(_BaseValidator):
     def max_angle(self):
         """
         The maximal valid angle (in degrees)
-        This value can be either smaller or larger than :func:`~trajtracker.movement.MovementAngleValidator.min_angle`
+        This value can be either smaller or larger than :attr:`~trajtracker.validators.MovementAngleValidator.min_angle`
         """
         return self._max_angle
 

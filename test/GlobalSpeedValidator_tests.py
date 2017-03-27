@@ -17,7 +17,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
     #--------------------------------------------------
     # noinspection PyTypeChecker
     def test_set_enabled(self):
-        GlobalSpeedValidator(enabled=True)
+        GlobalSpeedValidator()
         self.assertRaises(TypeError, lambda: GlobalSpeedValidator(enabled=None))
         self.assertRaises(TypeError, lambda: GlobalSpeedValidator(enabled=1))
 
@@ -144,19 +144,19 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
     #--------------------------------------------------
     def test_validate_uninitialized(self):
-        v = GlobalSpeedValidator(origin_coord=0, end_coord=100, enabled=True)
+        v = GlobalSpeedValidator(origin_coord=0, end_coord=100)
         self.assertRaises(trajtracker.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
 
-        v = GlobalSpeedValidator(max_trial_duration=1, end_coord=100, enabled=True)
+        v = GlobalSpeedValidator(max_trial_duration=1, end_coord=100)
         self.assertRaises(trajtracker.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
 
-        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, enabled=True)
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0)
         self.assertRaises(trajtracker.InvalidStateError, lambda: v.check_xyt(0, 0, 0))
 
 
     #--------------------------------------------------
     def test_validate_one_milestone(self):
-        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=True)
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100)
 
         self.assertEqual(0, v.get_expected_coord_at_time(0))
         self.assertEqual(10, v.get_expected_coord_at_time(.1))
@@ -177,7 +177,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
     #--------------------------------------------------
     def test_validate_two_milestones(self):
-        v = GlobalSpeedValidator(max_trial_duration=6, origin_coord=0, end_coord=100, enabled=True,
+        v = GlobalSpeedValidator(max_trial_duration=6, origin_coord=0, end_coord=100,
                                  milestones=[(.5, .25), (.5, .75)])
         v.reset()
         self.assertIsNone(v.check_xyt(0, 25, 3))
@@ -194,8 +194,14 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
 
     #--------------------------------------------------
+    def test_disabled(self):
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=False)
+        self.assertIsNone(v.check_xyt(0, 49, .5))
+
+
+    #--------------------------------------------------
     def test_validate_grace_period(self):
-        v = GlobalSpeedValidator(max_trial_duration=10, origin_coord=0, end_coord=100, enabled=True, grace_period=3)
+        v = GlobalSpeedValidator(max_trial_duration=10, origin_coord=0, end_coord=100, grace_period=3)
         v.reset()
         self.assertIsNone(v.check_xyt(0, 1, 2))
         self.assertIsNone(v.check_xyt(0, 1, 3))
@@ -204,7 +210,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
     #--------------------------------------------------
     def test_validate_move_backwards(self):
-        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=100, end_coord=0, enabled=True)
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=100, end_coord=0)
 
         self.assertEqual(100, v.get_expected_coord_at_time(0))
         self.assertEqual(90, v.get_expected_coord_at_time(.1))
@@ -225,7 +231,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
     #--------------------------------------------------
     def test_validate_x_axis(self):
-        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, axis=ValidationAxis.x, enabled=True)
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, axis=ValidationAxis.x)
         v.reset()
         self.assertIsNone(v.check_xyt(50, 0, .5))
         self.assertIsNone(v.check_xyt(100, 0, 1))
@@ -240,7 +246,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
     #--------------------------------------------------
     def test_guide_selects_color(self):
-        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=True, show_guide=True, grace_period=.3)
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, show_guide=True, grace_period=.3)
         v.guide_warning_time_delta = .1
         v._guide = DbgGlobalSpeedGuide(v)
 
@@ -261,7 +267,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
     #--------------------------------------------------
     def test_guide_coords_y(self):
-        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=True, show_guide=True)
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, show_guide=True)
         v._guide = DbgGlobalSpeedGuide(v)
 
         v.reset()
@@ -270,7 +276,7 @@ class GlobalSpeedValidatorTests(unittest.TestCase):
 
     #--------------------------------------------------
     def test_guide_coords_x(self):
-        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, enabled=True, show_guide=True, axis=ValidationAxis.x)
+        v = GlobalSpeedValidator(max_trial_duration=1, origin_coord=0, end_coord=100, show_guide=True, axis=ValidationAxis.x)
         v._guide = DbgGlobalSpeedGuide(v)
 
         v.reset()

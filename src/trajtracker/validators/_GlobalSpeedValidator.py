@@ -44,7 +44,7 @@ class GlobalSpeedValidator(_BaseValidator):
 
 
     #-----------------------------------------------------------------------------------
-    def __init__(self, enabled=False, origin_coord=None, end_coord=None, axis=ValidationAxis.y,
+    def __init__(self, enabled=True, origin_coord=None, end_coord=None, axis=ValidationAxis.y,
                  grace_period=None, max_trial_duration=None, milestones=None, show_guide=False):
         """
 

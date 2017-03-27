@@ -23,7 +23,7 @@ class MoveByGradientValidator(_BaseValidator):
 
 
     def __init__(self, image, position=(0, 0), rgb_should_ascend=True, max_valid_back_movement=0,
-                 last_validated_rgb=None, enabled=False):
+                 last_validated_rgb=None, enabled=True):
         """
         Constructor
 

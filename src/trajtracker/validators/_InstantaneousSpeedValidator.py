@@ -30,7 +30,7 @@ class InstantaneousSpeedValidator(_BaseValidator):
     arg_speed = 'speed'  # ValidationFailed exception argument: the speed observed
 
     #-----------------------------------------------------------------------------------
-    def __init__(self, units_per_mm, axis=ValidationAxis.y, enabled=False, min_speed=None, max_speed=None,
+    def __init__(self, units_per_mm, axis=ValidationAxis.y, enabled=True, min_speed=None, max_speed=None,
                  grace_period=0, calculation_interval=0, movement_monitor=None):
         """
         Constructor

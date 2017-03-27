@@ -26,7 +26,7 @@ class LocationsValidator(_BaseValidator):
 
 
     #------------------------------------------------------------
-    def __init__(self, image, enabled=False, position=None, default_valid=False):
+    def __init__(self, image, enabled=True, position=None, default_valid=False):
         """
         Constructor
 

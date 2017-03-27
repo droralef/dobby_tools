@@ -33,16 +33,17 @@ class NCurvesValidator(_BaseValidator):
 
 
     #-----------------------------------------------------------------
-    def __init__(self, direction_monitor=None, max_curves_per_trial=None):
+    def __init__(self, direction_monitor=None, max_curves_per_trial=None, enabled=True):
         """
         Constructor
 
         :param direction_monitor: A :class:`~trajtracker.movement.DirectionMonitor` object for tracking curves.
                                   If this object is not provided, a default one would be created.
-        :param max_curves_per_trial: See :attr:`trajtracker.validators.NCurvesValidator.max_curves_per_trial`
+        :param max_curves_per_trial: See :attr:`~trajtracker.validators.NCurvesValidator.max_curves_per_trial`
+        :param enabled: See :attr:`~trajtracker.validators.NCurvesValidator.enabled`
         """
 
-        super(NCurvesValidator, self).__init__()
+        super(NCurvesValidator, self).__init__(enabled=enabled)
 
         if direction_monitor is None:
             direction_monitor = trajtracker.movement.DirectionMonitor(1)
@@ -78,6 +79,9 @@ class NCurvesValidator(_BaseValidator):
 
         self._direction_monitor.update_xyt(x_coord, y_coord, time)
 
+        if not self.enabled:
+            return None
+
         if self._direction_monitor.n_curves > self._max_curves_per_trial:
             return self._create_validation_error(self.err_too_many_curves, "Too many left-right deviations", {})
 
@@ -107,7 +111,7 @@ class NCurvesValidator(_BaseValidator):
     def min_distance(self):
         """
         The minimal distance (in mm) between points required for calculating direction
-        (see :func:`~trajtracker.movement.DirectionMonitor.min_distance`)
+        (see :attr:`trajtracker.movement.DirectionMonitor.min_distance`)
         """
         return self._direction_monitor.min_distance
 
@@ -122,7 +126,7 @@ class NCurvesValidator(_BaseValidator):
         """
         A curve must change the finger/mouse direction by at least this amount (specified in degrees).
         Smaller changes do not count as curves.
-        (see :func:`~trajtracker.movement.DirectionMonitor.min_angle_change_per_curve`)
+        (see :attr:`trajtracker.movement.DirectionMonitor.min_angle_change_per_curve`)
         """
         return self._direction_monitor.min_angle_change_per_curve
 
