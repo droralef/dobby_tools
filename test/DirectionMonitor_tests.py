@@ -291,6 +291,58 @@ class DirectionMonitorTests(unittest.TestCase):
         self.assertEqual(1, dm.n_curves)
 
 
+    #----------------------------------------------------
+    def test_curve_min_angle_first_curve(self):
+
+        dm = DirectionMonitor(1, min_angle_change_per_curve=45)
+
+        dm.update_xyt(0, 0, 0)
+        dm.update_xyt(0, 1, 1)
+        self.assertEqual(0, dm.curr_angle)
+        dm.update_xyt(1.1, 2, 2)
+        self.assertTrue(dm.curr_angle > 45)
+        self.assertEqual(1, dm.n_curves)
+
+        dm.reset()
+        dm.update_xyt(0, 0, 0)
+        dm.update_xyt(0, 1, 1)
+        self.assertEqual(0, dm.curr_angle)
+        dm.update_xyt(.9, 2, 2)
+        self.assertTrue(dm.curr_angle < 45)
+        self.assertEqual(0, dm.n_curves)
+        dm.update_xyt(.99, 2, 2)
+        dm.update_xyt(1.01, 2, 2)
+        self.assertEqual(1, dm.n_curves)
+
+
+    #----------------------------------------------------
+    def test_curve_min_angle_second_curve(self):
+
+        dm = DirectionMonitor(1, min_angle_change_per_curve=45)
+
+        dm.update_xyt(0, 0, 0)
+        dm.update_xyt(0, 1, 1)
+        dm.update_xyt(1, 2, 2)
+        self.assertEqual(45, dm.curr_angle) # 45 degrees rightwards
+        self.assertEqual(1, dm.n_curves)
+        dm.update_xyt(.99, 3, 2)
+        self.assertTrue(dm.curr_angle < 0)
+        self.assertEqual(2, dm.n_curves)
+
+        dm.reset()
+        dm.update_xyt(0, 0, 0)
+        dm.update_xyt(0, 1, 1)
+        dm.update_xyt(1, 2, 2)
+        self.assertEqual(45, dm.curr_angle) # 45 degrees rightwards
+        self.assertEqual(1, dm.n_curves)
+        dm.update_xyt(1.01, 3, 2)
+        self.assertEqual(1, dm.n_curves)
+        dm.update_xyt(.99, 4, 2)
+        self.assertEqual(2, dm.n_curves)
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

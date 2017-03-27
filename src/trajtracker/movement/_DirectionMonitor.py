@@ -18,10 +18,6 @@ import trajtracker._utils as _u
 import trajtracker.utils as u
 
 
-# todo: in curve counting - require a minimal change from start_angle to count as a curve
-#       (this means that when curve changes, we register a tentative place for the new start-of-curve, and we confirm
-#        it only when the finger changed its direction enough)
-
 class DirectionMonitor(trajtracker._TTrkObject):
     """
     Monitor the mouse/finger direction.
@@ -34,13 +30,14 @@ class DirectionMonitor(trajtracker._TTrkObject):
 
 
     #-------------------------------------------------------------------------
-    def __init__(self, units_per_mm, min_distance=0, angle_units=Units.Degrees, zero_angle=0):
+    def __init__(self, units_per_mm, min_distance=0, angle_units=Units.Degrees, zero_angle=0, min_angle_change_per_curve=0):
         """
         Constructor
 
         :param units_per_mm: See :attr:`~trajtracker.movement.DirectionMonitor.units_per_mm`
         :param min_distance: See :attr:`~trajtracker.movement.DirectionMonitor.min_distance`
         :param angle_units: See :attr:`~trajtracker.movement.DirectionMonitor.angle_units`
+        :param min_angle_change_per_curve: See :attr:`~trajtracker.movement.DirectionMonitor.min_angle_change_per_curve`
         """
         super(DirectionMonitor, self).__init__()
 
@@ -51,6 +48,7 @@ class DirectionMonitor(trajtracker._TTrkObject):
         self.min_distance = min_distance
         self.angle_units = angle_units
         self.zero_angle = zero_angle
+        self.min_angle_change_per_curve = min_angle_change_per_curve
 
         self.reset()
 
@@ -70,9 +68,18 @@ class DirectionMonitor(trajtracker._TTrkObject):
         self._pre_recent_coord = None
 
         self._curr_angle = None
+
+        #-- "current curve" is a curve that is validated
         self._curr_curve_direction = None
         self._curr_curve_start_angle = None
         self._curr_curve_start_index = None
+
+        #-- "new curve" is when we observe a very small change in angle, but we're not yet sure
+        #-- it should count as a curve.
+        self._possible_curve_direction = None
+        self._possible_curve_start_angle = None
+        self._possible_curve_start_index = None
+
         self._n_curves = 0
 
 
@@ -90,6 +97,7 @@ class DirectionMonitor(trajtracker._TTrkObject):
 
         self._remove_far_enough_recent_coords(x_coord, y_coord)
 
+        # remember coordinates
         self._recent_near_coords.append((x_coord, y_coord, time))
 
         last_angle = self._curr_angle
@@ -140,12 +148,45 @@ class DirectionMonitor(trajtracker._TTrkObject):
 
         curr_curve_direction = 1 if change_in_angle <= max_angle / 2 else -1
 
-        if curr_curve_direction != self._curr_curve_direction:
-            self._curr_curve_direction = curr_curve_direction
-            self._curr_curve_start_angle = self._curr_angle
-            self._curr_curve_start_index = len(self._recent_near_coords) - 1
-            self._n_curves += 1
+        #-- Compare the angular acceleration's direction between existing curve and new data
+        if curr_curve_direction == self._curr_curve_direction:
 
+            #-- Angular acceleration remained in the same direction: we're still in the same curve
+            self._clear_possible_curve()
+
+        else:
+            #-- Angular acceleration changed its direction: this may be a new curve
+
+            if self._possible_curve_direction is None:
+                #-- Mark the beginning of a possible curve
+                self._possible_curve_direction = curr_curve_direction
+                self._possible_curve_start_angle = self._curr_angle
+                self._possible_curve_start_index = len(self._recent_near_coords) - 1
+                self._last_pre_curve_angle = prev_angle
+
+            #-- Check if the finger/mouse changed its direction enough
+            change_in_angle_along_curve = (self._curr_angle - self._last_pre_curve_angle) % max_angle
+            change_in_angle_along_curve = min(change_in_angle_along_curve, 360-change_in_angle_along_curve)
+
+            if change_in_angle_along_curve >= self._min_angle_change_per_curve:
+                #-- The change in angle is large enough: this counts as a new curve
+
+                self._n_curves += 1
+
+                self._curr_curve_direction = curr_curve_direction
+                self._curr_curve_start_angle = self._curr_angle
+                self._curr_curve_start_index = len(self._recent_near_coords) - 1
+
+                self._clear_possible_curve()
+
+
+
+    #-------------------------------------------------
+    def _clear_possible_curve(self):
+        self._possible_curve_direction = None
+        self._possible_curve_start_angle = None
+        self._possible_curve_start_index = None
+        self._last_pre_curve_angle = None
 
     #-------------------------------------
     # Remove the first entries in self._prev_locations, as long as the first entry remains far enough
@@ -276,3 +317,20 @@ class DirectionMonitor(trajtracker._TTrkObject):
         _u.validate_attr_numeric(self, "zero_angle", value)
         self._zero_angle = value
         self._log_setter("zero_angle")
+
+
+    #-------------------------------------
+    @property
+    def min_angle_change_per_curve(self):
+        """
+        A curve must change the finger/mouse direction by at least this amount (specified in degrees).
+        Smaller changes do not count as curves.
+        """
+        return self._min_angle_change_per_curve
+
+    @min_angle_change_per_curve.setter
+    def min_angle_change_per_curve(self, value):
+        _u.validate_attr_numeric(self, "min_angle_change_per_curve", value)
+        _u.validate_attr_not_negative(self, "min_angle_change_per_curve", value)
+        self._min_angle_change_per_curve = value
+        self._log_setter("min_angle_change_per_curve")
