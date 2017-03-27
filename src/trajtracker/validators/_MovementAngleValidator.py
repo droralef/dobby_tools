@@ -60,6 +60,7 @@ class MovementAngleValidator(_BaseValidator):
     #========================================================================
 
     #-----------------------------------------------------------------------------------
+    # noinspection PyUnusedLocal
     def reset(self, time0=None):
         """
         Called when a trial starts - reset any previous movement

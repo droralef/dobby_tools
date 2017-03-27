@@ -71,4 +71,5 @@ from _InstantaneousSpeedValidator import InstantaneousSpeedValidator
 from _LocationsValidator import LocationsValidator
 from _MovementAngleValidator import MovementAngleValidator
 from _MoveByGradientValidator import MoveByGradientValidator
+from _NCurvesValidator import NCurvesValidator
 

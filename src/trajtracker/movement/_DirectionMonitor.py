@@ -166,7 +166,7 @@ class DirectionMonitor(trajtracker._TTrkObject):
 
             #-- Check if the finger/mouse changed its direction enough
             change_in_angle_along_curve = (self._curr_angle - self._last_pre_curve_angle) % max_angle
-            change_in_angle_along_curve = min(change_in_angle_along_curve, 360-change_in_angle_along_curve)
+            change_in_angle_along_curve = min(change_in_angle_along_curve, max_angle-change_in_angle_along_curve)
 
             if change_in_angle_along_curve >= self._min_angle_change_per_curve:
                 #-- The change in angle is large enough: this counts as a new curve
@@ -323,7 +323,7 @@ class DirectionMonitor(trajtracker._TTrkObject):
     @property
     def min_angle_change_per_curve(self):
         """
-        A curve must change the finger/mouse direction by at least this amount (specified in degrees).
+        A curve must change the finger/mouse direction by at least this amount.
         Smaller changes do not count as curves.
         """
         return self._min_angle_change_per_curve
